@@ -39,8 +39,7 @@ public class Pathfind {
 				closedList.add(current);
 
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, currentLevel.getGridWidth(), currentLevel.getGridHeight());
-				for (int i = 0; i < neighbors.size(); i++) {
-					PathNode currentNeighbor = neighbors.get(i);
+				for (PathNode currentNeighbor : neighbors) {
 					if (presentInList(currentNeighbor, closedList) || currentLevel.getTerrain()[currentNeighbor.getPos().getX()][currentNeighbor.getPos().getY()] != 0) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
@@ -90,15 +89,10 @@ public class Pathfind {
 		double lowestFCost = 0;
 		double lowestGCost = 0;
 		PathNode finalPos = new PathNode(new Vector2(0,0), 0);
-		for (int i = 0; i < candidates.size(); i++) {
-			PathNode currentCandidate = candidates.get(i);
-			//	      int gCost = calcDistance(origin.pos, currentCandidate.pos) + origin.gCost;
-			//	      int hCost = calcDistance(desiredPos, currentCandidate.pos);
-			//	      int fCost = gCost + hCost;
+		for (PathNode currentCandidate: candidates) {
 			if (currentCandidate.getfCost() < lowestFCost || lowestFCost == 0 || (currentCandidate.getfCost() == lowestFCost && currentCandidate.getgCost() < lowestGCost)) {
 				lowestFCost = currentCandidate.getfCost();
 				lowestGCost = currentCandidate.getgCost();
-				//currentCandidate.gCost = gCost;
 				finalPos = currentCandidate;
 			}
 		}
