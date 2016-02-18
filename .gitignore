@@ -45,3 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+#==========================
+# Non-standard ignores
+#==========================
+
+# java binaries
+*.class
