@@ -4,10 +4,24 @@ import java.util.ArrayList;
 import nl.retaliation.level.Level;
 import java.lang.Math;
 
+/**
+ * This class calculates the shortest path between different coordinates
+ * 
+ * @author Luke Nooteboom
+ *
+ */
 public class Pathfind {
 
 	//TODO: add constructor?
-
+	
+	/**
+	 * Calculates the shortest path
+	 * 
+	 * @param pos the position where the path starts
+	 * @param desiredPos the position where the path ends
+	 * @param currentLevel map of obstacles
+	 * @return List of path nodes
+	 */
 	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, Level currentLevel) {
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();

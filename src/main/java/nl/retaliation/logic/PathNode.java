@@ -1,5 +1,6 @@
 package nl.retaliation.logic;
 
+
 class PathNode {
 	private Vector2 pos;
 	private double gCost;
