@@ -134,7 +134,7 @@ public class Pathfind {
 		int dx = Math.abs(node.getX() - desiredPos.getX());
 		int dy = Math.abs(node.getY() - desiredPos.getY());
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
-		//return 0;
+		//return 0; for dijkstra's algorithm (slower)
 	}
 	private boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
 		//TODO: update this
