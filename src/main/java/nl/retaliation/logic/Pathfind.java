@@ -3,6 +3,7 @@ package nl.retaliation.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.level.WaterTile;
@@ -25,7 +26,7 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, boolean canStepOnLand, boolean canStepOnWater) {
+	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();
 		PathNode desiredNode = new PathNode(pos, 0);
@@ -43,7 +44,7 @@ public class Pathfind {
 
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth(), terrain.getMapHeight());
 				for (PathNode currentNeighbor : neighbors) {
-					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, canStepOnLand, canStepOnWater)) { //als de neighbor in de closedlist staat of niet walkable is
+					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, gameobjects, canStepOnLand, canStepOnWater)) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
 					int duplicateIndex = findInList(currentNeighbor.getPos(), openList);
@@ -135,14 +136,27 @@ public class Pathfind {
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0;
 	}
-	private boolean place_free(Vector2 position, TileMap tilemap, boolean canStepOnLand, boolean canStepOnWater) {
+	private boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
 		//TODO: update this
 		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 		//if ((currentTile.isWater() == true && canStepOnWater == true) || (currentTile.isWater() == false && canStepOnLand == true)) {
-		if ((currentTile instanceof WaterTile == true && canStepOnWater == true) || (currentTile instanceof WaterTile == false && canStepOnLand == true)) {
+		if ((currentTile instanceof WaterTile == true && canStepOnWater == true) || (currentTile instanceof WaterTile == false && canStepOnLand == true) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
+			&& posInObject(position, gameobjects) == false){
 			return true;
 		} else {
 			return false;
 		}
+	}
+	private boolean posInObject(Vector2 pos, GameObject[] gameobjects) {
+		for (GameObject currentGameObject : gameobjects) {
+			float goX = currentGameObject.getX();
+			float goY = currentGameObject.getY();
+			float width = currentGameObject.getWidth();
+			float height = currentGameObject.getHeight();
+			if (pos.getX() >= goX && pos.getX() <= goX + width && pos.getY() >= goY && pos.getY() <= goY + height) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
