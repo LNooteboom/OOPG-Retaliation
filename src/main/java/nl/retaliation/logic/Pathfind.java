@@ -3,8 +3,9 @@ package nl.retaliation.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
-//import nl.retaliation.level.TerrainTile;
+import nl.retaliation.level.WaterTile;
 
 import java.lang.Math;
 
@@ -136,8 +137,9 @@ public class Pathfind {
 	}
 	private boolean place_free(Vector2 position, TileMap tilemap, boolean canStepOnLand, boolean canStepOnWater) {
 		//TODO: update this
-		int currentTile = tilemap.getTileMap()[position.getX()][position.getY()];
-		if ((currentTile == 0 && canStepOnWater == true) || (currentTile != 0 && canStepOnLand == true)) {
+		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
+		//if ((currentTile.isWater() == true && canStepOnWater == true) || (currentTile.isWater() == false && canStepOnLand == true)) {
+		if ((currentTile instanceof WaterTile == true && canStepOnWater == true) || (currentTile instanceof WaterTile == false && canStepOnLand == true)) {
 			return true;
 		} else {
 			return false;
