@@ -1,7 +1,11 @@
 package nl.retaliation.logic;
 
 import java.util.ArrayList;
-import nl.retaliation.level.Level;
+import java.util.Collections;
+
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+//import nl.retaliation.level.TerrainTile;
+
 import java.lang.Math;
 
 /**
@@ -11,8 +15,6 @@ import java.lang.Math;
  *
  */
 public class Pathfind {
-
-	//TODO: add constructor?
 	
 	/**
 	 * Calculates the shortest path
@@ -22,7 +24,7 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, Level currentLevel) {
+	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, boolean canStepOnLand, boolean canStepOnWater) {
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();
 		PathNode desiredNode = new PathNode(pos, 0);
@@ -38,9 +40,9 @@ public class Pathfind {
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
 
-				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, currentLevel.getGridWidth(), currentLevel.getGridHeight());
+				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth(), terrain.getMapHeight());
 				for (PathNode currentNeighbor : neighbors) {
-					if (presentInList(currentNeighbor, closedList) || currentLevel.getTerrain()[currentNeighbor.getPos().getX()][currentNeighbor.getPos().getY()] != 0) { //als de neighbor in de closedlist staat of niet walkable is
+					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, canStepOnLand, canStepOnWater)) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
 					int duplicateIndex = findInList(currentNeighbor.getPos(), openList);
@@ -60,12 +62,11 @@ public class Pathfind {
 		ArrayList<Vector2> path = new ArrayList<Vector2>();
 		PathNode currentNode = desiredNode;
 		while (currentNode.getPos().equal(pos) == false) {
-			//println(count++ + ": " + currentNode.pos.x + ", " + currentNode.pos.y);
-			//fill(#FF0000);
 			path.add(currentNode.getPos());
 			currentNode = closedList.get(findInList(currentNode.getParent(), closedList));
 		}
-		return path; //INFO: path is reversed
+		Collections.reverse(path);
+		return path;
 	}
 	private ArrayList<PathNode> calcNeighbors(PathNode currentNode, Vector2 desiredPos, int levelWidth, int levelHeight) {
 		ArrayList<PathNode> neighBors = new ArrayList<PathNode>();
@@ -132,5 +133,14 @@ public class Pathfind {
 		int dy = Math.abs(node.getY() - desiredPos.getY());
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0;
+	}
+	private boolean place_free(Vector2 position, TileMap tilemap, boolean canStepOnLand, boolean canStepOnWater) {
+		//TODO: update this
+		int currentTile = tilemap.getTileMap()[position.getX()][position.getY()];
+		if ((currentTile == 0 && canStepOnWater == true) || (currentTile != 0 && canStepOnLand == true)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
