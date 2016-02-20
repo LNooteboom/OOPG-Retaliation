@@ -1,5 +1,6 @@
 package nl.retaliation;
 
+
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
@@ -45,7 +46,8 @@ public class Retaliation extends GameEngine {
 	@Override
 	public void mouseClicked() {
 		GameObject allUnits[] = {u};
-		u.setPath(new Vector2(6, 6), tileMap, allUnits);
+		u.setPath(new Vector2((int) (mouseX / TILESIZE), (int) (mouseY / TILESIZE)), tileMap, allUnits);
+		System.out.println((int) Math.random() * 7);
 	}
 	
 	private void initTileMap() {

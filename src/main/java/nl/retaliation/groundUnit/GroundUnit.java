@@ -58,7 +58,6 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		
 		if (isMoving) {
 			moveNext();
-			//System.out.println(x);
 		}
 	}
 	
@@ -67,7 +66,6 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, canStepOnLand, canStepOnWater);
-		//System.out.println(currentPath);
 	}
 	private void moveNext() {
 		//TODO: finish this
@@ -87,7 +85,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 				updateSpriteDirection(currentDirection);
 				x = x + Trigonio.xSpeed(currentDirection, maxSpeed);
 				y = y + Trigonio.ySpeed(currentDirection, maxSpeed);
-				System.out.println(x);
+				System.out.println(currentDirection / Trigonio.PI);
 
 				Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
 				if (newTile.equal(currentPath.get(0))) {
@@ -110,19 +108,19 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 			setCurrentFrameIndex(3);
 			return;
 		}
-		if (trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8) { //left
+		if ((trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8)|| (trueDirection <= -(Trigonio.PI - pi8) && trueDirection > -(Trigonio.PI + pi8))) { //left
 			setCurrentFrameIndex(4);
 			return;
 		}
-		if (trueDirection >= Trigonio.PI + pi8 && trueDirection < Trigonio.PI + Trigonio.QUARTER_PI + pi8) { //top-left
+		if (trueDirection <= -(Trigonio.HALF_PI + pi8) && trueDirection > -(Trigonio.PI - pi8)) { //top-left
 			setCurrentFrameIndex(5);
 			return;
 		}
-		if (trueDirection >= Trigonio.PI + Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.PI + Trigonio.HALF_PI + pi8) { //top
+		if (trueDirection <= -(Trigonio.QUARTER_PI + pi8) && trueDirection > -(Trigonio.HALF_PI + pi8)) { //top
 			setCurrentFrameIndex(6);
 			return;
 		}
-		if (trueDirection >= Trigonio.PI + Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.TAU - pi8) { //top-right
+		if (trueDirection <= -pi8 && trueDirection > -(Trigonio.QUARTER_PI + pi8)) { //top-right
 			setCurrentFrameIndex(7);
 			return;
 		}
