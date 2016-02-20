@@ -18,7 +18,7 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 	private Vector2 desiredTilePos;
 	private Vector2 nextTilePosition;
 	private float direction; //0 is rechts, 0,5PI is onder etc. IN GRAD
-	
+
 	private float maxSpeed;
 	
 	private Sprite sprite;
@@ -45,6 +45,10 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 	public void update() {
 		tilePosition.setX((int) (x / width));
 		tilePosition.setY((int) (y / height));
+		
+		if (isMoving) {
+			moveNext();
+		}
 	}
 	
 	/* Moving */
@@ -60,6 +64,7 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 			y = nextY;
 		} else {
 			direction = Trigonio.angle(deltaX, deltaY);
+			toSpriteDirection(direction);
 			x = x + Trigonio.xSpeed(direction, maxSpeed);
 			y = y + Trigonio.ySpeed(direction, maxSpeed);
 			
@@ -69,13 +74,37 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 			}
 		}
 	}
+	private int toSpriteDirection(double trueDirection){
+		double pi8 = Trigonio.PI / 8;
+		if (trueDirection >= pi8 && trueDirection < Trigonio.QUARTER_PI + pi8) { //Rechtsonder
+			return 1;
+		}
+		if (trueDirection >= Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.HALF_PI + pi8) { //Onder
+			return 2;
+		}
+		if (trueDirection >= Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.PI - pi8) { //Linksonder
+			return 3;
+		}
+		if (trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8) { //Links
+			return 4;
+		}
+		if (trueDirection >= Trigonio.PI + pi8 && trueDirection < Trigonio.PI + Trigonio.QUARTER_PI + pi8) { //Linksboven
+			return 5;
+		}
+		if (trueDirection >= Trigonio.PI + Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.PI + Trigonio.HALF_PI + pi8) { //Boven
+			return 6;
+		}
+		if (trueDirection >= Trigonio.PI + Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.TAU - pi8) { //Rechtsboven
+			return 7;
+		}
+		return 0; //Rechts
+	}
 
 	
 	/* Getters & Setters */
 	public Vector2 getDesiredTilePos() {
 		return desiredTilePos;
 	}
-
 	public void setDesiredTilePos(Vector2 desiredTilePos) {
 		this.desiredTilePos = desiredTilePos;
 	}

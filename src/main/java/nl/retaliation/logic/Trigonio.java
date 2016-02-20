@@ -7,6 +7,10 @@ package nl.retaliation.logic;
  *
  */
 public class Trigonio {
+	public static final double PI = Math.PI;
+	public static final double TAU = Math.PI * 2;
+	public static final double HALF_PI = Math.PI / 2;
+	public static final double QUARTER_PI = Math.PI / 4;
 	
 	/**
 	 * Calculates the distance between coordinates
