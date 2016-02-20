@@ -5,10 +5,10 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 
 public class WaterTile extends Tile{
 	
-	private static Sprite sprite = new Sprite("src/main/java/nl/retaliation/sprites/water.png");
+	public static final Sprite SPRITE = new Sprite("src/main/java/nl/retaliation/media/sprites/water.png");
 
 	public WaterTile() {
-		super(sprite);
+		super(SPRITE);
 		
 	}
 

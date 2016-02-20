@@ -1,7 +1,12 @@
 package nl.retaliation.groundUnit;
 
+import java.util.ArrayList;
+
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 
@@ -11,18 +16,17 @@ import nl.retaliation.logic.Vector2;
  * @author Luke Nooteboom
  *
  */
-abstract class GroundUnit extends AnimatedSpriteObject{
+public abstract class GroundUnit extends AnimatedSpriteObject{
 	//@SuppressWarnings("unused")
 	private float x, y;
 	private Vector2 tilePosition;
 	private Vector2 desiredTilePos;
-	private Vector2 nextTilePosition;
-	private float direction; //0 is rechts, 0,5PI is onder etc. IN GRAD
+	//private Vector2 nextTilePosition;
+	private float currentDirection; //0 is right, 0,5PI is bottom etc. IN GRAD
+	
+	private ArrayList<Vector2> currentPath;
 
 	private float maxSpeed;
-	
-	private Sprite sprite;
-	private int spriteDirection;
 	
 	private boolean canStepOnWater = false;
 	private boolean canStepOnLand = true;
@@ -30,7 +34,9 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 	private boolean isSelected = false;
 	private boolean isMoving = false;
 	
-	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed) {
+	private int health;
+	
+	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health) {
 		super(sprite, 8);
 		
 		this.setX(x);
@@ -40,6 +46,7 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 		this.setHeight(tileSize);
 		
 		this.maxSpeed = maxSpeed;
+		this.health = health;
 	}
 	
 	public void update() {
@@ -52,52 +59,67 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 	}
 	
 	/* Moving */
+	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects) {
+		this.desiredTilePos = desiredTilePos;
+		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, gameobjects, canStepOnLand, canStepOnWater);
+	}
 	private void moveNext() {
 		//TODO: finish this
-		float nextX = nextTilePosition.getX() * width;
-		float nextY = nextTilePosition.getY() * height;
-		float deltaX = nextX - x;
-		float deltaY = nextY - y;
+		if (currentPath.size() > 0) { //checks if path exists
+			float nextX = currentPath.get(0).getX() * width;
+			float nextY = currentPath.get(0).getY() * height;
+			float deltaX = nextX - x;
+			float deltaY = nextY - y;
 
-		if (maxSpeed >= Trigonio.distance(deltaX, deltaY)) { //To prevent oscillation
-			x = nextX;
-			y = nextY;
-		} else {
-			direction = Trigonio.angle(deltaX, deltaY);
-			toSpriteDirection(direction);
-			x = x + Trigonio.xSpeed(direction, maxSpeed);
-			y = y + Trigonio.ySpeed(direction, maxSpeed);
-			
-			Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
-			if (newTile.equal(nextTilePosition)) {
-				tilePosition = nextTilePosition;
+			if (maxSpeed >= Trigonio.distance(deltaX, deltaY)) { //To prevent oscillation
+				x = nextX;
+				y = nextY;
+
+				currentPath.remove(0); //sets target to next tile in path
+			} else {
+				currentDirection = Trigonio.angle(deltaX, deltaY);
+				updateSpriteDirection(currentDirection);
+				x = x + Trigonio.xSpeed(currentDirection, maxSpeed);
+				y = y + Trigonio.ySpeed(currentDirection, maxSpeed);
+
+				Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
+				if (newTile.equal(currentPath.get(0))) {
+					tilePosition = currentPath.get(0);
+				}
 			}
 		}
 	}
-	private int toSpriteDirection(double trueDirection){
+	private void updateSpriteDirection(double trueDirection){
 		double pi8 = Trigonio.PI / 8;
-		if (trueDirection >= pi8 && trueDirection < Trigonio.QUARTER_PI + pi8) { //Rechtsonder
-			return 1;
+		if (trueDirection >= pi8 && trueDirection < Trigonio.QUARTER_PI + pi8) { //bottom-right
+			setCurrentFrameIndex(1);
+			return;
 		}
-		if (trueDirection >= Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.HALF_PI + pi8) { //Onder
-			return 2;
+		if (trueDirection >= Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.HALF_PI + pi8) { //bottom
+			setCurrentFrameIndex(2);
+			return;
 		}
-		if (trueDirection >= Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.PI - pi8) { //Linksonder
-			return 3;
+		if (trueDirection >= Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.PI - pi8) { //bottom-left
+			setCurrentFrameIndex(3);
+			return;
 		}
-		if (trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8) { //Links
-			return 4;
+		if (trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8) { //left
+			setCurrentFrameIndex(4);
+			return;
 		}
-		if (trueDirection >= Trigonio.PI + pi8 && trueDirection < Trigonio.PI + Trigonio.QUARTER_PI + pi8) { //Linksboven
-			return 5;
+		if (trueDirection >= Trigonio.PI + pi8 && trueDirection < Trigonio.PI + Trigonio.QUARTER_PI + pi8) { //top-left
+			setCurrentFrameIndex(5);
+			return;
 		}
-		if (trueDirection >= Trigonio.PI + Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.PI + Trigonio.HALF_PI + pi8) { //Boven
-			return 6;
+		if (trueDirection >= Trigonio.PI + Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.PI + Trigonio.HALF_PI + pi8) { //top
+			setCurrentFrameIndex(6);
+			return;
 		}
-		if (trueDirection >= Trigonio.PI + Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.TAU - pi8) { //Rechtsboven
-			return 7;
+		if (trueDirection >= Trigonio.PI + Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.TAU - pi8) { //top-right
+			setCurrentFrameIndex(7);
+			return;
 		}
-		return 0; //Rechts
+		setCurrentFrameIndex(0); //right
 	}
 
 	
@@ -107,6 +129,22 @@ abstract class GroundUnit extends AnimatedSpriteObject{
 	}
 	public void setDesiredTilePos(Vector2 desiredTilePos) {
 		this.desiredTilePos = desiredTilePos;
+	}
+
+	public boolean canStepOnWater() {
+		return canStepOnWater;
+	}
+
+	public void setStepOnWater(boolean canStepOnWater) {
+		this.canStepOnWater = canStepOnWater;
+	}
+
+	public boolean canStepOnLand() {
+		return canStepOnLand;
+	}
+
+	public void setStepOnLand(boolean canStepOnLand) {
+		this.canStepOnLand = canStepOnLand;
 	}
 	
 }
