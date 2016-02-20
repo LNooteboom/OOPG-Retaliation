@@ -32,7 +32,7 @@ public class Vector2 {
 	 * @param object2 the object to compare it to
 	 * @return True if the objects are equal
 	 */
-	boolean equal(Vector2 object2) {
+	public boolean equal(Vector2 object2) {
 		return x == object2.x && y == object2.y;
 	}
 	

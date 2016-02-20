@@ -11,7 +11,7 @@ import nl.retaliation.level.WaterTile;
 import java.lang.Math;
 
 /**
- * This class calculates the shortest path between different coordinates
+ * This class calculates the shortest path between 2 different coordinates
  * 
  * @author Luke Nooteboom
  *
@@ -26,7 +26,7 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
+	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();
 		PathNode desiredNode = new PathNode(pos, 0);
@@ -70,7 +70,7 @@ public class Pathfind {
 		Collections.reverse(path);
 		return path;
 	}
-	private ArrayList<PathNode> calcNeighbors(PathNode currentNode, Vector2 desiredPos, int levelWidth, int levelHeight) {
+	private static ArrayList<PathNode> calcNeighbors(PathNode currentNode, Vector2 desiredPos, int levelWidth, int levelHeight) {
 		ArrayList<PathNode> neighBors = new ArrayList<PathNode>();
 		for (int xOffset = -1; xOffset <= 1; xOffset++) {
 			for (int yOffset = -1; yOffset <=1; yOffset++) {
@@ -88,7 +88,7 @@ public class Pathfind {
 		}
 		return neighBors;
 	}
-	private PathNode calcLowestFCost(ArrayList<PathNode> candidates) {
+	private static PathNode calcLowestFCost(ArrayList<PathNode> candidates) {
 		double lowestFCost = 0;
 		double lowestGCost = 0;
 		PathNode finalPos = new PathNode(new Vector2(0,0), 0);
@@ -101,7 +101,7 @@ public class Pathfind {
 		}
 		return finalPos;
 	}
-	private ArrayList<PathNode> removeWithValues(PathNode input, ArrayList<PathNode> list) {
+	private static ArrayList<PathNode> removeWithValues(PathNode input, ArrayList<PathNode> list) {
 		for (int i = 0; i < list.size(); i++) {
 			PathNode currentEntry = list.get(i);
 			if (input.getPos().equal(currentEntry.getPos())) {
@@ -111,7 +111,7 @@ public class Pathfind {
 		}
 		return list;
 	}
-	private boolean presentInList(PathNode input, ArrayList<PathNode> list) {
+	private static boolean presentInList(PathNode input, ArrayList<PathNode> list) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getPos().equal(input.getPos())) {
 				return true;
@@ -119,7 +119,7 @@ public class Pathfind {
 		}
 		return false;
 	}
-	private int findInList(Vector2 input, ArrayList<PathNode> list) {
+	private static int findInList(Vector2 input, ArrayList<PathNode> list) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getPos().equal(input)) {
 				return i;
@@ -127,16 +127,16 @@ public class Pathfind {
 		}
 		return -1;
 	}
-	private double calcDistance(Vector2 pos1, Vector2 pos2) {
+	private static double calcDistance(Vector2 pos1, Vector2 pos2) {
 		return (Math.sqrt(Math.pow(pos1.getX() * 10 - pos2.getX() * 10, 2) + Math.pow(pos1.getY() * 10 - pos2.getY() * 10, 2)));
 	}
-	private double heuristic(Vector2 node, Vector2 desiredPos) {
+	private static double heuristic(Vector2 node, Vector2 desiredPos) {
 		int dx = Math.abs(node.getX() - desiredPos.getX());
 		int dy = Math.abs(node.getY() - desiredPos.getY());
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0; for dijkstra's algorithm (slower)
 	}
-	private boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
+	private static boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
 		//TODO: update this
 		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 		//if ((currentTile.isWater() == true && canStepOnWater == true) || (currentTile.isWater() == false && canStepOnLand == true)) {
@@ -147,7 +147,7 @@ public class Pathfind {
 			return false;
 		}
 	}
-	private boolean posInObject(Vector2 pos, GameObject[] gameobjects) {
+	private static boolean posInObject(Vector2 pos, GameObject[] gameobjects) {
 		for (GameObject currentGameObject : gameobjects) {
 			float goX = currentGameObject.getX();
 			float goY = currentGameObject.getY();

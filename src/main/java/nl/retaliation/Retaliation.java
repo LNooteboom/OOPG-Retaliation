@@ -14,7 +14,7 @@ public class Retaliation extends GameEngine {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PApplet.main(new String[]{"nl.han.ica.waterworld.WaterWorld"});
+		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
 	}
 
 	@Override
