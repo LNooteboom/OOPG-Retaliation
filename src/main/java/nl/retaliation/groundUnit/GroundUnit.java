@@ -18,11 +18,11 @@ import nl.retaliation.logic.Vector2;
  */
 public abstract class GroundUnit extends AnimatedSpriteObject{
 	//@SuppressWarnings("unused")
-	private float x, y;
+	//private float x, y;
 	private Vector2 tilePosition;
 	private Vector2 desiredTilePos;
 	//private Vector2 nextTilePosition;
-	private float currentDirection; //0 is right, 0,5PI is bottom etc. IN GRAD
+	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN GRAD
 	
 	private ArrayList<Vector2> currentPath;
 
@@ -41,12 +41,15 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		
 		this.setX(x);
 		this.setY(y);
+		tilePosition = new Vector2((int) x / tileSize, (int) y / tileSize);
 		
 		this.setWidth(tileSize);
 		this.setHeight(tileSize);
 		
 		this.maxSpeed = maxSpeed;
 		this.health = health;
+		
+		System.out.println("created unit");
 	}
 	
 	public void update() {
@@ -55,13 +58,16 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		
 		if (isMoving) {
 			moveNext();
+			//System.out.println(x);
 		}
 	}
 	
 	/* Moving */
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects) {
+		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
-		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, gameobjects, canStepOnLand, canStepOnWater);
+		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, canStepOnLand, canStepOnWater);
+		//System.out.println(currentPath);
 	}
 	private void moveNext() {
 		//TODO: finish this
@@ -81,6 +87,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 				updateSpriteDirection(currentDirection);
 				x = x + Trigonio.xSpeed(currentDirection, maxSpeed);
 				y = y + Trigonio.ySpeed(currentDirection, maxSpeed);
+				System.out.println(x);
 
 				Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
 				if (newTile.equal(currentPath.get(0))) {

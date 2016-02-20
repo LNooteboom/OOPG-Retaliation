@@ -1,12 +1,14 @@
 package nl.retaliation;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.retaliation.groundUnit.*;
 import nl.retaliation.level.*;
+import nl.retaliation.logic.Vector2;
 import processing.core.PApplet;
 
 /**
@@ -30,6 +32,7 @@ public class Retaliation extends GameEngine {
 	@Override
 	public void setupGame() {
 		// TODO Auto-generated method stub
+		addGameObject(u);
 		initTileMap();
 		tempViewPort(800, 600);
 	}
@@ -39,21 +42,30 @@ public class Retaliation extends GameEngine {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void mouseClicked() {
+		GameObject allUnits[] = {u};
+		u.setPath(new Vector2(6, 6), tileMap, allUnits);
+	}
 	
 	private void initTileMap() {
 		//temp
 		//TileType<WaterTile> waterType = new TileType<>(WaterTile.class, WaterTile.SPRITE);
 		Sprite grassSprite = new Sprite("src/main/java/nl/retaliation/media/sprites/grass.png");
 		TileType<GrassTile> grassType = new TileType<>(GrassTile.class, grassSprite);
-		TileType[] tileTypes = {grassType};
+		Sprite waterSprite = new Sprite("src/main/java/nl/retaliation/media/sprites/water.png");
+		TileType<WaterTile> waterType = new TileType<>(WaterTile.class, waterSprite);
+		
+		TileType[] tileTypes = {grassType, waterType};
 		
 		int tilesMap[][] = new int[8][8];
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
 				tilesMap[x][y] = 0;
-				System.out.println(x + ", " + y + ", I: " + tilesMap[x][y]);
+				//System.out.println(x + ", " + y + ", I: " + tilesMap[x][y]);
 			}
 		}
+		tilesMap[2][2] = 1;
 		
 		tileMap = new TileMap(64, tileTypes, tilesMap);
 	}

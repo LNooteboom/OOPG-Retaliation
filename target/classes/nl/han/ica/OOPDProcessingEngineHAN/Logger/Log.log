@@ -270,3 +270,9 @@ FAILURE: test
 FAILURE: test
 [2015-51-08 10:51:39.436] 
 FAILURE: test
+[2016-20-20 02:20:14.594] 
+FAILURE: java.lang.NoSuchMethodException: nl.retaliation.level.WaterTile.<init>(nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite)
+[2016-21-20 02:21:48.182] 
+FAILURE: java.lang.NoSuchMethodException: nl.retaliation.level.WaterTile.<init>(nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite)
+[2016-21-20 02:21:59.12] 
+FAILURE: java.lang.NoSuchMethodException: nl.retaliation.level.WaterTile.<init>(nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite)
