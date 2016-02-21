@@ -39,8 +39,8 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health) {
 		super(sprite, 8);
 		
-		this.setX(x);
-		this.setY(y);
+		this.setX(x * tileSize);
+		this.setY(y * tileSize);
 		tilePosition = new Vector2((int) x / tileSize, (int) y / tileSize);
 		
 		this.setWidth(tileSize);
