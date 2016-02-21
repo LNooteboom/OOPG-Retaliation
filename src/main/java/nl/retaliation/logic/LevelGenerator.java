@@ -1,22 +1,38 @@
 package nl.retaliation.logic;
 
+/**
+ * A simple random island level generator
+ * Using an algorithm I found out myself (not very optimised, it should only be used at the start of a match)
+ * 
+ * @author Luke Nooteboom
+ *
+ */
 public class LevelGenerator {
+	/**
+	 * Generates an island level
+	 * 
+	 * @param width
+	 * @param height
+	 * @param waterHeight Invert this
+	 * @return New level
+	 */
 	public static int[][] createNewTiles(int width, int height, float waterHeight) {
-		float tiles[][] = new float[width][height];
-		tiles[width/2][height/2] = 1; //zet het hoogste punt
-		while (tiles[width - 1][height - 1] == 0 || tiles[0][0] == 0) {
+		float tiles[][] = new float[width][height]; //heightmap, higher numbers mean lower terrain.
+		tiles[width/2][height/2] = 1; //Puts the highest point in the middle.
+		while (tiles[width - 1][height - 1] == 0 || tiles[0][0] == 0) { //while the corners of the map are not assigned
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
-					if(tiles[x][y] != 0) {
-						tiles = setTileNeighbors(x, y, tiles);
+					if(tiles[x][y] != 0) { //if this tile is already assigned
+						tiles = setTileNeighbors(x, y, tiles); //set this tile's neighbours
 					}
 				}
 			}
 		}
+		//convert the heightmap into a tileIndex array
 		int tileIndex[][] = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (tiles[x][y] > waterHeight) { //water
+				if (tiles[x][y] > waterHeight) {
 					tileIndex[x][y] = 1;
 				} else {
 					tileIndex[x][y] = 0;
@@ -38,7 +54,7 @@ public class LevelGenerator {
 					//} else if (mode <= 0.66) {
 					//	add = (float) Math.random();
 					//}
-					tiles[x][y] = tiles[currentX][currentY] + add;
+					tiles[x][y] = tiles[currentX][currentY] + add; //for each neighbour of tile: assign the value of parent + a random number from 0 to 1;
 				}
 			}
 		}

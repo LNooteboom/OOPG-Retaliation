@@ -30,13 +30,11 @@ public class Retaliation extends GameEngine {
 	private GroundUnit u = new SovIFV(6, 6, TILESIZE);
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
 	}
 
 	@Override
 	public void setupGame() {
-		// TODO Auto-generated method stub
 		addGameObject(u);
 		initTileMap();
 		tempViewPort(800, 600);
@@ -44,9 +42,9 @@ public class Retaliation extends GameEngine {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void mouseClicked() {
 		GameObject allUnits[] = vectorToArray(getGameObjectItems());
