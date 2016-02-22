@@ -1,4 +1,4 @@
-package nl.retaliation.groundUnit;
+package nl.retaliation.unit;
 
 import java.util.ArrayList;
 

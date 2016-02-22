@@ -9,10 +9,10 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
-import nl.retaliation.groundUnit.*;
 import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.unit.*;
 import processing.core.PApplet;
 
 /**

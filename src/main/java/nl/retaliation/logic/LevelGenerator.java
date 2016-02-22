@@ -32,7 +32,7 @@ public class LevelGenerator {
 		int tileIndex[][] = new int[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (tiles[x][y] > waterHeight) {
+				if (tiles[x][y] > waterHeight) { //invert the > for a continent with lake in the middle
 					tileIndex[x][y] = 1;
 				} else {
 					tileIndex[x][y] = 0;
