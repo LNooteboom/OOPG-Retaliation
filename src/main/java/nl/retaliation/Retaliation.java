@@ -23,7 +23,7 @@ import processing.core.PApplet;
  *
  */
 @SuppressWarnings("serial")
-public class Retaliation extends GameEngine {
+public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of garbage */
 	
 	private final int TILESIZE = 32;
 	
