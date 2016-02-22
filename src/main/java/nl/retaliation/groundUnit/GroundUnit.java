@@ -69,7 +69,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 	}
 	private void moveNext() {
 		//TODO: finish this
-		if (currentPath.size() > 0) { //checks if path exists
+		if (currentPath != null && currentPath.size() > 0) { //checks if path exists
 			float nextX = currentPath.get(0).getX() * width;
 			float nextY = currentPath.get(0).getY() * height;
 			float deltaX = nextX - x;
