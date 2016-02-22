@@ -145,7 +145,7 @@ public class Pathfind {
 			&& posInObject(position, gameobjects, currentUnit) == false){
 			return true;
 		} else {
-			System.out.println(posInObject(position, gameobjects, currentUnit));
+			//System.out.println(posInObject(position, gameobjects, currentUnit));
 			return false;
 		}
 	}

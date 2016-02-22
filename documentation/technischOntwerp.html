@@ -1,0 +1,45 @@
+Retaliation heeft een GameThread
+
+Menu is een GameThread
+World is een GameThread
+
+Menu heeft Dashboards
+
+World heeft Spelers
+World heeft GameObjecten
+World heeft Tiles
+World heeft Dashboards
+
+Dashboard heeft Elements
+Dashboard kan zichzelf tekenen
+
+Element kan zichzelf tekenen
+
+Button is een Element
+Label is een Element
+
+Spelers zijn van een type (AI, Player)
+Spelers geven opdrachten aan GameObjecten
+Spelers hebben een hoeveelheid Recources
+
+Civilian is een Speler
+
+Tiles zijn van een type (Grass, Dirt, Sand, Water)
+Tiles heeft een hoeveelheid Ore
+Tiles hebben 1 of 0 GroundUnits
+Tiles hebben 1 of 0 AirUnits
+Tiles kunnen zichzelf tekenen
+
+GameObjects hebben Health (-1 voor onbreekbaar, GameObject verdwijnt als Health gelijk is aan 0)
+GameObjects hebben een Positie
+GameObjects hebben Acties
+GameObjects kunnen zichzelf tekenen
+
+Building is een GameObject
+Unit is een GameObject
+Ore is een GameObject (van Civilian)
+Cliff is een GameObject (van Civilian)
+
+Building kan GameObjecten maken
+
+Unit kan Positie aanpassen
