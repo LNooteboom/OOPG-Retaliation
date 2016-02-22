@@ -49,7 +49,7 @@ public class Retaliation extends GameEngine {
 	public void mouseClicked() {
 		GameObject allUnits[] = vectorToArray(getGameObjectItems());
 		u.setPath(new Vector2((int) (mouseX / TILESIZE), (int) (mouseY / TILESIZE)), tileMap, allUnits);
-		System.out.println((int) Math.random() * 7);
+		//System.out.println((int) Math.random() * 7);
 	}
 	
 	private void initTileMap() {
@@ -75,7 +75,7 @@ public class Retaliation extends GameEngine {
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
 		View view = new View(screenWidth,screenHeight);
-		view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
+		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 
 		setView(view);
 		size(screenWidth, screenHeight);

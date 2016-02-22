@@ -285,7 +285,7 @@ public abstract class GameEngine extends PApplet {
             }
         }
         
-        gameObjects.sort((obj1, obj2) -> Float.compare(obj1.getZ(), obj2.getZ())); // Sort the list by Z index...
+        //gameObjects.sort((obj1, obj2) -> Float.compare(obj1.getZ(), obj2.getZ())); // Sort the list by Z index...
     }
 
     /**
