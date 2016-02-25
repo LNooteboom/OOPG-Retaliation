@@ -10,6 +10,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.CenterFollowingViewport;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Noise;
@@ -28,6 +29,8 @@ import processing.core.PApplet;
 public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of garbage */
 	
 	private final int TILESIZE = 32;
+	private View view;
+	private Viewport viewport;
 	
 	private GroundUnit u = new SovIFV(6, 6, TILESIZE);
 
@@ -39,7 +42,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void setupGame() {
 		addGameObject(u);
 		initTileMap();
-		tempViewPort(800, 600);
+		tempViewPort(1280, 720);
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	@Override
 	public void mouseClicked() {
 		GameObject allUnits[] = vectorToArray(getGameObjectItems());
-		u.setPath(new Vector2((int) (mouseX / TILESIZE), (int) (mouseY / TILESIZE)), tileMap, allUnits);
+		u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allUnits);
 		//System.out.println((int) Math.random() * 7);
 	}
 	
@@ -73,12 +76,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 //		tilesMap[2][2] = 1;
 		
 		//tileMap = new TileMap(TILESIZE, tileTypes, LevelGenerator.createNewTiles(16, 16, (float)3.4));
-		Noise noise = new Noise(0.0f, 18, 25);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.3f));
+		Noise noise = new Noise(0.0f, 128, 128);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
-		View view = new View(screenWidth,screenHeight);
+		viewport = new CenterFollowingViewport(u, screenWidth, screenHeight);
+		view = new View(viewport, 64 * TILESIZE,64 * TILESIZE);
 		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 
 		setView(view);
