@@ -8,6 +8,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
+import nl.han.ica.OOPDProcessingEngineHAN.View.CenterFollowingViewport;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
@@ -38,7 +39,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void setupGame() {
 		addGameObject(u);
 		initTileMap();
-		tempViewPort(1280, 720);
+		tempViewPort(800, 600);
 	}
 
 	@Override
@@ -72,8 +73,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 //		tilesMap[2][2] = 1;
 		
 		//tileMap = new TileMap(TILESIZE, tileTypes, LevelGenerator.createNewTiles(16, 16, (float)3.4));
-		Noise noise = new Noise(0.1f, 15, 17);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		Noise noise = new Noise(0.0f, 18, 25);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.3f));
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {

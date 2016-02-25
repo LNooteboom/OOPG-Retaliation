@@ -40,7 +40,7 @@ public class Noise {
 		int middlePointX = width / 2;
 		int middlePointY = height / 2;
 		
-		if (width > 1 && height > 1) {
+		if (width > 1 || height > 1) {
 			//Diamond step
 			//The center value is the average of all corners
 			float centerValue = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
