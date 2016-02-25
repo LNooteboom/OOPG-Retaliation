@@ -12,7 +12,6 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.CenterFollowingViewport;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.level.*;
-import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Noise;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.unit.*;
@@ -40,9 +39,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
+		setGameSpeed(30);
 		addGameObject(u);
 		initTileMap();
-		tempViewPort(1280, 720);
+		tempViewPort(1920, 1080);
+		setFPSCounter(true);
 	}
 
 	@Override
@@ -76,13 +77,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 //		tilesMap[2][2] = 1;
 		
 		//tileMap = new TileMap(TILESIZE, tileTypes, LevelGenerator.createNewTiles(16, 16, (float)3.4));
-		Noise noise = new Noise(0.0f, 128, 128);
+		Noise noise = new Noise(0.5f, 128, 128);
 		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
 		viewport = new CenterFollowingViewport(u, screenWidth, screenHeight);
-		view = new View(viewport, 64 * TILESIZE,64 * TILESIZE);
+		view = new View(viewport, 128 * TILESIZE, 128 * TILESIZE);
 		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 
 		setView(view);

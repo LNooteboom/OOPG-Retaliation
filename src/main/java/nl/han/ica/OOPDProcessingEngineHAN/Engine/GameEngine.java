@@ -2,9 +2,6 @@ package nl.han.ica.OOPDProcessingEngineHAN.Engine;
 
 import ddf.minim.Minim;
 import nl.han.ica.OOPDProcessingEngineHAN.Dashboard.Dashboard;
-import nl.han.ica.OOPDProcessingEngineHAN.Collision.CollidedTile;
-import nl.han.ica.OOPDProcessingEngineHAN.Collision.ICollidableWithGameObjects;
-import nl.han.ica.OOPDProcessingEngineHAN.Collision.ICollidableWithTiles;
 import nl.han.ica.OOPDProcessingEngineHAN.Dashboard.FPSCounter;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
@@ -269,21 +266,21 @@ public abstract class GameEngine extends PApplet {
         updateGameObjects();
         updateDashboards();
         
-        Vector<GameObject> tempCollision = (Vector<GameObject>) gameObjects.clone();
-        for(int i = 0; i < tempCollision.size(); i++) {
-
-            if (tempCollision.get(i) instanceof ICollidableWithGameObjects) {
-                Vector collidedGameobjects = CollidingHelper.calculateGameObjectCollisions(tempCollision.get(i), tempCollision);
-                if (!collidedGameobjects.isEmpty())
-                    ((ICollidableWithGameObjects) tempCollision.get(i)).gameObjectCollisionOccurred(collidedGameobjects);
-            }
-            if (tempCollision.get(i) instanceof ICollidableWithTiles) {
-                Vector collidedTiles = CollidingHelper.calculateTileCollision(tempCollision.get(i), tileMap);
-                if (!collidedTiles.isEmpty())
-                    ((ICollidableWithTiles) tempCollision.get(i)).tileCollisionOccurred(collidedTiles);
-
-            }
-        }
+//        Vector<GameObject> tempCollision = (Vector<GameObject>) gameObjects.clone();
+//        for(int i = 0; i < tempCollision.size(); i++) {
+//
+//            if (tempCollision.get(i) instanceof ICollidableWithGameObjects) {
+//                Vector collidedGameobjects = CollidingHelper.calculateGameObjectCollisions(tempCollision.get(i), tempCollision);
+//                if (!collidedGameobjects.isEmpty())
+//                    ((ICollidableWithGameObjects) tempCollision.get(i)).gameObjectCollisionOccurred(collidedGameobjects);
+//            }
+//            if (tempCollision.get(i) instanceof ICollidableWithTiles) {
+//                Vector collidedTiles = CollidingHelper.calculateTileCollision(tempCollision.get(i), tileMap);
+//                if (!collidedTiles.isEmpty())
+//                    ((ICollidableWithTiles) tempCollision.get(i)).tileCollisionOccurred(collidedTiles);
+//
+//            }
+//        }
         
         //gameObjects.sort((obj1, obj2) -> Float.compare(obj1.getZ(), obj2.getZ())); // Sort the list by Z index...
     }
@@ -601,30 +598,30 @@ public abstract class GameEngine extends PApplet {
          * @param gameObject, allGameObjects
          * @return Vector<GameObject>
          */
-        private static Vector<CollidedTile> calculateTileCollision(GameObject gameObject, TileMap tileMap) {
-            Vector<CollidedTile> collidedTiles = new Vector<>();
-
-            Rectangle gameObjectRectangle = new Rectangle((int)gameObject.getX(), (int)gameObject.getY(),
-                                                          (int)gameObject.getWidth(), (int)gameObject.getHeight());
-            Rectangle tileRectangle;
-
-            for (int i = 0; i < tileMap.getTileMap().length; i++) {
-                for (int j = 0; j < tileMap.getTileMap()[i].length; j++) {
-                    if (!tilemapIndexHasEmptyTile(tileMap, i, j))
-                    {
-                        tileRectangle = new Rectangle(j * tileMap.getTileSize(), i * tileMap.getTileSize(),
-                                                      tileMap.getTileSize(), tileMap.getTileSize());
-                        collidedTiles.addAll(checkCollisionBetweenTileAndObject(gameObject, tileMap.getTileOnIndex(j, i), tileRectangle, gameObjectRectangle));
-                    }
-                }
-            }
-
-            if (!collidedTiles.isEmpty()) {
-                return collidedTiles;
-            }
-
-            return new Vector<CollidedTile>();
-        }
+//        private static Vector<CollidedTile> calculateTileCollision(GameObject gameObject, TileMap tileMap) {
+//            Vector<CollidedTile> collidedTiles = new Vector<>();
+//
+//            Rectangle gameObjectRectangle = new Rectangle((int)gameObject.getX(), (int)gameObject.getY(),
+//                                                          (int)gameObject.getWidth(), (int)gameObject.getHeight());
+//            Rectangle tileRectangle;
+//
+//            for (int i = 0; i < tileMap.getTileMap().length; i++) {
+//                for (int j = 0; j < tileMap.getTileMap()[i].length; j++) {
+//                    if (!tilemapIndexHasEmptyTile(tileMap, i, j))
+//                    {
+//                        tileRectangle = new Rectangle(j * tileMap.getTileSize(), i * tileMap.getTileSize(),
+//                                                      tileMap.getTileSize(), tileMap.getTileSize());
+//                        collidedTiles.addAll(checkCollisionBetweenTileAndObject(gameObject, tileMap.getTileOnIndex(j, i), tileRectangle, gameObjectRectangle));
+//                    }
+//                }
+//            }
+//
+//            if (!collidedTiles.isEmpty()) {
+//                return collidedTiles;
+//            }
+//
+//            return new Vector<CollidedTile>();
+//        }
 
         /**
          * Method that checks if an index of the TileMap has an empty Tile.
@@ -777,33 +774,33 @@ public abstract class GameEngine extends PApplet {
          * @param collidingGameobject
          * @return Vector
          */
-        private static Vector checkCollisionBetweenTileAndObject(GameObject gameObject, Tile tile, Rectangle collidingTile, Rectangle collidingGameobject) {
-            Vector objects = new Vector();
-
-            if (objectIsMoving(gameObject)) {
-
-                boolean collided = false;
-
-                for (int t = 0; t <= gameObject.getSpeed() && !collided; t++) {
-                    double xPos = lerp(gameObject.getPrevX(), gameObject.getX(), t / gameObject.getSpeed());
-                    double yPos = lerp(gameObject.getPrevY(), gameObject.getY(), t / gameObject.getSpeed());
-                    collidingGameobject.setLocation((int) xPos, (int) yPos);
-
-                    if (collidingGameobject.intersects(collidingTile)) {
-
-                        objects.add(new CollidedTile(tile, getCollidedTileSide(collidingGameobject, collidingTile)));
-                        int tileSide = getCollidedTileSide(collidingGameobject, collidingTile);
-                        collided = true;
-                    }
-                }
-            }
-            else {
-                if (collidingGameobject.intersects(collidingTile))
-                    objects.add(new CollidedTile(tile, getCollidedTileSide(collidingGameobject, collidingTile)));
-            }
-
-            return objects;
-        }
+//        private static Vector checkCollisionBetweenTileAndObject(GameObject gameObject, Tile tile, Rectangle collidingTile, Rectangle collidingGameobject) {
+//            Vector objects = new Vector();
+//
+//            if (objectIsMoving(gameObject)) {
+//
+//                boolean collided = false;
+//
+//                for (int t = 0; t <= gameObject.getSpeed() && !collided; t++) {
+//                    double xPos = lerp(gameObject.getPrevX(), gameObject.getX(), t / gameObject.getSpeed());
+//                    double yPos = lerp(gameObject.getPrevY(), gameObject.getY(), t / gameObject.getSpeed());
+//                    collidingGameobject.setLocation((int) xPos, (int) yPos);
+//
+//                    if (collidingGameobject.intersects(collidingTile)) {
+//
+//                        objects.add(new CollidedTile(tile, getCollidedTileSide(collidingGameobject, collidingTile)));
+//                        int tileSide = getCollidedTileSide(collidingGameobject, collidingTile);
+//                        collided = true;
+//                    }
+//                }
+//            }
+//            else {
+//                if (collidingGameobject.intersects(collidingTile))
+//                    objects.add(new CollidedTile(tile, getCollidedTileSide(collidingGameobject, collidingTile)));
+//            }
+//
+//            return objects;
+//        }
 
         /**
          * This method checks if a GameObject has collided with another GameObject and returns this GameObject.

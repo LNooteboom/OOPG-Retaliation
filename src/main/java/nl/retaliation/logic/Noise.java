@@ -22,9 +22,13 @@ public class Noise {
 		
 		//set corners
 		tiles[0][0] = randomMinHalf();
+		//tiles[0][0] = 1.0f;
 		tiles[maxX][0] = randomMinHalf();
+		//tiles[maxX][0] = 0;
 		tiles[0][maxY] = randomMinHalf();
+		//tiles[0][maxY] = 0;
 		tiles[maxX][maxY] = randomMinHalf();
+		//tiles[maxX][maxY] = 1.0f;
 		
 		generateFractal(0, 0, maxX + 1, maxY + 1, tiles[0][0], tiles[maxX][0], tiles[maxX][maxY], tiles[0][maxY]);
 		return toTileIndex(waterHeight);

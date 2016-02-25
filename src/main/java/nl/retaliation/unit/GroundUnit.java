@@ -68,7 +68,6 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, canStepOnLand, canStepOnWater);
 	}
 	private void moveNext() {
-		//TODO: finish this
 		if (currentPath != null && currentPath.size() > 0) { //checks if path exists
 			float nextX = currentPath.get(0).getX() * width;
 			float nextY = currentPath.get(0).getY() * height;
@@ -85,7 +84,6 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 				updateSpriteDirection(currentDirection);
 				x = x + Trigonio.xSpeed(currentDirection, maxSpeed);
 				y = y + Trigonio.ySpeed(currentDirection, maxSpeed);
-				System.out.println(currentDirection / Trigonio.PI);
 
 				Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
 				if (newTile.equal(currentPath.get(0))) {

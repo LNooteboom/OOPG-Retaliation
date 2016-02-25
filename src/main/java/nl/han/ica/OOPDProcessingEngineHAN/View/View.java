@@ -78,10 +78,11 @@ public class View {
 		PGraphics viewGraphics = pGraphicsCreator.createPGraphics(worldWidth, worldHeight);
 
         viewGraphics.beginDraw();
+        
         if (backgroundImage != null) {
             viewGraphics.background(backgroundImage);
         }
-
+        
         if (tileMap != null) {
             tileMap.draw(viewGraphics);
         }
@@ -90,7 +91,6 @@ public class View {
             drawVisibleGameObjects(gameObjects, viewGraphics, i);
         }
 		viewGraphics.endDraw();
-		
 		return viewGraphics;
 	}
 
