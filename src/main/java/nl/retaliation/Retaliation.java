@@ -39,10 +39,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		setGameSpeed(30);
+		setGameSpeed(50);
 		addGameObject(u);
 		initTileMap();
-		tempViewPort(1920, 1080);
+		tempViewPort(1280, 720);
 		setFPSCounter(true);
 	}
 

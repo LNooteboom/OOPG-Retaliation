@@ -75,7 +75,7 @@ public class GameThread implements Runnable {
 
         while (!isGamePaused) {
             int updateCount = 0;
-
+            long startTime = System.nanoTime();
             //Do as many game updates as we need to, potentially playing catchup.
             while (System.nanoTime() - lastUpdateTime > timeBetweenUpdates && updateCount < MAX_UPDATES_BEFORE_RENDER) {
                 gameEngine.updateGame();
@@ -89,6 +89,7 @@ public class GameThread implements Runnable {
             } catch (Exception e) {
                 logger.logln(0, e.toString());
             }
+            System.out.println("e: "+ (1000000000 / (System.nanoTime() - startTime)));
         }
     }
 

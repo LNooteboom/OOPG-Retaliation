@@ -113,7 +113,7 @@ public class View {
      */
     protected void drawViewport(PGraphics g, PGraphics viewGraphics) {
 		PImage viewportImage = viewport.createImage(viewGraphics);
-        viewportImage.resize(g.width, g.height);
+        //viewportImage.resize(g.width, g.height);
         g.image(viewportImage, 0, 0);
 	}
 
