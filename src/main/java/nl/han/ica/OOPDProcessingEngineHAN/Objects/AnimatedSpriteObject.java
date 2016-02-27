@@ -2,6 +2,7 @@ package nl.han.ica.OOPDProcessingEngineHAN.Objects;
 
 import java.awt.Rectangle;
 
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -36,9 +37,12 @@ public abstract class AnimatedSpriteObject extends SpriteObject {
 	 * Draws the AnimatedSprite. This is fired by the GameEngine.
 	 */
 	@Override
-	public void draw(PGraphics g) {
+	public void drawWithViewport(PGraphics g, Viewport viewport) {
 		PImage img = getImage().get(currentFrame.x, currentFrame.y, currentFrame.width, currentFrame.height);
-		g.image(img, x, y);
+		g.image(img, x - viewport.getX(), y - viewport.getY());
+	}
+	public void draw(PGraphics g) {
+		
 	}
 	
 	/**

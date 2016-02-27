@@ -50,8 +50,8 @@ public class Viewport {
      * @return The cut out image of the world.
      */
     public PImage createImage(PGraphics worldGraphics) {
-        PImage viewPortImage = worldGraphics.get(x, y, zoomWidth, zoomHeight);
-        return viewPortImage;
+        //PImage viewPortImage = worldGraphics.get(x, y, zoomWidth, zoomHeight);
+        return worldGraphics;
     }
 
     /**

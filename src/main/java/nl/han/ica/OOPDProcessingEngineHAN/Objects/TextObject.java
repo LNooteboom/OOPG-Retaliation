@@ -1,5 +1,6 @@
 package nl.han.ica.OOPDProcessingEngineHAN.Objects;
 
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import processing.core.PGraphics;
 
 /**
@@ -39,6 +40,9 @@ public class TextObject extends GameObject {
 		g.fill(this.r, this.g, this.b, this.alpha);
 		g.textSize(fontSize);
 		g.text(text, x, y);
+	}
+	public void drawWithViewport(PGraphics g, Viewport viewport) {
+		
 	}
 	
 	/**

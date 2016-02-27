@@ -63,6 +63,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 	
 	/* Moving */
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects) {
+		System.out.println(desiredTilePos.getX() + ", " + desiredTilePos.getY());
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, canStepOnLand, canStepOnWater);

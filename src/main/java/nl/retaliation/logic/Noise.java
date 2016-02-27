@@ -8,12 +8,14 @@ public class Noise {
 	private float roughness;
 	private float[][] tiles;
 	private int totalSize;
+	private long progress;
 	
 	public Noise(float roughness, int width, int height) {
 		this.roughness = roughness / width;
 		this.tiles = new float[width][height];
 		this.totalSize = width + height;
 		this.random = new Random();
+		this.progress = 0;
 	}
 	
 	public int[][] generateNoise(float waterHeight) {
@@ -67,6 +69,8 @@ public class Noise {
 			//store the new value in the array
 			//if (x <= tiles.length && y <= tiles[0].length) {
 				tiles[x][y] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
+				progress++;
+				System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
 			//}
 		}
 	}

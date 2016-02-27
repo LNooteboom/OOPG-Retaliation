@@ -39,7 +39,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		setGameSpeed(50);
+		//setGameSpeed(50);
 		addGameObject(u);
 		initTileMap();
 		tempViewPort(1280, 720);
@@ -83,7 +83,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
 		viewport = new CenterFollowingViewport(u, screenWidth, screenHeight);
-		view = new View(viewport, 128 * TILESIZE, 128 * TILESIZE);
+		view = new View(viewport, screenWidth, screenHeight);
 		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 
 		setView(view);

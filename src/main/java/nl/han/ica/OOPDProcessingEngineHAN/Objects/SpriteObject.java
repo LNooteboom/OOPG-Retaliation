@@ -1,5 +1,6 @@
 package nl.han.ica.OOPDProcessingEngineHAN.Objects;
 
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -27,9 +28,12 @@ public abstract class SpriteObject extends GameObject {
 	 * Draws the image on the PGraphics object, this is fired by the GameEngine.
 	 */
 	@Override
-	public void draw(PGraphics g)
+	public void drawWithViewport(PGraphics g, Viewport viewport)
 	{
-		g.image(sprite.getPImage(), x, y);
+		g.image(sprite.getPImage(), x - viewport.getX(), y - viewport.getY());
+	}
+	public void draw(PGraphics g) {
+		
 	}
 	
 	/**

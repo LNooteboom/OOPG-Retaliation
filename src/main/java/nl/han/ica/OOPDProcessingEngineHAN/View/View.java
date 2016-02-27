@@ -76,7 +76,7 @@ public class View {
      */
     protected PGraphics drawWorld(TileMap tileMap, List<GameObject> gameObjects) {
 		PGraphics viewGraphics = pGraphicsCreator.createPGraphics(worldWidth, worldHeight);
-
+		
         viewGraphics.beginDraw();
         
         if (backgroundImage != null) {
@@ -84,13 +84,15 @@ public class View {
         }
         
         if (tileMap != null) {
-            tileMap.draw(viewGraphics);
+            tileMap.draw(viewGraphics, viewport.getX(), viewport.getY(), viewport.getZoomWidth(), viewport.getZoomHeight());
         }
-
+        
         for (int i = 0; i < gameObjects.size(); i++) {
             drawVisibleGameObjects(gameObjects, viewGraphics, i);
         }
+        //long startTime = System.nanoTime();
 		viewGraphics.endDraw();
+		//System.out.println("Draw: "+(System.nanoTime() - startTime));
 		return viewGraphics;
 	}
 
@@ -102,7 +104,7 @@ public class View {
      */
     private void drawVisibleGameObjects(List<GameObject> gameObjects, PGraphics viewGraphics, int i) {
         if(gameObjects.get(i).isVisible()) {
-            gameObjects.get(i).draw(viewGraphics);
+            gameObjects.get(i).drawWithViewport(viewGraphics, viewport);
         }
     }
 

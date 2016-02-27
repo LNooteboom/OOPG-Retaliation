@@ -2,6 +2,7 @@ package nl.han.ica.OOPDProcessingEngineHAN.Tile;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Exceptions.TileNotFoundException;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
+import nl.retaliation.logic.Vector2;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -127,14 +128,21 @@ public class TileMap {
      * The method the View calls to draw the tiles of the TileMap.
      * @param pGraphics The canvas on which the tiles will be drawn.
      */
-    public void draw(PGraphics pGraphics) {
+    public void draw(PGraphics pGraphics, float screenX, float screenY, int screenWidth, int screenHeight) {
     	
         if (tileMap != null && indexMap != null) {
-            for (int i = 0; i < tileMap.length; i++) {
-                for (int j = 0; j < tileMap[i].length; j++) {
-                    pGraphics.image(tileMap[i][j].getSprite().getPImage(), j * tileSize, i * tileSize);
-                }
-            }
+        	Vector2 screenPos = new Vector2((int) screenX / tileSize, (int) screenY / tileSize);
+        	int scrTileWidth = screenWidth / tileSize;
+        	int scrTileHeight = screenHeight / tileSize;
+        	for (int x = 0; x < scrTileWidth; x++) {
+        		for (int y = 0; y < scrTileHeight; y++) {
+        			int tileMapX = screenPos.getX() + x;
+        			int tileMapY = screenPos.getY() + y;
+        			if (tileMapX >= 0 && tileMapX < tileMap.length && tileMapY >= 0 && tileMapY < tileMap[0].length) {
+        				pGraphics.image(tileMap[tileMapX][tileMapY].getSprite().getPImage(), x * tileSize, y * tileSize);
+        			}
+        		}
+        	}
         }
     }
 

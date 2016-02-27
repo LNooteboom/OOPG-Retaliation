@@ -3,6 +3,7 @@ package nl.han.ica.OOPDProcessingEngineHAN.Dashboard;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.View.PGraphicsCreator;
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import processing.core.PGraphics;
 
 import java.util.Vector;
@@ -47,6 +48,9 @@ public class Dashboard extends GameObject {
 
 		PGraphics canvas = drawCanvas();
 		g.image(canvas, this.getX(), this.getY());
+	}
+	public void drawWithViewport(PGraphics g, Viewport viewport) {
+		
 	}
 
 	/**

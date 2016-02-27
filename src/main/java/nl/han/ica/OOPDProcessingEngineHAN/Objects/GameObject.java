@@ -2,6 +2,7 @@ package nl.han.ica.OOPDProcessingEngineHAN.Objects;
 
 import nl.han.ica.OOPDProcessingEngineHAN.UserInput.IKeyInput;
 import nl.han.ica.OOPDProcessingEngineHAN.UserInput.IMouseInput;
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -49,6 +50,7 @@ public abstract class GameObject implements IKeyInput, IMouseInput, PConstants {
      * @param g PGraphics object will be given by the GameEngine.
      */
     public abstract void draw(PGraphics g);
+    public abstract void drawWithViewport(PGraphics g, Viewport viewport);
 
     /**
      * Moves this object and sets the previous location. This function only
