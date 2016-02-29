@@ -19,17 +19,17 @@ public class Noise {
 	}
 	
 	public int[][] generateNoise(float waterHeight) {
-		int maxX = tiles.length - 1;
-		int maxY = tiles[0].length - 1;
+		int maxX = tiles[0].length - 1;
+		int maxY = tiles.length - 1;
 		
 		//set corners
 		tiles[0][0] = randomMinHalf();
 		//tiles[0][0] = 1.0f;
-		tiles[maxX][0] = randomMinHalf();
+		tiles[maxY][0] = randomMinHalf();
 		//tiles[maxX][0] = 0;
-		tiles[0][maxY] = randomMinHalf();
+		tiles[0][maxX] = randomMinHalf();
 		//tiles[0][maxY] = 0;
-		tiles[maxX][maxY] = randomMinHalf();
+		tiles[maxY][maxX] = randomMinHalf();
 		//tiles[maxX][maxY] = 1.0f;
 		
 		generateFractal(0, 0, maxX + 1, maxY + 1, tiles[0][0], tiles[maxX][0], tiles[maxX][maxY], tiles[0][maxY]);
@@ -68,7 +68,7 @@ public class Noise {
 		} else {
 			//store the new value in the array
 			//if (x <= tiles.length && y <= tiles[0].length) {
-				tiles[x][y] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
+				tiles[y][x] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
 				progress++;
 				System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
 			//}
@@ -93,10 +93,10 @@ public class Noise {
 		int[][] tileIndex = new int[tiles.length][tiles[0].length];
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[0].length; y++) {
-				if (tiles[x][y] > waterHeight) { //land
-					tileIndex[x][y] = 0;
+				if (tiles[y][x] > waterHeight) { //land
+					tileIndex[y][x] = 0;
 				} else {
-					tileIndex[x][y] = 1;
+					tileIndex[y][x] = 1;
 				}
 			}
 		}

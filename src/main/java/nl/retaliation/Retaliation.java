@@ -8,13 +8,14 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
-import nl.han.ica.OOPDProcessingEngineHAN.View.CenterFollowingViewport;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-import nl.retaliation.level.*;
+import nl.retaliation.level.GrassTile;
+import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.Noise;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.unit.*;
+import nl.retaliation.unit.GroundUnit;
+import nl.retaliation.unit.SovIFV;
 import processing.core.PApplet;
 
 /**
@@ -52,6 +53,23 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void update() {
 		
 	}
+	@Override
+	public void keyPressed() {
+		switch (key) {
+		case 'w':
+			viewport.setY(viewport.getY() - 32);
+			break;
+		case 's':
+			viewport.setY(viewport.getY() + 32);
+			break;
+		case 'a':
+			viewport.setX(viewport.getX() - 32);
+			break;
+		case 'd':
+			viewport.setX(viewport.getX() + 32);
+			break;
+		}
+	}
 	
 	@Override
 	public void mouseClicked() {
@@ -67,7 +85,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		Sprite waterSprite = new Sprite("src/main/java/nl/retaliation/media/sprites/water.png");
 		TileType<WaterTile> waterType = new TileType<>(WaterTile.class, waterSprite);
 		
-		TileType[] tileTypes = {grassType, waterType};
+		TileType<?>[] tileTypes = {grassType, waterType};
 		
 //		int tilesMap[][] = new int[8][8];
 //		for (int y = 0; y < 8; y++) {
@@ -85,7 +103,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
-		viewport = new CenterFollowingViewport(u, screenWidth, screenHeight);
+		viewport = new Viewport(0, 0, screenWidth, screenHeight);
 		view = new View(viewport, screenWidth, screenHeight);
 		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 

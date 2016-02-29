@@ -138,8 +138,8 @@ public class TileMap {
         		for (int y = 0; y < scrTileHeight; y++) {
         			int tileMapX = screenPos.getX() + x;
         			int tileMapY = screenPos.getY() + y;
-        			if (tileMapX >= 0 && tileMapX < tileMap.length && tileMapY >= 0 && tileMapY < tileMap[0].length) {
-        				pGraphics.image(tileMap[tileMapX][tileMapY].getSprite().getPImage(), x * tileSize, y * tileSize);
+        			if (tileMapX >= 0 && tileMapX < tileMap[0].length && tileMapY >= 0 && tileMapY < tileMap.length) {
+        				pGraphics.image(tileMap[tileMapY][tileMapX].getSprite().getPImage(), x * tileSize, y * tileSize);
         			}
         		}
         	}
