@@ -32,6 +32,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Viewport viewport;
 	
 	private GroundUnit u = new SovIFV(6, 6, TILESIZE);
+	private GroundUnit u2 = new SovIFV(10, 10, TILESIZE);
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
@@ -41,8 +42,9 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void setupGame() {
 		//setGameSpeed(50);
 		addGameObject(u);
+		addGameObject(u2);
 		initTileMap();
-		tempViewPort(1280, 720);
+		tempViewPort(800, 600);
 		setFPSCounter(true);
 	}
 
@@ -78,7 +80,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		//tileMap = new TileMap(TILESIZE, tileTypes, LevelGenerator.createNewTiles(16, 16, (float)3.4));
 		Noise noise = new Noise(0.5f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		tileMap.setTile(3, 3, 1);
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {

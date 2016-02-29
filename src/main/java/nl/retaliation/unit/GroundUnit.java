@@ -22,7 +22,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 	private Vector2 tilePosition;
 	private Vector2 desiredTilePos;
 	//private Vector2 nextTilePosition;
-	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN GRAD
+	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN RAD
 	
 	private ArrayList<Vector2> currentPath;
 
@@ -66,7 +66,7 @@ public abstract class GroundUnit extends AnimatedSpriteObject{
 		System.out.println(desiredTilePos.getX() + ", " + desiredTilePos.getY());
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
-		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, canStepOnLand, canStepOnWater);
+		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects);
 	}
 	private void moveNext() {
 		if (currentPath != null && currentPath.size() > 0) { //checks if path exists

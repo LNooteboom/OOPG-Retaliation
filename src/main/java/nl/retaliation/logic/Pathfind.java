@@ -7,6 +7,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.level.WaterTile;
+import nl.retaliation.unit.GroundUnit;
 
 import java.lang.Math;
 
@@ -26,7 +27,7 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GameObject currentUnit, GameObject[] gameobjects, boolean canStepOnLand, boolean canStepOnWater) {
+	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GroundUnit currentUnit, GameObject[] gameobjects) {
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();
 		PathNode desiredNode = new PathNode(pos, 0);
@@ -41,10 +42,10 @@ public class Pathfind {
 			} else {
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
-
+				//System.out.println(posInObject());
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
 				for (PathNode currentNeighbor : neighbors) {
-					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, gameobjects, currentUnit, canStepOnLand, canStepOnWater) == false) { //als de neighbor in de closedlist staat of niet walkable is
+					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, gameobjects, currentUnit) == false) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
 					int duplicateIndex = findInList(currentNeighbor.getPos(), openList);
@@ -136,12 +137,12 @@ public class Pathfind {
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0; for dijkstra's algorithm (slower)
 	}
-	private static boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, GameObject currentUnit, boolean canStepOnLand, boolean canStepOnWater) {
+	private static boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, GroundUnit currentUnit) {
 		//TODO: update this
 		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 		
 		//if ((currentTile.isWater() == true && canStepOnWater == true) || (currentTile.isWater() == false && canStepOnLand == true)) {
-		if ((currentTile instanceof WaterTile == true && canStepOnWater == true) || (currentTile instanceof WaterTile == false && canStepOnLand == true) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
+		if ((currentTile instanceof WaterTile == true && currentUnit.canStepOnWater() == true) || (currentTile instanceof WaterTile == false && currentUnit.canStepOnLand() == true) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
 			&& posInObject(position, gameobjects, currentUnit) == false){
 			return true;
 		} else {
@@ -151,10 +152,10 @@ public class Pathfind {
 	}
 	private static boolean posInObject(Vector2 pos, GameObject[] gameobjects, GameObject currentUnit) {
 		for (GameObject currentGameObject : gameobjects) {
-			float goX = currentGameObject.getX();
-			float goY = currentGameObject.getY();
-			float width = currentGameObject.getWidth();
-			float height = currentGameObject.getHeight();
+			int goX = (int) (currentGameObject.getX() / currentUnit.getWidth());
+			int goY = (int) (currentGameObject.getY() / currentUnit.getHeight());
+			int width = (int) (currentGameObject.getWidth() / currentUnit.getWidth());
+			int height = (int) (currentGameObject.getHeight() / currentUnit.getHeight());
 			if (pos.getX() >= goX && pos.getX() <= goX + width && pos.getY() >= goY && pos.getY() <= goY + height && currentGameObject.equals(currentUnit) == false) {
 				return true;
 			}
