@@ -12,7 +12,7 @@ import nl.retaliation.unit.GroundUnit;
 import java.lang.Math;
 
 /**
- * This class calculates the shortest path between 2 different coordinates
+ * This class calculates the shortest path between 2 different coordinates while avoiding obstacles
  * 
  * @author Luke Nooteboom
  *
