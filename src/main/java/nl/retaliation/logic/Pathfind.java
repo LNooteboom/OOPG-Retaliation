@@ -42,7 +42,6 @@ public class Pathfind {
 			} else {
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
-				//System.out.println(posInObject());
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
 				for (PathNode currentNeighbor : neighbors) {
 					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, gameobjects, currentUnit) == false) { //als de neighbor in de closedlist staat of niet walkable is
@@ -60,11 +59,12 @@ public class Pathfind {
 				}
 			}
 		}
-
-		//start met reconstrueren path
+		return reconstruct_path(pos, desiredNode, closedList);
+	}
+	private static ArrayList<Vector2> reconstruct_path(Vector2 currentPos, PathNode desiredNode, ArrayList<PathNode> closedList) {
 		ArrayList<Vector2> path = new ArrayList<Vector2>();
 		PathNode currentNode = desiredNode;
-		while (currentNode.getPos().equal(pos) == false) {
+		while (currentNode.getPos().equal(currentPos) == false) {
 			path.add(currentNode.getPos());
 			currentNode = closedList.get(findInList(currentNode.getParent(), closedList));
 		}
@@ -76,9 +76,7 @@ public class Pathfind {
 		for (int xOffset = -1; xOffset <= 1; xOffset++) {
 			for (int yOffset = -1; yOffset <=1; yOffset++) {
 				Vector2 position = new Vector2(currentNode.getPos().getX() + xOffset, currentNode.getPos().getY() + yOffset);
-				if ((xOffset != 0 || yOffset != 0) && position.getX() >= 0 && position.getY() >= 0 && position.getX() < levelWidth && position.getY() < levelHeight) { //TODO: add more boundary checks
-					//int xPos = currentNode.pos.x + xOffset;
-					//int yPos = currentNode.pos.y + yOffset;
+				if ((xOffset != 0 || yOffset != 0) && position.getX() >= 0 && position.getY() >= 0 && position.getX() < levelWidth && position.getY() < levelHeight) {
 
 					double gCost = currentNode.getgCost() + calcDistance(currentNode.getPos(), position);
 					double hCost = heuristic(position, desiredPos);
@@ -135,18 +133,15 @@ public class Pathfind {
 		int dx = Math.abs(node.getX() - desiredPos.getX());
 		int dy = Math.abs(node.getY() - desiredPos.getY());
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
-		//return 0; for dijkstra's algorithm (slower)
+		//return 0; //for dijkstra's algorithm (slower)
 	}
 	private static boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, GroundUnit currentUnit) {
-		//TODO: update this
 		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 		
-		//if ((currentTile.isWater() == true && canStepOnWater == true) || (currentTile.isWater() == false && canStepOnLand == true)) {
 		if ((currentTile instanceof WaterTile == true && currentUnit.canStepOnWater() == true) || (currentTile instanceof WaterTile == false && currentUnit.canStepOnLand() == true) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
 			&& posInObject(position, gameobjects, currentUnit) == false){
 			return true;
 		} else {
-			//System.out.println(posInObject(position, gameobjects, currentUnit));
 			return false;
 		}
 	}

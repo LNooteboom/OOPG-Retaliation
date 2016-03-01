@@ -12,7 +12,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.level.GrassTile;
 import nl.retaliation.level.WaterTile;
-import nl.retaliation.logic.Noise;
+import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.unit.GroundUnit;
 import nl.retaliation.unit.SovIFV;
@@ -41,7 +41,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		//setGameSpeed(50);
 		addGameObject(u);
 		addGameObject(u2);
 		initTileMap();
@@ -55,18 +54,19 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	}
 	@Override
 	public void keyPressed() {
+		int moveSpeed = 32;
 		switch (key) {
 		case 'w':
-			viewport.setY(viewport.getY() - 32);
+			viewport.setY(viewport.getY() - moveSpeed);
 			break;
 		case 's':
-			viewport.setY(viewport.getY() + 32);
+			viewport.setY(viewport.getY() + moveSpeed);
 			break;
 		case 'a':
-			viewport.setX(viewport.getX() - 32);
+			viewport.setX(viewport.getX() - moveSpeed);
 			break;
 		case 'd':
-			viewport.setX(viewport.getX() + 32);
+			viewport.setX(viewport.getX() + moveSpeed);
 			break;
 		}
 	}
@@ -75,7 +75,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void mouseClicked() {
 		GameObject allUnits[] = vectorToArray(getGameObjectItems());
 		u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allUnits);
-		//System.out.println((int) Math.random() * 7);
 	}
 	
 	private void initTileMap() {
@@ -87,17 +86,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-//		int tilesMap[][] = new int[8][8];
-//		for (int y = 0; y < 8; y++) {
-//			for (int x = 0; x < 8; x++) {
-//				tilesMap[x][y] = 0;
-//				//System.out.println(x + ", " + y + ", I: " + tilesMap[x][y]);
-//			}
-//		}
-//		tilesMap[2][2] = 1;
-		
-		//tileMap = new TileMap(TILESIZE, tileTypes, LevelGenerator.createNewTiles(16, 16, (float)3.4));
-		Noise noise = new Noise(0.5f, 128, 128);
+		LevelGenerator noise = new LevelGenerator(0.5f, 128, 128);
 		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
 		tileMap.setTile(3, 3, 1);
 	}
@@ -105,7 +94,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private void tempViewPort(int screenWidth, int screenHeight) {
 		viewport = new Viewport(0, 0, screenWidth, screenHeight);
 		view = new View(viewport, screenWidth, screenHeight);
-		//view.setBackground(loadImage("src/main/java/nl/han/ica/waterworld/media/background.jpg"));
 
 		setView(view);
 		size(screenWidth, screenHeight);

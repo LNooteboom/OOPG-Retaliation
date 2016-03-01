@@ -1,66 +1,116 @@
 package nl.retaliation.logic;
 
+import java.util.Random;
+
 /**
- * A simple random island level generator
- * Using an algorithm I found out myself (not very optimised, it should only be used at the start of a match)
+ * Random map generator based on plasma fractal
  * 
  * @author Luke Nooteboom
  *
  */
 public class LevelGenerator {
+	
+	private Random random;
+	private float roughness;
+	private float[][] tiles;
+	private int totalSize;
+	private long progress;
+	
+	public LevelGenerator(float roughness, int width, int height) {
+		this.roughness = roughness / width;
+		this.tiles = new float[width][height];
+		this.totalSize = width + height;
+		this.random = new Random();
+		this.progress = 0;
+	}
 	/**
-	 * Generates an island level
+	 * Generates a level
 	 * 
-	 * @param width
-	 * @param height
-	 * @param waterHeight Invert this
-	 * @return New level
+	 * @param waterHeight The minimum height for the water to appear
+	 * @return
 	 */
-	public static int[][] createNewTiles(int width, int height, float waterHeight) {
-		float tiles[][] = new float[width][height]; //heightmap, higher numbers mean lower terrain.
-		tiles[width/2][height/2] = 1; //Puts the highest point in the middle.
-		while (tiles[width - 1][height - 1] == 0 || tiles[0][0] == 0) { //while the corners of the map are not assigned
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
-					if(tiles[x][y] != 0) { //if this tile is already assigned
-						tiles = setTileNeighbors(x, y, tiles); //set this tile's neighbours
-					}
-				}
-			}
+	public int[][] generateNoise(float waterHeight) {
+		int maxX = tiles[0].length - 1;
+		int maxY = tiles.length - 1;
+		
+		//set corners
+		tiles[0][0] = randomMinHalf();
+		//tiles[0][0] = 1.0f;
+		tiles[maxY][0] = randomMinHalf();
+		//tiles[maxX][0] = 0;
+		tiles[0][maxX] = randomMinHalf();
+		//tiles[0][maxY] = 0;
+		tiles[maxY][maxX] = randomMinHalf();
+		//tiles[maxX][maxY] = 1.0f;
+		
+		generateFractal(0, 0, maxX + 1, maxY + 1, tiles[0][0], tiles[maxX][0], tiles[maxX][maxY], tiles[0][maxY]);
+		return toTileIndex(waterHeight);
+	}
+	
+	private void generateFractal(int x, int y, int width, int height, float cornerValue1, float cornerValue2, float cornerValue3, float cornerValue4) {
+		/*
+		 * 1-1-2
+		 * |4c |2
+		 * 4-3-3
+		 */
+		
+		int middlePointX = width / 2;
+		int middlePointY = height / 2;
+		
+		if (width > 1 || height > 1) {
+			//Diamond step
+			//The center value is the average of all corners
+			float centerValue = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
+			centerValue += shift(middlePointX + middlePointY);
+			
+			//Square step
+			// a side is the average of its connected corners
+			float side1 = normalize((cornerValue1 + cornerValue2) / 2);
+			float side2 = normalize((cornerValue2 + cornerValue3) / 2);
+			float side3 = normalize((cornerValue3 + cornerValue4) / 2);
+			float side4 = normalize((cornerValue4 + cornerValue1) / 2);
+			
+			//repeat this for new squares
+			generateFractal(x, y, middlePointX, middlePointY, cornerValue1, side1, centerValue, side4);
+			generateFractal(x + middlePointX, y, width - middlePointX, middlePointY, side1, cornerValue2, side2, centerValue);
+			generateFractal(x + middlePointX, y + middlePointY, width - middlePointX, height - middlePointY, centerValue, side2, cornerValue3, side3); 
+			generateFractal(x, y + middlePointY, middlePointX, height - middlePointY, side4, centerValue, side3, cornerValue4);
+			
+		} else {
+			//store the new value in the array
+			//if (x <= tiles.length && y <= tiles[0].length) {
+				tiles[y][x] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
+				progress++;
+				System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
+			//}
 		}
-		//convert the heightmap into a tileIndex array
-		int tileIndex[][] = new int[width][height];
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (tiles[x][y] > waterHeight) { //invert the > for a continent with lake in the middle
-					tileIndex[x][y] = 1;
+	}
+	private float normalize(float input) {
+		if (input < 0) {
+			return 0;
+		} else if (input > 1) {
+			return 1;
+		} else {
+			return input;
+		}
+	}
+	private float shift(int smallSize) {
+		return (float) ((Math.random() - 0.5) * smallSize / totalSize * roughness);
+	}
+	private float randomMinHalf() {
+		return random.nextFloat();
+	}
+	private int[][] toTileIndex(float waterHeight) {
+		int[][] tileIndex = new int[tiles.length][tiles[0].length];
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[0].length; y++) {
+				if (tiles[y][x] > waterHeight) { //land
+					tileIndex[y][x] = 0;
 				} else {
-					tileIndex[x][y] = 0;
+					tileIndex[y][x] = 1;
 				}
 			}
 		}
 		return tileIndex;
 	}
-	private static float[][] setTileNeighbors(int currentX, int currentY, float[][] tiles) {
-		for (int xOffset = -1; xOffset <= 1; xOffset++) {
-			for (int yOffset = -1; yOffset <= 1; yOffset++) {
-				int x = currentX + xOffset;
-				int y = currentY + yOffset;
-				if (x >= 0 && x < tiles.length && y >= 0 && y < tiles[x].length && tiles[x][y] == 0) {
-					//double mode = Math.random();
-					float add = 1;
-					//if (mode <= 0.33 && tiles[currentX][currentY] > 1) {
-					add = (float) Math.random();
-					//} else if (mode <= 0.66) {
-					//	add = (float) Math.random();
-					//}
-					tiles[x][y] = tiles[currentX][currentY] + add; //for each neighbour of tile: assign the value of parent + a random number from 0 to 1;
-				}
-			}
-		}
-
-		return tiles;
-	}
-	
-	
 }
