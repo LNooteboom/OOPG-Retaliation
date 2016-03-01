@@ -7,6 +7,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
+import nl.retaliation.Retaliation;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 
@@ -27,7 +28,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private int health;
 	private int armor;
 	
-	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health) {
+	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor) {
 		super(sprite, 8);
 		
 		this.setX(x * tileSize);

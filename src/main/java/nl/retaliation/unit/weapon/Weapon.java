@@ -25,6 +25,7 @@ public abstract class Weapon {
 		timeSinceLastFire++;
 		if (enemy != null && Trigonio.distance(parent.getX(), parent.getY(), enemy.getX(), enemy.getY()) <= range && timeSinceLastFire > cooldown) {
 			fire();
+			timeSinceLastFire = 0;
 		}
 	}
 	public abstract void fire();
