@@ -32,6 +32,7 @@ public abstract class GroundUnit extends Unit{
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects);
+		System.out.println(currentPath.get(0).getX());
 	}
 	
 	

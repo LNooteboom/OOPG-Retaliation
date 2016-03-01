@@ -6,10 +6,11 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 
-public abstract class Unit extends AnimatedSpriteObject{
+public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	protected Vector2 tilePosition;
 	protected Vector2 desiredTilePos;
@@ -24,6 +25,7 @@ public abstract class Unit extends AnimatedSpriteObject{
 	private boolean isIndestructible = false;
 	
 	private int health;
+	private int armor;
 	
 	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health) {
 		super(sprite, 8);
@@ -115,5 +117,15 @@ public abstract class Unit extends AnimatedSpriteObject{
 			return;
 		}
 		setCurrentFrameIndex(0); //right
+	}
+	
+	public void damage(int damage) {
+		health -= damage;
+	}
+	public int getHealth() {
+		return health;
+	}
+	public int getArmor() {
+		return armor;
 	}
 }
