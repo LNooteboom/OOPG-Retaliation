@@ -156,7 +156,7 @@ public class Pathfind {
 			int goY = (int) (currentGameObject.getY() / currentUnit.getHeight());
 			int width = (int) (currentGameObject.getWidth() / currentUnit.getWidth());
 			int height = (int) (currentGameObject.getHeight() / currentUnit.getHeight());
-			if (pos.getX() >= goX && pos.getX() <= goX + width && pos.getY() >= goY && pos.getY() <= goY + height && currentGameObject.equals(currentUnit) == false) {
+			if (pos.getX() >= goX && pos.getX() < goX + width && pos.getY() >= goY && pos.getY() < goY + height && currentGameObject.equals(currentUnit) == false) {
 				return true;
 			}
 		}
