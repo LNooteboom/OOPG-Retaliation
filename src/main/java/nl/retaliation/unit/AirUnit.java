@@ -13,9 +13,9 @@ import nl.retaliation.logic.Vector2;
  *
  */
 
-public class AirUnit extends Unit{
-	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health){
-		super(x, y, sprite, tileSize, maxSpeed, health);
+public abstract class AirUnit extends Unit{
+	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor){
+		super(x, y, sprite, tileSize, maxSpeed, health, armor);
 	}
 	
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects){

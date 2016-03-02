@@ -32,6 +32,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private View view;
 	private Viewport viewport;
 	
+	private GameObject allObjects[];
+	
 	private GroundUnit u = new SovIFV(6, 6, TILESIZE);
 	private GroundUnit u2 = new SovIFV(10, 10, TILESIZE);
 
@@ -50,7 +52,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void update() {
-		
+		allObjects = vectorToArray(getGameObjectItems());
+		deleteDeadGameObjects();
 	}
 	@Override
 	public void keyPressed() {
@@ -73,8 +76,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	@Override
 	public void mouseClicked() {
-		GameObject allUnits[] = vectorToArray(getGameObjectItems());
-		u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allUnits);
+		u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
 	}
 	
 	private void initTileMap() {
@@ -105,6 +107,15 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			newGameObjects[i] = gameObjects.get(i);
 		}
 		return newGameObjects;
+	}
+	private void deleteDeadGameObjects() {
+		GameObject currentObject;
+		for (int i = 0; i < getGameObjectItems().size(); i++) {
+			currentObject = getGameObjectItems().get(i);
+			if (currentObject.isVisible() == false) {
+				deleteGameObject(currentObject);
+			}
+		}
 	}
 
 }
