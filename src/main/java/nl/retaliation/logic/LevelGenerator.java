@@ -14,6 +14,7 @@ public class LevelGenerator {
 	private float roughness;
 	private float[][] tiles;
 	private int totalSize;
+	private int oldPercent;
 	private long progress;
 	
 	public LevelGenerator(float roughness, int width, int height) {

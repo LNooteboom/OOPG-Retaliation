@@ -40,6 +40,7 @@ public class Pathfind {
 				desiredNode = current;
 				break;
 			} else {
+				System.out.println(current.getPos().getX() + ", " + current.getPos().getY());
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
@@ -98,6 +99,9 @@ public class Pathfind {
 				finalPos = currentCandidate;
 			}
 		}
+		if (finalPos.getPos().getX() != finalPos.getPos().getY()) {
+			System.out.println("as");
+		}
 		return finalPos;
 	}
 	private static ArrayList<PathNode> removeWithValues(PathNode input, ArrayList<PathNode> list) {
@@ -126,8 +130,13 @@ public class Pathfind {
 		}
 		return -1;
 	}
-	private static double calcDistance(Vector2 pos1, Vector2 pos2) {
-		return (Math.sqrt(Math.pow(pos1.getX() * 10 - pos2.getX() * 10, 2) + Math.pow(pos1.getY() * 10 - pos2.getY() * 10, 2)));
+	private static float calcDistance(Vector2 pos1, Vector2 pos2) {
+		//return (Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) + Math.pow(pos1.getY() - pos2.getY(), 2)));
+		if (Math.abs(pos1.getX() - pos2.getX()) == Math.abs(pos1.getY() - pos2.getY())) {
+			return 1.4f;
+		} else {
+			return 1.0f;
+		}
 	}
 	private static double heuristic(Vector2 node, Vector2 desiredPos) {
 		int dx = Math.abs(node.getX() - desiredPos.getX());

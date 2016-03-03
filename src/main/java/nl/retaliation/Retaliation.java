@@ -10,6 +10,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
+import nl.retaliation.dashboard.Minimap;
 import nl.retaliation.level.GrassTile;
 import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.LevelGenerator;
@@ -31,6 +32,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private final int TILESIZE = 32;
 	private View view;
 	private Viewport viewport;
+	private Minimap minimap;
 	
 	private GameObject allObjects[];
 	
@@ -44,10 +46,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	@Override
 	public void setupGame() {
 		addGameObject(u);
-		addGameObject(u2);
+		//addGameObject(u2);
+		
 		initTileMap();
 		tempViewPort(800, 600);
 		setFPSCounter(true);
+		minimap = new Minimap(0, 0, tileMap);
+		//addDashboard(minimap);
 	}
 
 	@Override
@@ -88,13 +93,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(0.5f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
+		LevelGenerator noise = new LevelGenerator(1000f, 1024, 1024);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
-		viewport = new Viewport(0, 0, screenWidth, screenHeight);
+		viewport = new Viewport(1024 * TILESIZE, 1024 * TILESIZE, screenWidth, screenHeight);
 		view = new View(viewport, screenWidth, screenHeight);
 
 		setView(view);
