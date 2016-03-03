@@ -129,4 +129,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public int getArmor() {
 		return armor;
 	}
+	
+	public Vector2 getCor(){
+		return tilePosition;
+	}
 }
