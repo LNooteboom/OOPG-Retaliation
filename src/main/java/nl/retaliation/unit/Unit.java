@@ -21,7 +21,6 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 
 	private float maxSpeed;
 	
-	private boolean isSelected = false;
 	protected boolean isMoving = false;
 	private boolean isIndestructible = false;
 	
