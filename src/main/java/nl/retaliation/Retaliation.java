@@ -33,7 +33,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private GameObject allObjects[];
 	private ArrayList<Unit> units = new ArrayList<Unit>(100);
 	
-	private Unit selectedUnit = null;
+	private ArrayList<Unit> selectedUnits = null;
+	private Vector2 corMousePressed = null, corMouseReleased = null;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
@@ -44,6 +45,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		units.add(new SovIFV(6, 6, TILESIZE));
 		units.add(new SovIFV(10, 10, TILESIZE));
 		units.add(new SovMiG(13, 13, TILESIZE));
+		units.add(new SovMiG(16, 16, TILESIZE));
 		for(Unit unit : units){
 			addGameObject(unit);
 		}
@@ -77,22 +79,37 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	}
 	
 	@Override
+	public void mousePressed(){
+		if(mouseButton == LEFT){
+			int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
+			int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
+		
+			corMousePressed = new Vector2(xTile, yTile);
+		}
+	}
+	
+	@Override
+	public void mouseReleased(){
+		if(mouseButton == LEFT){
+			int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
+			int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
+			corMouseReleased = new Vector2(xTile, yTile);
+			
+			selectedUnits = vectorsToUnits(corMousePressed, corMouseReleased);
+		}
+	}
+	
+	@Override
 	public void mouseClicked() {
 		int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
 		int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
 		Vector2 tileCor = new Vector2(xTile, yTile);
 		Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
 		
-		Unit clickedUnit = this.vectorToUnit(tileCor);
-		
-		if(mouseButton == LEFT){
-			if(clickedUnit != null){
-				selectedUnit = clickedUnit;
-				System.out.println(selectedUnit.getCor().toString());
-			}
-		}
 		if(mouseButton == RIGHT){
-			selectedUnit.setPath(tileCor, tileMap, this.getGameObjectItems().toArray(new GameObject[this.getGameObjectItems().size()]));
+			for(Unit unit : selectedUnits){
+				unit.setPath(tileCor, tileMap, this.getGameObjectItems().toArray(new GameObject[this.getGameObjectItems().size()]));
+			}
 		}
 		
 		if(clickedTile instanceof WaterTile){
@@ -103,6 +120,18 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
+	}
+	
+	private ArrayList<Unit> vectorsToUnits(Vector2 cor1, Vector2 cor2){
+		ArrayList<Unit> selectedUnits = new ArrayList<Unit>(30);
+		
+		for(Unit unit : units){
+			if(unit.getCor().between(cor1, cor2)){
+				selectedUnits.add(unit);
+			}
+		}
+		
+		return selectedUnits;
 	}
 	
 	private Unit vectorToUnit(Vector2 cor){
