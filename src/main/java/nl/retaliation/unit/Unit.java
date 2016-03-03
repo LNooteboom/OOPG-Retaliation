@@ -39,6 +39,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		
 		this.maxSpeed = maxSpeed;
 		this.health = health;
+		this.armor = armor;
 	}
 	
 	public abstract void destroy();
@@ -129,7 +130,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		return armor;
 	}
 	
-	public Vector2 getCor(){
+	public Vector2 getPos(){
 		return tilePosition;
 	}
 }

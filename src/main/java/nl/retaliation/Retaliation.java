@@ -126,7 +126,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		ArrayList<Unit> selectedUnits = new ArrayList<Unit>(30);
 		
 		for(Unit unit : units){
-			if(unit.getCor().between(cor1, cor2)){
+			if(unit.getPos().between(cor1, cor2)){
 				selectedUnits.add(unit);
 			}
 		}
@@ -136,7 +136,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	private Unit vectorToUnit(Vector2 cor){
 		for(Unit unit : units){
-			if(unit.getCor().equal(cor)){
+			if(unit.getPos().equal(cor)){
 				return unit;
 			}
 		}

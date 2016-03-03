@@ -1,5 +1,7 @@
 package nl.retaliation;
 
+import nl.retaliation.logic.Vector2;
+
 public interface IRTSObject {
 	
 	public float getX();
@@ -10,4 +12,6 @@ public interface IRTSObject {
 	public int getHealth();
 	
 	public int getArmor();
+	
+	public Vector2 getPos();
 }
