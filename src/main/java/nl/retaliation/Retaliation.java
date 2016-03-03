@@ -89,7 +89,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
 		LevelGenerator noise = new LevelGenerator(0.5f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
