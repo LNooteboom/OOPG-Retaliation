@@ -21,7 +21,6 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 
 	private float maxSpeed;
 	
-	private boolean isSelected = false;
 	protected boolean isMoving = false;
 	private boolean isIndestructible = false;
 	
@@ -40,6 +39,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		
 		this.maxSpeed = maxSpeed;
 		this.health = health;
+		this.armor = armor;
 	}
 	
 	public abstract void destroy();
@@ -128,5 +128,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	}
 	public int getArmor() {
 		return armor;
+	}
+	
+	public Vector2 getPos(){
+		return tilePosition;
 	}
 }

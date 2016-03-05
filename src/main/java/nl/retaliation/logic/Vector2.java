@@ -36,6 +36,16 @@ public class Vector2 {
 		return x == object2.x && y == object2.y;
 	}
 	
+	public boolean between(Vector2 vector1, Vector2 vector2){
+		if( (x <= vector1.getX() && x >= vector2.getX()) || (x >= vector1.getX() && x <= vector2.getX()) ){
+			if( (y <= vector1.getY() && y >= vector2.getY()) || (y >= vector1.getY() && y <= vector2.getY()) ){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public int getX() {
 		return x;
 	}
@@ -47,5 +57,9 @@ public class Vector2 {
 	}
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	public String toString(){
+		return x + " " + y;
 	}
 }
