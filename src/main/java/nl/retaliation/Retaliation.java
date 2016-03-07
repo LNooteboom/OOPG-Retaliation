@@ -153,7 +153,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		for(IRTSObject object: allObjects){
 			if(object.getPos().equal(cor)){
 				if(object instanceof AirUnit){
-					selectedObject.add(object);
+					selectedObject.set(0, object);
 					return selectedObject;
 				}
 				else{
