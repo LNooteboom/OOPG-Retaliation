@@ -32,7 +32,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private View view;
 	private Viewport viewport;
 	
-	private GameObject allObjects[];
+	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>(200);
 	private ArrayList<Unit> units = new ArrayList<Unit>(100);
 	private ArrayList<Building> buildings = new ArrayList<Building>(100);
 	
@@ -55,9 +55,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		buildings.add(new HQRed(1, 1, TILESIZE));
 		for(Unit unit : units){
 			addGameObject(unit);
+			allObjects.add(unit);
+			
 		}
 		for(Building building : buildings){
 			addGameObject(building);
+			allObjects.add(building);
 		}
 		initTileMap();
 		tempViewPort(800, 600);
@@ -66,7 +69,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void update() {
-		allObjects = vectorToArray(getGameObjectItems());
+		//allObjects = vectorToArray(getGameObjectItems());
 		deleteDeadGameObjects();
 	}
 	@Override
@@ -106,10 +109,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			corMouseReleased = new Vector2(xTile, yTile);
 			
 			if(corMouseReleased.equal(corMousePressed)){
-				
+				selectedUnits = vectorToIRTSObject(corMouseReleased);
 			}
 			else{
-				selectedUnits = vectorsToUnits(corMousePressed, corMouseReleased);
+				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
 			}
 		}
 	}
@@ -121,7 +124,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		Vector2 tileCor = new Vector2(xTile, yTile);
 		Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
 		
-		if(mouseButton == RIGHT){
+		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){
 				for(IRTSObject unit : selectedUnits){
 					((Unit)unit).setPath(tileCor, tileMap, this.getGameObjectItems().toArray(new GameObject[this.getGameObjectItems().size()]));
@@ -129,38 +132,39 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			}
 		}
 		
-		if(clickedTile instanceof WaterTile){
-			System.out.println("Je moeder!");
-		}
-		if(clickedTile instanceof GrassTile){
-			System.out.println("Je vader!");
-		}
-		
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
 	}
 	
-	private ArrayList<Unit> vectorsToUnits(Vector2 cor1, Vector2 cor2){
-		ArrayList<Unit> selectedUnits = new ArrayList<Unit>(30);
+	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
+		ArrayList<IRTSObject> selectedUnits = new ArrayList<IRTSObject>(30);
 		
-		for(Unit unit : units){
-			if(unit.getPos().between(cor1, cor2)){
-				selectedUnits.add(unit);
+		for(IRTSObject object: allObjects){
+			if(object.getPos().between(cor1, cor2)){
+				selectedUnits.add(object);
 			}
 		}
 		
 		return selectedUnits;
 	}
 	
-	private IRTSObject vectorToIRTSObject(Vector2 cor){
-		for(GameObject object: this.getGameObjectItems()){
-			if(object instanceof IRTSObject){
-				if( ((IRTSObject)object).getPos().equal(cor) ){
-					return (IRTSObject)object;
+	private ArrayList<IRTSObject> vectorToIRTSObject(Vector2 cor){
+		ArrayList<IRTSObject> selectedObject = new ArrayList<IRTSObject>(1);
+		
+		for(IRTSObject object: allObjects){
+			if(object.getPos().equal(cor)){
+				if(object instanceof AirUnit){
+					selectedObject.add(object);
+					return selectedObject;
+				}
+				else{
+					if(selectedObject.size() == 0){
+						selectedObject.add(object);
+					}
 				}
 			}
 		}
 		
-		return null;
+		return selectedObject;
 	}
 	
 	private void initTileMap() {
