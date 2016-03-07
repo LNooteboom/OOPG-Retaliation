@@ -44,7 +44,7 @@ public class LevelGenerator {
 		tiles[maxY][maxX] = randomMinHalf();
 		//tiles[maxX][maxY] = 1.0f;
 		
-		generateFractal(0, 0, maxX + 1, maxY + 1, tiles[0][0], tiles[maxX][0], tiles[maxX][maxY], tiles[0][maxY]);
+		generateFractal(0, 0, maxX + 1, maxY + 1, tiles[0][0], tiles[maxY][0], tiles[maxY][maxX], tiles[0][maxX]);
 		return toTileIndex(waterHeight);
 	}
 	
@@ -103,8 +103,8 @@ public class LevelGenerator {
 	}
 	private int[][] toTileIndex(float waterHeight) {
 		int[][] tileIndex = new int[tiles.length][tiles[0].length];
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
+		for (int x = 0; x < tiles[0].length; x++) {
+			for (int y = 0; y < tiles.length; y++) {
 				if (tiles[y][x] > waterHeight) { //land
 					tileIndex[y][x] = 0;
 				} else {

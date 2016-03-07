@@ -93,13 +93,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(1000f, 1024, 1024);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		LevelGenerator noise = new LevelGenerator(0000f, 600, 800);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
 	private void tempViewPort(int screenWidth, int screenHeight) {
-		viewport = new Viewport(1024 * TILESIZE, 1024 * TILESIZE, screenWidth, screenHeight);
+		viewport = new Viewport(0 * TILESIZE, 0 * TILESIZE, screenWidth, screenHeight);
 		view = new View(viewport, screenWidth, screenHeight);
 
 		setView(view);
