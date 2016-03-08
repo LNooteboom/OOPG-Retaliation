@@ -14,16 +14,10 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 
 import nl.retaliation.building.*;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 import nl.retaliation.dashboard.Minimap;
->>>>>>> origin/master
 import nl.retaliation.dashboard.Selection;
 import nl.retaliation.logic.*;
 import nl.retaliation.unit.*;
->>>>>>> origin/master
 import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
@@ -46,14 +40,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private View view;
 	private Viewport viewport;
 	
-<<<<<<< HEAD
 	//private Player currentPlayer;
 	private Server currentServer;
 	private Client currentClient;
 	
-=======
 	private Minimap minimap;
->>>>>>> origin/master
 	
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>(200);
 	private ArrayList<Unit> units = new ArrayList<Unit>(100);
