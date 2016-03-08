@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
+import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Vector2;
 
 /**
@@ -18,13 +20,16 @@ public abstract class AirUnit extends Unit{
 		super(x, y, sprite, tileSize, maxSpeed, health, armor);
 	}
 	
-	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects){
+	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects){
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
-		this.currentPath = setPath(desiredTilePos, this.tilePosition);
+		this.currentPath = setPath(desiredTilePos, this.tilePosition, gameobjects);
 	}
 	
-	private ArrayList<Vector2> setPath(Vector2 desiredTilePos, Vector2 pos){
+	private ArrayList<Vector2> setPath(Vector2 desiredTilePos, Vector2 pos, ArrayList<IRTSObject> gameobjects){
+		if(!Pathfind.place_free(desiredTilePos, gameobjects, this)){
+			return new ArrayList<Vector2>(0);
+		}
 		Vector2 currentPos = pos;
 		ArrayList<Vector2> path = new ArrayList<Vector2>(0);
 		int deltaX, deltaY;

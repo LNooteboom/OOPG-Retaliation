@@ -6,8 +6,11 @@ import java.util.Collections;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
 import nl.retaliation.level.WaterTile;
+import nl.retaliation.unit.AirUnit;
 import nl.retaliation.unit.GroundUnit;
+import nl.retaliation.unit.Unit;
 
 import java.lang.Math;
 
@@ -15,6 +18,7 @@ import java.lang.Math;
  * This class calculates the shortest path between 2 different coordinates while avoiding obstacles
  * 
  * @author Luke Nooteboom
+ * @author Jonathan Vos
  *
  */
 public class Pathfind {
@@ -27,7 +31,11 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, GroundUnit currentUnit, GameObject[] gameobjects) {
+	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, Unit currentUnit, ArrayList<IRTSObject> gameobjects) {
+		if(!place_free(desiredPos, gameobjects, currentUnit)){
+			return new ArrayList<Vector2>(0);
+		}
+		
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
 		ArrayList<PathNode> closedList = new ArrayList<PathNode>();
 		PathNode desiredNode = new PathNode(pos, 0);
@@ -45,7 +53,7 @@ public class Pathfind {
 				closedList.add(current);
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
 				for (PathNode currentNeighbor : neighbors) {
-					if (presentInList(currentNeighbor, closedList) || place_free(currentNeighbor.getPos(), terrain, gameobjects, currentUnit) == false) { //als de neighbor in de closedlist staat of niet walkable is
+					if (presentInList(currentNeighbor, closedList) || !place_free(currentNeighbor.getPos(), gameobjects, currentUnit)) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
 					int duplicateIndex = findInList(currentNeighbor.getPos(), openList);
@@ -144,17 +152,34 @@ public class Pathfind {
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0; //for dijkstra's algorithm (slower)
 	}
-	private static boolean place_free(Vector2 position, TileMap tilemap, GameObject[] gameobjects, GroundUnit currentUnit) {
-		Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
+	public static boolean place_free(Vector2 position, ArrayList<IRTSObject> allObjects, Unit currentUnit) {
+		//Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
+
+		if(currentUnit instanceof AirUnit){
+			for(IRTSObject object : allObjects){
+				if(object.getPos().equal(position) && object instanceof AirUnit){
+					return false;
+				}
+			}
+		}
+		if(currentUnit instanceof GroundUnit){
+			for(IRTSObject object : allObjects){
+				if(object.getPos().equal(position) && object instanceof GroundUnit){
+					return false;
+				}
+			}
+		}
 		
-		if ((currentTile instanceof WaterTile == true && currentUnit.canStepOnWater() == true) || (currentTile instanceof WaterTile == false && currentUnit.canStepOnLand() == true) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
-			&& posInObject(position, gameobjects, currentUnit) == false){
+		return true;
+		
+		/*if ((currentTile instanceof WaterTile && currentUnit.canStepOnWater()) || (!(currentTile instanceof WaterTile) && currentUnit.canStepOnLand()) //controleert of de unit over dit type terrain kan (boten kunnen niet over land etc)
+			&& !posInObject(position, gameobjects, currentUnit)){
 			return true;
 		} else {
 			return false;
-		}
+		}*/
 	}
-	private static boolean posInObject(Vector2 pos, GameObject[] gameobjects, GameObject currentUnit) {
+	/*private static boolean posInObject(Vector2 pos, GameObject[] gameobjects, GameObject currentUnit) {
 		for (GameObject currentGameObject : gameobjects) {
 			int goX = (int) (currentGameObject.getX() / currentUnit.getWidth());
 			int goY = (int) (currentGameObject.getY() / currentUnit.getHeight());
@@ -165,5 +190,5 @@ public class Pathfind {
 			}
 		}
 		return false;
-	}
+	}*/
 }

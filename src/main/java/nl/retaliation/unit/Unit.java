@@ -56,7 +56,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		}
 	}
 	
-	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects);
+	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects);
 	
 	private void moveNext() {
 		if (currentPath != null && currentPath.size() > 0) { //checks if path exists

@@ -119,12 +119,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			}
 			
 			removeSelection();
-			
 			selections = new ArrayList<Selection>(selectedUnits.size());
 			for(IRTSObject object : selectedUnits){
 				selections.add(new Selection(new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
 			}
-			
 			updateSelection();
 		}
 	}
@@ -139,7 +137,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){
 				for(IRTSObject unit : selectedUnits){
-					((Unit)unit).setPath(tileCor, tileMap, this.getGameObjectItems().toArray(new GameObject[this.getGameObjectItems().size()]));
+					((Unit)unit).setPath(tileCor, tileMap, allObjects);
 				}
 			}
 		}
@@ -189,6 +187,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 					selectedObject.set(0, object);
 				}
 			}
+		}
+		
+		if(selectedObject.get(0) == null){
+			return new ArrayList<IRTSObject>(0);
 		}
 		
 		return selectedObject;
