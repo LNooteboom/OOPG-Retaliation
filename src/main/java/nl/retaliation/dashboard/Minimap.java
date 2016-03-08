@@ -11,7 +11,8 @@ public class Minimap extends Dashboard {
 		super(x, y, tilemap.getTileMap()[0].length, tilemap.getTileMap().length);
 		this.tilemap = tilemap;
 	}
-
+	
+	@Override
 	public void draw(PGraphics g) {
 		
 		int green = g.color(0x00, 0xFF, 0x00);

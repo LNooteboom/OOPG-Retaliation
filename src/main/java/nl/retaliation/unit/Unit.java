@@ -6,10 +6,11 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+
 import nl.retaliation.IRTSObject;
-import nl.retaliation.Retaliation;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.Player;
 
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
@@ -132,5 +133,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	public Vector2 getPos(){
 		return tilePosition;
+	}
+	public Player getOwner() {
+		return null;
 	}
 }

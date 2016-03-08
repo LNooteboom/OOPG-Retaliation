@@ -82,7 +82,7 @@ public class LevelGenerator {
 			//if (x <= tiles.length && y <= tiles[0].length) {
 				tiles[y][x] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
 				progress++;
-				System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
+				//System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
 			//}
 		}
 	}

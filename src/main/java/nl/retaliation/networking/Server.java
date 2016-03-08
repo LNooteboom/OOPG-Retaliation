@@ -8,66 +8,67 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
-import nl.retaliation.players.Player;
 
 public class Server {
-	private ArrayList<IRTSObject> RTSObjects;
-	private String hostName;
 	private int port;
 	
-	//private ServerSocket socket2;
-	//private PrintWriter out;
-	//private BufferedReader in;
-	private ArrayList<Socket> connectedClients;
+	//private ServerSocket socket;
+	
+	private ArrayList<Socket> connectedClients = new ArrayList<Socket>();
+	private ArrayList<BufferedReader> input = new ArrayList<BufferedReader>();
+	private ArrayList<PrintWriter> output = new ArrayList<PrintWriter>();
 	
 	private boolean sendTileMap;
-	private TileMap tileMap;
-	private GameObject[][] gameobjects;
 	
-	public Server(String hostName, int port) {
-		this.hostName = hostName;
+	public Server(int port) {
 		this.port = port;
+		
+		setupServer();
 	}
 	private void setupServer() {
 		try (
 				ServerSocket socket = new ServerSocket(port)
 			) {
-			for (Socket client : connectedClients) {
-				connectToPlayer(client);
-			}
+			//this.socket = socket;
+			waitForClient(socket);
 		} catch (IOException e) {
 			System.out.println("Error making server");
 		}
 	}
 	public void waitForClient(ServerSocket serverSocket) {
-		while (connectedClients.size() == 0) {
+		while (connectedClients.size() < 1) {
 			try {
-				connectedClients.add(serverSocket.accept());
+				Socket newClient = serverSocket.accept();
+				input.add(new BufferedReader(new InputStreamReader(newClient.getInputStream())));
+				output.add(new PrintWriter(newClient.getOutputStream(), true));
+				connectedClients.add(newClient);
 			} catch (IOException e){
 				System.out.println("Error waiting for clients?");
 			}
 		}
 	}
-	
-	private void connectToPlayer(Socket client) {
-		try (
-				Socket connectedClient = client;
-				PrintWriter out = new PrintWriter(connectedClient.getOutputStream(), true);
-				BufferedReader in = new BufferedReader(new InputStreamReader(connectedClient.getInputStream()));
-			) {
-			transceiveData(out, in);
-		} catch (IOException e) {
-			System.out.println("Error connecting player");
+	public void sendData(ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
+		for (int i = 0; i < connectedClients.size(); i++) {
+			transceiveData(output.get(i), input.get(i), gameobjects, tilemap);
 		}
 	}
-	private void transceiveData(PrintWriter out, BufferedReader in) {
+	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
 		//send
-		if (sendTileMap) {
-			out.println(tileMap.getTileMap());
-		}
+		//System.out.println("sending data...");
+		out.println("hoi");
+		//if (sendTileMap) {
+			out.println(tilemap.getTileMap());
+			setSendTileMap(false);
+		//}
 		out.println(gameobjects);
+	}
+	
+	public boolean sendTileMap() {
+		return sendTileMap;
+	}
+	public void setSendTileMap(boolean sendTileMap) {
+		this.sendTileMap = sendTileMap;
 	}
 }

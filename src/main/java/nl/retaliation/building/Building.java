@@ -3,6 +3,7 @@ package nl.retaliation.building;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.*;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.Player;
 
 public abstract class Building extends AnimatedSpriteObject implements IRTSObject{
 	private Vector2 tilePosition;
@@ -50,5 +51,11 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	public Vector2 getPos(){
 		return tilePosition;
+	}
+	
+	@Override
+	public Player getOwner() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

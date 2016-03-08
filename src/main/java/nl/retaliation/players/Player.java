@@ -1,7 +1,5 @@
 package nl.retaliation.players;
 
-import java.net.Socket;
-
 import nl.retaliation.networking.Client;
 
 public class Player {

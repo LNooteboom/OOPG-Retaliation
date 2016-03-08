@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
@@ -13,10 +12,15 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
+
 import nl.retaliation.building.*;
-import nl.retaliation.logic.*;
-import nl.retaliation.unit.*;
 import nl.retaliation.level.*;
+import nl.retaliation.logic.LevelGenerator;
+import nl.retaliation.logic.Vector2;
+import nl.retaliation.networking.Client;
+import nl.retaliation.networking.Server;
+import nl.retaliation.unit.*;
+
 import processing.core.PApplet;
 
 /**
@@ -32,6 +36,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private View view;
 	private Viewport viewport;
 	
+	//private Player currentPlayer;
+	private Server currentServer;
+	private Client currentClient;
+	
+	
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>(200);
 	private ArrayList<Unit> units = new ArrayList<Unit>(100);
 	private ArrayList<Building> buildings = new ArrayList<Building>(100);
@@ -45,6 +54,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
+		//currentServer = new Server("", 63530);
+		currentClient = new Client("Luke-Laptop", 63530);
+		
+		
+		
 		units.add(new SovIFV(6, 6, TILESIZE));
 		units.add(new SovIFV(10, 10, TILESIZE));
 		units.add(new SovMiG(13, 13, TILESIZE));
@@ -53,6 +67,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		buildings.add(new HQRed(3, 3, TILESIZE));
 		buildings.add(new HQRed(2, 2, TILESIZE));
 		buildings.add(new HQRed(1, 1, TILESIZE));
+		
 		for(Unit unit : units){
 			addGameObject(unit);
 			allObjects.add(unit);
@@ -69,8 +84,16 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void update() {
-		//allObjects = vectorToArray(getGameObjectItems());
+		allObjects = vectorToArrayList(getGameObjectItems());
 		deleteDeadGameObjects();
+		
+		if (currentServer != null) {
+			currentServer.sendData(allObjects, tileMap);
+		}
+		if (currentClient != null) {
+			currentClient.transceiveData();
+		}
+		
 	}
 	@Override
 	public void keyPressed() {
@@ -189,10 +212,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		size(screenWidth, screenHeight);
 	}
 	
-	private GameObject[] vectorToArray(Vector<GameObject> gameObjects) {
-		GameObject newGameObjects[] = new GameObject[gameObjects.size()];
+	private ArrayList<IRTSObject> vectorToArrayList(Vector<GameObject> gameObjects) {
+		ArrayList<IRTSObject> newGameObjects = new ArrayList<IRTSObject>();
 		for (int i = 0; i < gameObjects.size(); i++) {
-			newGameObjects[i] = gameObjects.get(i);
+			if (gameObjects.get(i) instanceof IRTSObject) {
+				newGameObjects.add((IRTSObject) gameObjects.get(i));
+			}
 		}
 		return newGameObjects;
 	}
