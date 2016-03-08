@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
+
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
 
 public class Client {
 	private int hostPort;
@@ -35,6 +39,8 @@ public class Client {
 			
 			System.out.println("connected!");
 			
+		} catch (UnknownHostException e){
+			System.out.println("Could not find host");
 		} catch (IOException e) {
 			System.out.println("failed to connect");
 		}
@@ -45,15 +51,28 @@ public class Client {
 	}
 	
 	
-	public void transceiveData() {
+	public void transceiveData(TileMap tilemap) {
 		try {
 			String line = input.readLine();
-			if (line != null) {
-				System.out.println("received: "+line);
+			System.out.println(line);
+			if (line != null && line == "start") {
+				System.out.println("received: "+input.readLine());
 				//socket.close();
 			}
 		} catch (IOException e) {
 			System.out.println(e);
 		}
+	}
+	private void deserializeGameObjects() {
+		char objectSeperator = '%';
+		
+	}
+	private IRTSObject deserializeGameObject(String input) {
+		char seperator = '$';
+		int amountOfSeperators = 0;
+		
+		
+		int[] sepLocations;
+		
 	}
 }

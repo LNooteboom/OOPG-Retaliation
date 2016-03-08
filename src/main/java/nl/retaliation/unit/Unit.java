@@ -121,6 +121,17 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		setCurrentFrameIndex(0); //right
 	}
 	
+	@Override
+	public String serialize() {
+		String output = "";
+		output += ("$" + this.getClass());
+		output += ("$" + x);
+		output += ("$" + y);
+		output += ("$" + currentDirection);
+		
+		return output;
+	}
+	
 	public void damage(int damage) {
 		health -= damage;
 	}

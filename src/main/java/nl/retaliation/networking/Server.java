@@ -15,6 +15,7 @@ public class Server {
 	private int port;
 	
 	//private ServerSocket socket;
+	private RTSProtocolServer protocol = new RTSProtocolServer();
 	
 	private ArrayList<Socket> connectedClients = new ArrayList<Socket>();
 	private ArrayList<BufferedReader> input = new ArrayList<BufferedReader>();
@@ -55,14 +56,15 @@ public class Server {
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		//send
-		//System.out.println("sending data...");
-		out.println("hoi");
-		//if (sendTileMap) {
-			out.println(tilemap.getTileMap());
-			setSendTileMap(false);
-		//}
-		out.println(gameobjects);
+		try {
+			String input = in.readLine();
+			String output = protocol.processInput(input);
+			if (output != "") {
+				out.println(output);
+			}
+		} catch (IOException e) {
+			System.out.println("Error sending/receiving transmission");
+		}
 	}
 	
 	public boolean sendTileMap() {

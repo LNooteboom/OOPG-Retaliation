@@ -60,10 +60,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		//currentServer = new Server("", 63530);
-		currentClient = new Client("Luke-Laptop", 63530);
+		//currentServer = new Server(63530);
+		//currentClient = new Client("Luke-Laptop", 63530);
 		
-		
+		IRTSObject u = new SovIFV(6, 6, TILESIZE);
+		System.out.println(u.serialize());
 		
 		units.add(new SovIFV(6, 6, TILESIZE));
 		units.add(new SovIFV(10, 10, TILESIZE));
@@ -99,7 +100,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentServer.sendData(allObjects, tileMap);
 		}
 		if (currentClient != null) {
-			currentClient.transceiveData();
+			currentClient.transceiveData(tileMap);
 		}
 		
 	}

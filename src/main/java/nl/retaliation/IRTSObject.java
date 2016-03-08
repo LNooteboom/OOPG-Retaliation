@@ -17,4 +17,6 @@ public interface IRTSObject {
 	public Player getOwner();
 	
 	public Vector2 getPos();
+	
+	public String serialize();
 }

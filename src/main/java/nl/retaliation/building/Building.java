@@ -58,4 +58,10 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String serialize() {
+		//TODO: Add serialization
+		return "";
+	}
 }
