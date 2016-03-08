@@ -14,6 +14,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.building.*;
+import nl.retaliation.dashboard.Selection;
 import nl.retaliation.logic.*;
 import nl.retaliation.unit.*;
 import nl.retaliation.level.*;
@@ -37,6 +38,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private ArrayList<Building> buildings = new ArrayList<Building>(100);
 	
 	private ArrayList<IRTSObject> selectedUnits = null;
+	private ArrayList<Selection> selections = null;
 	private Vector2 corMousePressed = null, corMouseReleased = null;
 
 	public static void main(String[] args) {
@@ -72,6 +74,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		//allObjects = vectorToArray(getGameObjectItems());
 		deleteDeadGameObjects();
 	}
+	
 	@Override
 	public void keyPressed() {
 		int moveSpeed = 32;
@@ -114,6 +117,15 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			else{
 				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
 			}
+			
+			removeSelection();
+			
+			selections = new ArrayList<Selection>(selectedUnits.size());
+			for(IRTSObject object : selectedUnits){
+				selections.add(new Selection(new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
+			}
+			
+			updateSelection();
 		}
 	}
 	
@@ -133,6 +145,22 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
+	}
+	
+	private void removeSelection(){
+		if(selections != null){
+			for(Selection selection : selections){
+				deleteGameObject(selection);
+			}
+		}
+	}
+	
+	private void updateSelection(){
+		if(selections != null){
+			for(Selection selection : selections){
+				this.addGameObject(selection);
+			}
+		}
 	}
 	
 	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
