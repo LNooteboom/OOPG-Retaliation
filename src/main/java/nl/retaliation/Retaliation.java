@@ -15,7 +15,11 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 
 import nl.retaliation.building.*;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+import nl.retaliation.dashboard.Minimap;
+>>>>>>> origin/master
 import nl.retaliation.dashboard.Selection;
 import nl.retaliation.logic.*;
 import nl.retaliation.unit.*;
@@ -42,10 +46,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private View view;
 	private Viewport viewport;
 	
+<<<<<<< HEAD
 	//private Player currentPlayer;
 	private Server currentServer;
 	private Client currentClient;
 	
+=======
+	private Minimap minimap;
+>>>>>>> origin/master
 	
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>(200);
 	private ArrayList<Unit> units = new ArrayList<Unit>(100);
@@ -86,6 +94,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		initTileMap();
 		tempViewPort(800, 600);
+		minimap = new Minimap(0, 0, this.getTileMap());
+		addDashboard(minimap);
 		setFPSCounter(true);
 	}
 
@@ -233,8 +243,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(0.5f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 		tileMap.setTile(3, 3, 1);
 	}
 	

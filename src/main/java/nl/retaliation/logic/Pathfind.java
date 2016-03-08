@@ -32,7 +32,7 @@ public class Pathfind {
 	 * @return List of path nodes
 	 */
 	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, Unit currentUnit, ArrayList<IRTSObject> gameobjects) {
-		if(!place_free(desiredPos, gameobjects, currentUnit)){
+		if(!place_free(desiredPos, gameobjects, currentUnit, terrain)){
 			return new ArrayList<Vector2>(0);
 		}
 		
@@ -53,7 +53,7 @@ public class Pathfind {
 				closedList.add(current);
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
 				for (PathNode currentNeighbor : neighbors) {
-					if (presentInList(currentNeighbor, closedList) || !place_free(currentNeighbor.getPos(), gameobjects, currentUnit)) { //als de neighbor in de closedlist staat of niet walkable is
+					if (presentInList(currentNeighbor, closedList) || !place_free(currentNeighbor.getPos(), gameobjects, currentUnit, terrain)) { //als de neighbor in de closedlist staat of niet walkable is
 						continue;
 					}
 					int duplicateIndex = findInList(currentNeighbor.getPos(), openList);
@@ -152,7 +152,7 @@ public class Pathfind {
 		return (1.0 * (dx + dy) + (1.4 - 2.0) * Math.min(dx, dy));
 		//return 0; //for dijkstra's algorithm (slower)
 	}
-	public static boolean place_free(Vector2 position, ArrayList<IRTSObject> allObjects, Unit currentUnit) {
+	public static boolean place_free(Vector2 position, ArrayList<IRTSObject> allObjects, Unit currentUnit, TileMap terrain) {
 		//Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 
 		if(currentUnit instanceof AirUnit){
@@ -165,6 +165,12 @@ public class Pathfind {
 		if(currentUnit instanceof GroundUnit){
 			for(IRTSObject object : allObjects){
 				if(object.getPos().equal(position) && object instanceof GroundUnit){
+					return false;
+				}
+				if(terrain.getTileMap()[position.getY()][position.getX()] == 0 && !((GroundUnit)currentUnit).canStepOnLand()){ // GrassTile
+					return false;
+				}
+				else if(terrain.getTileMap()[position.getY()][position.getX()] == 1 && !((GroundUnit)currentUnit).canStepOnWater()){ //WaterTile
 					return false;
 				}
 			}
