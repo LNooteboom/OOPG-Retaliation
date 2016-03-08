@@ -1,8 +1,10 @@
 package nl.retaliation.unit;
 
+import java.util.ArrayList;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Vector2;
 
@@ -28,11 +30,10 @@ public abstract class GroundUnit extends Unit{
 		
 	}
 	
-	public void setPath(Vector2 desiredTilePos, TileMap terrain, GameObject[] gameobjects) {
+	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects) {
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects);
-		System.out.println(currentPath.get(0).getX());
 	}
 	
 	

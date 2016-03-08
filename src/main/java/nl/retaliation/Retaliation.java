@@ -14,6 +14,12 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 
 import nl.retaliation.building.*;
+<<<<<<< HEAD
+=======
+import nl.retaliation.dashboard.Selection;
+import nl.retaliation.logic.*;
+import nl.retaliation.unit.*;
+>>>>>>> origin/master
 import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
@@ -46,6 +52,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private ArrayList<Building> buildings = new ArrayList<Building>(100);
 	
 	private ArrayList<IRTSObject> selectedUnits = null;
+	private ArrayList<Selection> selections = null;
 	private Vector2 corMousePressed = null, corMouseReleased = null;
 
 	public static void main(String[] args) {
@@ -95,6 +102,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		
 	}
+	
 	@Override
 	public void keyPressed() {
 		int moveSpeed = 32;
@@ -137,6 +145,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			else{
 				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
 			}
+			
+			removeSelection();
+			selections = new ArrayList<Selection>(selectedUnits.size());
+			for(IRTSObject object : selectedUnits){
+				selections.add(new Selection(new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
+			}
+			updateSelection();
 		}
 	}
 	
@@ -150,12 +165,28 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){
 				for(IRTSObject unit : selectedUnits){
-					((Unit)unit).setPath(tileCor, tileMap, this.getGameObjectItems().toArray(new GameObject[this.getGameObjectItems().size()]));
+					((Unit)unit).setPath(tileCor, tileMap, allObjects);
 				}
 			}
 		}
 		
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
+	}
+	
+	private void removeSelection(){
+		if(selections != null){
+			for(Selection selection : selections){
+				deleteGameObject(selection);
+			}
+		}
+	}
+	
+	private void updateSelection(){
+		if(selections != null){
+			for(Selection selection : selections){
+				this.addGameObject(selection);
+			}
+		}
 	}
 	
 	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
@@ -172,6 +203,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	private ArrayList<IRTSObject> vectorToIRTSObject(Vector2 cor){
 		ArrayList<IRTSObject> selectedObject = new ArrayList<IRTSObject>(1);
+		selectedObject.add(null);
 		
 		for(IRTSObject object: allObjects){
 			if(object.getPos().equal(cor)){
@@ -180,11 +212,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 					return selectedObject;
 				}
 				else{
-					if(selectedObject.size() == 0){
-						selectedObject.add(object);
-					}
+					selectedObject.set(0, object);
 				}
 			}
+		}
+		
+		if(selectedObject.get(0) == null){
+			return new ArrayList<IRTSObject>(0);
 		}
 		
 		return selectedObject;
