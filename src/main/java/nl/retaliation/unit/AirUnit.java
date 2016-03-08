@@ -23,11 +23,11 @@ public abstract class AirUnit extends Unit{
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects){
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
-		this.currentPath = setPath(desiredTilePos, this.tilePosition, gameobjects);
+		this.currentPath = setPath(desiredTilePos, this.tilePosition, gameobjects, terrain);
 	}
 	
-	private ArrayList<Vector2> setPath(Vector2 desiredTilePos, Vector2 pos, ArrayList<IRTSObject> gameobjects){
-		if(!Pathfind.place_free(desiredTilePos, gameobjects, this)){
+	private ArrayList<Vector2> setPath(Vector2 desiredTilePos, Vector2 pos, ArrayList<IRTSObject> gameobjects, TileMap terrain){
+		if(!Pathfind.place_free(desiredTilePos, gameobjects, this, terrain)){
 			return new ArrayList<Vector2>(0);
 		}
 		Vector2 currentPos = pos;
