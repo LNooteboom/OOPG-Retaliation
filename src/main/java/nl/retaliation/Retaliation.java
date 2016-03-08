@@ -177,6 +177,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	private ArrayList<IRTSObject> vectorToIRTSObject(Vector2 cor){
 		ArrayList<IRTSObject> selectedObject = new ArrayList<IRTSObject>(1);
+		selectedObject.add(null);
 		
 		for(IRTSObject object: allObjects){
 			if(object.getPos().equal(cor)){
@@ -185,9 +186,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 					return selectedObject;
 				}
 				else{
-					if(selectedObject.size() == 0){
-						selectedObject.add(object);
-					}
+					selectedObject.set(0, object);
 				}
 			}
 		}
