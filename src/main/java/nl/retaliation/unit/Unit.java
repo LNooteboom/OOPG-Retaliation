@@ -2,6 +2,7 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
@@ -125,8 +126,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public String serialize() {
 		String output = "";
 		output += ("$" + this.getClass());
-		output += ("$" + x);
-		output += ("$" + y);
+		output += ("$" + (int) tilePosition.getX());
+		output += ("$" + (int) tilePosition.getY());
 		output += ("$" + currentDirection);
 		
 		return output;
@@ -152,5 +153,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	}
 	public Player getOwner() {
 		return null;
+	}
+	public void addToEngine(GameEngine engine) {
+		engine.addGameObject(this);
 	}
 }

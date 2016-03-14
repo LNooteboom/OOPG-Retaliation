@@ -43,6 +43,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	//private Player currentPlayer;
 	private Server currentServer;
 	private Client currentClient;
+	private boolean isServer = false;
 	
 	private Minimap minimap;
 	
@@ -60,20 +61,20 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		//currentServer = new Server(63530);
-		//currentClient = new Client("Luke-Laptop", 63530);
-		
-		IRTSObject u = new SovIFV(6, 6, TILESIZE);
-		System.out.println(u.serialize());
+		if (isServer) {
+			currentServer = new Server(63530);
+		} else {
+			currentClient = new Client("Luke-Laptop", 63530);
+		}
 		
 		units.add(new SovIFV(6, 6, TILESIZE));
-		units.add(new SovIFV(10, 10, TILESIZE));
-		units.add(new SovMiG(13, 13, TILESIZE));
-		units.add(new SovMiG(16, 16, TILESIZE));
-		buildings.add(new HQRed(12, 12, TILESIZE));
-		buildings.add(new HQRed(3, 3, TILESIZE));
-		buildings.add(new HQRed(2, 2, TILESIZE));
-		buildings.add(new HQRed(1, 1, TILESIZE));
+//		units.add(new SovIFV(10, 10, TILESIZE));
+//		units.add(new SovMiG(13, 13, TILESIZE));
+//		units.add(new SovMiG(16, 16, TILESIZE));
+//		buildings.add(new HQRed(12, 12, TILESIZE));
+//		buildings.add(new HQRed(3, 3, TILESIZE));
+//		buildings.add(new HQRed(2, 2, TILESIZE));
+//		buildings.add(new HQRed(1, 1, TILESIZE));
 		
 		for(Unit unit : units){
 			addGameObject(unit);
@@ -87,7 +88,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		initTileMap();
 		tempViewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
-		addDashboard(minimap);
+		//addDashboard(minimap);
 		setFPSCounter(true);
 	}
 
@@ -100,7 +101,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentServer.sendData(allObjects, tileMap);
 		}
 		if (currentClient != null) {
-			currentClient.transceiveData(tileMap);
+			deleteAllGameOBjects();
+			IRTSObject newObject = currentClient.transceiveData(tileMap);
+			if (newObject != null) {
+				newObject.addToEngine(this);
+				//System.out.println(newObject.getX() + ", " + newObject.getY());
+			}
 		}
 		
 	}

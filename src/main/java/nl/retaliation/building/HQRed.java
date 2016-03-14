@@ -1,5 +1,6 @@
 package nl.retaliation.building;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.retaliation.players.Player;
 
@@ -12,5 +13,11 @@ public class HQRed extends Building{
 	@Override
 	public void destroy() {
 		// Boom!
+	}
+
+	@Override
+	public void addToEngine(GameEngine engine) {
+		// TODO Auto-generated method stub
+		
 	}
 }

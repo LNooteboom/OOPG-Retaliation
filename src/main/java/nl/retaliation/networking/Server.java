@@ -56,15 +56,20 @@ public class Server {
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		try {
-			String input = in.readLine();
-			String output = protocol.processInput(input);
-			if (output != "") {
-				out.println(output);
-			}
-		} catch (IOException e) {
-			System.out.println("Error sending/receiving transmission");
-		}
+		//try {
+			//String input = in.readLine();
+			//String output = protocol.processInput(input);
+			//if (output != "") {
+			//	out.println(output);
+			//}
+			//out.println("start");
+			//for (IRTSObject rtsObject : gameobjects) {
+				IRTSObject rtsObject = gameobjects.get(0);
+				out.println(rtsObject.serialize());
+			//}
+		//} catch (IOException e) {
+		//	System.out.println("Error sending/receiving transmission");
+		//}
 	}
 	
 	public boolean sendTileMap() {

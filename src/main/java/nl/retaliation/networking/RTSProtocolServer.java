@@ -15,7 +15,7 @@ public class RTSProtocolServer{
 	public String processInput(String input) {
 		String output = "";
 		if (state == WAITING && input == "pls send me stuff") {
-			output = "you want some tilemap with that?";
+			output = "yu want tilemap?";
 			state = SENT_ACK;
 		} else if (state == SENT_ACK){
 			if (input == "ye") {
