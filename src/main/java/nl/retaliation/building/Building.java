@@ -64,4 +64,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		//TODO: Add serialization
 		return "";
 	}
+	public float getHealthPercentage() {
+		return 0;
+	}
 }

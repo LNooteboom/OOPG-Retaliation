@@ -61,10 +61,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
+		setGameSpeed(30);
 		if (isServer) {
 			currentServer = new Server(63530);
 		} else {
-			currentClient = new Client("Luke-Laptop", 63530);
+			currentClient = new Client("LUKE-DESKTOP", 63530);
 		}
 		
 		units.add(new SovIFV(6, 6, TILESIZE));
@@ -242,7 +243,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
 		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
 		tileMap.setTile(3, 3, 1);
 	}
 	

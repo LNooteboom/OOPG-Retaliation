@@ -58,6 +58,7 @@ public class Client {
 	public IRTSObject transceiveData(TileMap tilemap) {
 		try {
 			String line = input.readLine();
+			System.out.println(line);
 			//System.out.println(line);
 			
 			//if (line != null && line == "start") {
@@ -104,8 +105,8 @@ public class Client {
 		for (int i = prevSepPos + 1; i < input.length(); i++) {
 			if (input.charAt(i) == '$') {
 				xPos = Integer.parseInt(input.substring(prevSepPos + 1, i));
-				System.out.println(xPos);
-				System.out.println(input.substring(prevSepPos + 1, i));
+				//System.out.println(xPos);
+				//System.out.println(input.substring(prevSepPos + 1, i));
 				prevSepPos = i;
 				break;
 			}
