@@ -43,7 +43,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	//private Player currentPlayer;
 	private Server currentServer;
 	private Client currentClient;
-	private boolean isServer = false;
+	private boolean isServer = true;
 	
 	private Minimap minimap;
 	
@@ -61,7 +61,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		setGameSpeed(30);
+		//setGameSpeed(30);
 		if (isServer) {
 			currentServer = new Server(63530);
 		} else {

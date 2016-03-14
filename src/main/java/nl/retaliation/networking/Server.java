@@ -1,5 +1,6 @@
 package nl.retaliation.networking;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +14,8 @@ import nl.retaliation.IRTSObject;
 
 public class Server {
 	private int port;
+	private int time = 0;
+	private final int wait = 1;
 	
 	//private ServerSocket socket;
 	private RTSProtocolServer protocol = new RTSProtocolServer();
@@ -43,7 +46,7 @@ public class Server {
 			try {
 				Socket newClient = serverSocket.accept();
 				input.add(new BufferedReader(new InputStreamReader(newClient.getInputStream())));
-				output.add(new PrintWriter(newClient.getOutputStream(), true));
+				output.add(new PrintWriter(new BufferedOutputStream(newClient.getOutputStream()), false));
 				connectedClients.add(newClient);
 			} catch (IOException e){
 				System.out.println("Error waiting for clients?");
@@ -51,8 +54,13 @@ public class Server {
 		}
 	}
 	public void sendData(ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		for (int i = 0; i < connectedClients.size(); i++) {
-			transceiveData(output.get(i), input.get(i), gameobjects, tilemap);
+		if (time == wait) {
+			for (int i = 0; i < connectedClients.size(); i++) {
+				transceiveData(output.get(i), input.get(i), gameobjects, tilemap);
+			}
+			time = 0;
+		} else {
+			time++;
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
@@ -66,6 +74,8 @@ public class Server {
 			//for (IRTSObject rtsObject : gameobjects) {
 				IRTSObject rtsObject = gameobjects.get(0);
 				out.println(rtsObject.serialize());
+				out.flush();
+				
 			//}
 		//} catch (IOException e) {
 		//	System.out.println("Error sending/receiving transmission");
