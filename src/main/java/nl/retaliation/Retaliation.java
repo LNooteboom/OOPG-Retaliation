@@ -151,7 +151,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			removeSelection();
 			selections = new ArrayList<Selection>(selectedUnits.size());
 			for(IRTSObject object : selectedUnits){
-				selections.add(new Selection(new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
+				selections.add(new Selection(this, new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
 			}
 			updateSelection();
 		}
@@ -178,7 +178,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private void removeSelection(){
 		if(selections != null){
 			for(Selection selection : selections){
-				deleteGameObject(selection);
+				selection.removeSelf(this);
 			}
 		}
 	}
