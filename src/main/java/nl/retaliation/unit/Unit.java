@@ -3,7 +3,6 @@ package nl.retaliation.unit;
 import java.util.ArrayList;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 
@@ -25,10 +24,10 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	protected boolean isMoving = false;
 	private boolean isIndestructible = false;
 	
-	private int health;
+	private int maxHealth, health;
 	private int armor;
 	
-	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor) {
+	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor) {
 		super(sprite, 8);
 		
 		this.setX(x * tileSize);
@@ -39,7 +38,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.setHeight(tileSize);
 		
 		this.maxSpeed = maxSpeed;
-		this.health = health;
+		this.maxHealth = maxHealth;
+		this.health = maxHealth;
 		this.armor = armor;
 	}
 	
@@ -138,6 +138,11 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public int getHealth() {
 		return health;
 	}
+	
+	public float getHealthPercentage(){
+		return (float)health / (float)maxHealth;
+	}
+	
 	public int getArmor() {
 		return armor;
 	}

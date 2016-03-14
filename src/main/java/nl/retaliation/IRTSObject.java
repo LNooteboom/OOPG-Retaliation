@@ -12,6 +12,8 @@ public interface IRTSObject {
 	
 	public int getHealth();
 	
+	public float getHealthPercentage();
+	
 	public int getArmor();
 	
 	public Player getOwner();
