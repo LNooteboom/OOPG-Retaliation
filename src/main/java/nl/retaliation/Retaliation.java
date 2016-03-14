@@ -102,11 +102,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentServer.sendData(allObjects, tileMap);
 		}
 		if (currentClient != null) {
-			deleteAllGameOBjects();
 			IRTSObject newObject = currentClient.transceiveData(tileMap);
 			if (newObject != null) {
+				deleteAllGameOBjects();
 				newObject.addToEngine(this);
-				//System.out.println(newObject.getX() + ", " + newObject.getY());
 			}
 		}
 		

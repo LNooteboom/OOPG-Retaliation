@@ -1,5 +1,6 @@
 package nl.retaliation.networking;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +18,6 @@ import nl.retaliation.IRTSObject;
 public class Client {
 	private int hostPort;
 	private String hostName;
-	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
 	
@@ -26,20 +26,17 @@ public class Client {
 		this.hostPort = hostPort;
 		
 		createClient();
-		System.out.println("c: "+socket.isClosed());
+		//System.out.println("c: "+socket.isClosed());
 	}
 	
 	private void createClient() {
-		try 
-				//Socket newSocket = new Socket(hostName, hostPort);
-				//PrintWriter out = new PrintWriter(newSocket.getOutputStream(), true);
-				//BufferedReader in = new BufferedReader(new InputStreamReader(newSocket.getInputStream()));
-			 {
-			socket = new Socket(hostName, hostPort);
-			socket.setKeepAlive(true);
+		try {
+			Socket socket = new Socket(hostName, hostPort);
+			//socket.setKeepAlive(true);
+			socket.setTcpNoDelay(true);
 			
-			this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			this.output = new PrintWriter(socket.getOutputStream(), true);
+			this.input = new BufferedReader(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
+			//this.output = new PrintWriter(socket.getOutputStream(), true);
 			
 			System.out.println("connected!");
 			
@@ -50,20 +47,16 @@ public class Client {
 		}
 	}
 	
-	public Socket getSocket() {
-		return socket;
-	}
-	
-	
 	public IRTSObject transceiveData(TileMap tilemap) {
 		try {
 			String line = input.readLine();
-			System.out.println(line);
 			//System.out.println(line);
+			
+			return deserializeGameObject(line);
 			
 			//if (line != null && line == "start") {
 				//System.out.println("received: "+input.readLine());
-				return deserializeGameObject(line);
+				//return deserializeGameObject(line);
 				//socket.close();
 			//}
 		} catch (IOException e) {
