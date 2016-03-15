@@ -65,8 +65,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentClient = new Client("localhost", 63530);
 		}
 		
-		units.add(new SovIFV(6, 6, TILESIZE));
-		units.add(new SovIFV(10, 10, TILESIZE));
+		units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
+		units.add(new SovIFV(10 * TILESIZE, 10 * TILESIZE, TILESIZE));
 //		units.add(new SovMiG(13, 13, TILESIZE));
 //		units.add(new SovMiG(16, 16, TILESIZE));
 //		buildings.add(new HQRed(12, 12, TILESIZE));
@@ -240,7 +240,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
+		LevelGenerator noise = new LevelGenerator(0000f, 128, 128);
 		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
 		tileMap.setTile(3, 3, 1);
 	}

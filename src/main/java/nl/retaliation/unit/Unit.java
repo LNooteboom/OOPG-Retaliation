@@ -8,6 +8,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 
 import nl.retaliation.IRTSObject;
+import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
@@ -21,6 +22,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private int spriteDirection = 0;
 	
 	protected ArrayList<Vector2> currentPath;
+	
+	protected ArrayList<IRTSObject> gameobjects;
+	protected TileMap terrain;
 
 	private float maxSpeed;
 	
@@ -50,6 +54,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public abstract void destroy();
 	
 	public void update() {
+		
 		tilePosition.setX((int) (x / width));
 		tilePosition.setY((int) (y / height));
 		
@@ -74,6 +79,13 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 			float nextY = currentPath.get(0).getY() * height;
 			float deltaX = nextX - x;
 			float deltaY = nextY - y;
+			if (Pathfind.place_free(new Vector2(currentPath.get(0).getX(), currentPath.get(0).getY()), gameobjects, this, terrain) == false) {
+				setPath(desiredTilePos, terrain, gameobjects);
+				if (currentPath.size() == 0) {
+					currentPath.add(tilePosition);
+				}
+				return;
+			}
 
 			if (maxSpeed >= Trigonio.distance(deltaX, deltaY)) { //To prevent oscillation
 				x = nextX;
@@ -90,7 +102,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 				y = y + Trigonio.ySpeed(currentDirection, maxSpeed);
 
 				Vector2 newTile = new Vector2((int) Math.floor(x / width), (int) Math.floor(y / height));
-				if (newTile.equal(currentPath.get(0))) {
+				if (currentPath.size() > 0 && newTile.equal(currentPath.get(0))) {
 					tilePosition = currentPath.get(0);
 				}
 			}

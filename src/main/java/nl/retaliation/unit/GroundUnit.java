@@ -32,6 +32,8 @@ public abstract class GroundUnit extends Unit{
 	
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float targetRadius) {
 		isMoving = true;
+		this.gameobjects = gameobjects;
+		this.terrain = terrain;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = Pathfind.calcPath(tilePosition, desiredTilePos, terrain, this, gameobjects, targetRadius);
 	}
