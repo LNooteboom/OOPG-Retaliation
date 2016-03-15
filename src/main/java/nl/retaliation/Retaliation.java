@@ -7,24 +7,22 @@ import java.util.Vector;
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
-import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-
-import nl.retaliation.building.*;
+import nl.retaliation.building.Building;
 import nl.retaliation.dashboard.Minimap;
 import nl.retaliation.dashboard.Selection;
-import nl.retaliation.logic.*;
-import nl.retaliation.unit.*;
-import nl.retaliation.level.*;
+import nl.retaliation.level.GrassTile;
+import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
 import nl.retaliation.networking.Server;
-import nl.retaliation.unit.*;
-
+import nl.retaliation.unit.AirUnit;
+import nl.retaliation.unit.SovIFV;
+import nl.retaliation.unit.Unit;
 import processing.core.PApplet;
 
 /**
@@ -88,7 +86,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		initTileMap();
 		tempViewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
-		//addDashboard(minimap);
+		addDashboard(minimap);
 		setFPSCounter(true);
 	}
 
@@ -169,7 +167,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
 		int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
 		Vector2 tileCor = new Vector2(xTile, yTile);
-		Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
+		//Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
 		
 		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){

@@ -14,15 +14,12 @@ public class LevelGenerator {
 	private float roughness;
 	private float[][] tiles;
 	private int totalSize;
-	private int oldPercent;
-	private long progress;
 	
 	public LevelGenerator(float roughness, int width, int height) {
 		this.roughness = roughness / width;
 		this.tiles = new float[width][height];
 		this.totalSize = width + height;
 		this.random = new Random();
-		this.progress = 0;
 	}
 	/**
 	 * Generates a level
@@ -79,11 +76,7 @@ public class LevelGenerator {
 			
 		} else {
 			//store the new value in the array
-			//if (x <= tiles.length && y <= tiles[0].length) {
-				tiles[y][x] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
-				progress++;
-				//System.out.println("Done "+progress+" out of "+(tiles.length * tiles[0].length));
-			//}
+			tiles[y][x] = (cornerValue1 + cornerValue2 + cornerValue3 + cornerValue4) / 4;
 		}
 	}
 	private float normalize(float input) {

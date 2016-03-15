@@ -3,11 +3,8 @@ package nl.retaliation.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
-import nl.han.ica.OOPDProcessingEngineHAN.Tile.Tile;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
-import nl.retaliation.level.WaterTile;
 import nl.retaliation.unit.AirUnit;
 import nl.retaliation.unit.GroundUnit;
 import nl.retaliation.unit.Unit;
