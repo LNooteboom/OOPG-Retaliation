@@ -6,14 +6,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
+import nl.retaliation.unit.Unit;
 
 public class Client {
 	private int hostPort;
@@ -47,27 +46,34 @@ public class Client {
 		}
 	}
 	
-	public IRTSObject transceiveData(TileMap tilemap) {
+	public ArrayList<IRTSObject> transceiveData(TileMap tilemap) {
 		try {
 			String line = input.readLine();
-			//System.out.println(line);
 			
-			return deserializeGameObject(line);
-			
-			//if (line != null && line == "start") {
-				//System.out.println("received: "+input.readLine());
-				//return deserializeGameObject(line);
-				//socket.close();
-			//}
+			return deserializeGameObjects(line);
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 		return null;
 	}
-	private void deserializeGameObjects(String input) {
-		char objectSeperator = '\n';
-		int nextSep = 0;
+	private ArrayList<IRTSObject> deserializeGameObjects(String input) {
+		ArrayList<IRTSObject> gameobjects = new ArrayList<IRTSObject>();
+		char objectSeperator = '%';
+		int prevSepPos = 0;
 		
+		for (int i = 1; i < input.length(); i++) {
+			if (input.charAt(i) == objectSeperator) {
+				String objectString = input.substring(prevSepPos + 1, i);
+				gameobjects.add(deserializeGameObject(objectString));
+				
+				prevSepPos = i;
+				//break;
+			} else if (i == input.length() - 1) {
+				String objectString = input.substring(prevSepPos + 1, input.length());
+				gameobjects.add(deserializeGameObject(objectString));
+			}
+		}
+		return gameobjects;
 	}
 	private IRTSObject deserializeGameObject(String input) {
 		Class<IRTSObject> objectClass = null;
@@ -76,14 +82,13 @@ public class Client {
 		IRTSObject newObject;
 		int xPos = 0;
 		int yPos = 0;
-		float direction;
+		int direction;
 		
 		int prevSepPos = 0;
 		char seperator = '$';
 		for (int i = 1; i < input.length(); i++) {
 			if (input.charAt(i) == seperator) {
 				String className = input.substring(7, i);
-				//System.out.println(className);
 				
 				try {
 					objectClass = (Class<IRTSObject>) Class.forName(className);
@@ -98,8 +103,6 @@ public class Client {
 		for (int i = prevSepPos + 1; i < input.length(); i++) {
 			if (input.charAt(i) == '$') {
 				xPos = Integer.parseInt(input.substring(prevSepPos + 1, i));
-				//System.out.println(xPos);
-				//System.out.println(input.substring(prevSepPos + 1, i));
 				prevSepPos = i;
 				break;
 			}
@@ -111,6 +114,7 @@ public class Client {
 				break;
 			}
 		}
+		direction = Integer.parseInt(input.substring(prevSepPos + 1, input.length()));
 		if (classExists) {
 			
 			Class<?>[] pars = {Float.TYPE, Float.TYPE, Integer.TYPE};
@@ -119,8 +123,10 @@ public class Client {
 				Constructor<?> constructor = objectClass.getConstructor(pars);
 				try {
 					newObject = (IRTSObject) constructor.newInstance(initargs);
-					//System.out.println(newObject.getX());
 					//Holy shit het werkt!!
+					if (newObject instanceof Unit) {
+						((Unit) newObject).forceSpriteDirection(direction);
+					}
 					return newObject;
 					
 				} catch (Exception e) {

@@ -48,7 +48,6 @@ public class Pathfind {
 				desiredNode = current;
 				break;
 			} else {
-				System.out.println(current.getPos().getX() + ", " + current.getPos().getY());
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
@@ -106,9 +105,6 @@ public class Pathfind {
 				lowestGCost = currentCandidate.getgCost();
 				finalPos = currentCandidate;
 			}
-		}
-		if (finalPos.getPos().getX() != finalPos.getPos().getY()) {
-			System.out.println("as");
 		}
 		return finalPos;
 	}

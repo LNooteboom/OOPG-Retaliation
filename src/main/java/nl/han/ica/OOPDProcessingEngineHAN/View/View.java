@@ -103,7 +103,7 @@ public class View {
      * @param i
      */
     private void drawVisibleGameObjects(List<GameObject> gameObjects, PGraphics viewGraphics, int i) {
-        if(gameObjects.get(i).isVisible()) {
+        if(i < gameObjects.size() && gameObjects.get(i).isVisible()) {
             gameObjects.get(i).drawWithViewport(viewGraphics, viewport);
         }
     }

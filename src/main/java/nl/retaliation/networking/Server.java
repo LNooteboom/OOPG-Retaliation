@@ -15,7 +15,7 @@ import nl.retaliation.IRTSObject;
 public class Server {
 	private int port;
 	private int time = 0;
-	private final int wait = 1;
+	private final int wait = 2;
 	
 	//private ServerSocket socket;
 	private RTSProtocolServer protocol = new RTSProtocolServer();
@@ -64,22 +64,12 @@ public class Server {
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		//try {
-			//String input = in.readLine();
-			//String output = protocol.processInput(input);
-			//if (output != "") {
-			//	out.println(output);
-			//}
-			//out.println("start");
-			//for (IRTSObject rtsObject : gameobjects) {
-				IRTSObject rtsObject = gameobjects.get(0);
-				out.println(rtsObject.serialize());
-				out.flush();
-				
-			//}
-		//} catch (IOException e) {
-		//	System.out.println("Error sending/receiving transmission");
-		//}
+		String output = "";
+		for (IRTSObject rtsObject : gameobjects) {
+			output += rtsObject.serialize();
+		}
+		out.println(output);
+		out.flush();
 	}
 	
 	public boolean sendTileMap() {

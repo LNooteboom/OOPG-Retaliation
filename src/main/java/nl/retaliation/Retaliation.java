@@ -43,7 +43,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	//private Player currentPlayer;
 	private Server currentServer;
 	private Client currentClient;
-	private boolean isServer = true;
+	private boolean isServer = false;
 	
 	private Minimap minimap;
 	
@@ -61,15 +61,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		//setGameSpeed(30);
 		if (isServer) {
 			currentServer = new Server(63530);
 		} else {
-			currentClient = new Client("LUKE-DESKTOP", 63530);
+			currentClient = new Client("localhost", 63530);
 		}
 		
 		units.add(new SovIFV(6, 6, TILESIZE));
-//		units.add(new SovIFV(10, 10, TILESIZE));
+		units.add(new SovIFV(10, 10, TILESIZE));
 //		units.add(new SovMiG(13, 13, TILESIZE));
 //		units.add(new SovMiG(16, 16, TILESIZE));
 //		buildings.add(new HQRed(12, 12, TILESIZE));
@@ -102,10 +101,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentServer.sendData(allObjects, tileMap);
 		}
 		if (currentClient != null) {
-			IRTSObject newObject = currentClient.transceiveData(tileMap);
-			if (newObject != null) {
+			ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
+			if (newObjects != null) {
 				deleteAllGameOBjects();
-				newObject.addToEngine(this);
+				for (IRTSObject newObject : newObjects) {
+					newObject.addToEngine(this);
+				}
 			}
 		}
 		

@@ -17,6 +17,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	protected Vector2 tilePosition;
 	protected Vector2 desiredTilePos;
 	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN RAD
+	private int spriteDirection = 0;
 	
 	protected ArrayList<Vector2> currentPath;
 
@@ -31,8 +32,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor) {
 		super(sprite, 8);
 		
-		this.setX(x * tileSize);
-		this.setY(y * tileSize);
+		this.setX(x);
+		this.setY(y);
 		tilePosition = new Vector2((int) x / tileSize, (int) y / tileSize);
 		
 		this.setWidth(tileSize);
@@ -92,45 +93,60 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private void updateSpriteDirection(double trueDirection){
 		double pi8 = Trigonio.PI / 8;
 		if (trueDirection >= pi8 && trueDirection < Trigonio.QUARTER_PI + pi8) { //bottom-right
+			spriteDirection = 1;
 			setCurrentFrameIndex(1);
 			return;
 		}
 		if (trueDirection >= Trigonio.QUARTER_PI + pi8 && trueDirection < Trigonio.HALF_PI + pi8) { //bottom
+			spriteDirection = 2;
 			setCurrentFrameIndex(2);
 			return;
 		}
 		if (trueDirection >= Trigonio.HALF_PI + pi8 && trueDirection < Trigonio.PI - pi8) { //bottom-left
+			spriteDirection = 3;
 			setCurrentFrameIndex(3);
 			return;
 		}
 		if ((trueDirection >= Trigonio.PI - pi8 && trueDirection < Trigonio.PI + pi8)|| (trueDirection <= -(Trigonio.PI - pi8) && trueDirection > -(Trigonio.PI + pi8))) { //left
+			spriteDirection = 4;
 			setCurrentFrameIndex(4);
 			return;
 		}
 		if (trueDirection <= -(Trigonio.HALF_PI + pi8) && trueDirection > -(Trigonio.PI - pi8)) { //top-left
+			spriteDirection = 5;
 			setCurrentFrameIndex(5);
 			return;
 		}
 		if (trueDirection <= -(Trigonio.QUARTER_PI + pi8) && trueDirection > -(Trigonio.HALF_PI + pi8)) { //top
+			spriteDirection = 6;
 			setCurrentFrameIndex(6);
 			return;
 		}
 		if (trueDirection <= -pi8 && trueDirection > -(Trigonio.QUARTER_PI + pi8)) { //top-right
+			spriteDirection = 7;
 			setCurrentFrameIndex(7);
 			return;
 		}
+		spriteDirection = 0;
 		setCurrentFrameIndex(0); //right
 	}
 	
 	@Override
 	public String serialize() {
-		String output = "";
+		String output = "%";
 		output += ("$" + this.getClass());
-		output += ("$" + (int) tilePosition.getX());
-		output += ("$" + (int) tilePosition.getY());
-		output += ("$" + currentDirection);
-		
+		output += ("$" + (int) getX());
+		output += ("$" + (int) getY());
+		if (spriteDirection != 0) {
+			output += ("$" + spriteDirection);
+		} else {
+			output += "$0";
+		}
 		return output;
+	}
+	public void forceSpriteDirection(int direction) {
+		spriteDirection = direction;
+		setCurrentFrameIndex(direction);
 	}
 	
 	public void damage(int damage) {
