@@ -19,9 +19,9 @@ public class HealthBar extends GameObject {
 	@Override
 	public void drawWithViewport(PGraphics g, Viewport viewport){
 		g.fill(128);
-		g.rect(object.getX(), object.getY(), TILESIZE-1, height);
+		g.rect(object.getX() - viewport.getX(), object.getY() - viewport.getY(), TILESIZE-1, height);
 		g.fill(255);
-		g.rect(object.getX(), object.getY(), TILESIZE*object.getHealthPercentage()-1, height);
+		g.rect(object.getX() - viewport.getX(), object.getY() - viewport.getY(), TILESIZE*object.getHealthPercentage()-1, height);
 	}
 
 	@Override
