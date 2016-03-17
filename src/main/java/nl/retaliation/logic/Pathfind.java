@@ -147,7 +147,9 @@ public class Pathfind {
 	}
 	public static boolean place_free(Vector2 position, ArrayList<IRTSObject> allObjects, Unit currentUnit, TileMap terrain) {
 		//Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
-
+		if (allObjects == null) {
+			return false;
+		}
 		if(currentUnit instanceof AirUnit){
 			for(IRTSObject object : allObjects){
 				if(object.getPos().equal(position) && object instanceof AirUnit){

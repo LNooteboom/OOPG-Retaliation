@@ -20,9 +20,7 @@ import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
 import nl.retaliation.networking.Server;
-import nl.retaliation.unit.AirUnit;
-import nl.retaliation.unit.SovIFV;
-import nl.retaliation.unit.Unit;
+import nl.retaliation.unit.*;
 import processing.core.PApplet;
 
 /**
@@ -67,8 +65,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
 		units.add(new SovIFV(10 * TILESIZE, 10 * TILESIZE, TILESIZE));
-//		units.add(new SovMiG(13, 13, TILESIZE));
-//		units.add(new SovMiG(16, 16, TILESIZE));
+		units.add(new SovMiG(13 * TILESIZE, 13 * TILESIZE, TILESIZE));
+		units.add(new SovMiG(16 * TILESIZE, 16 * TILESIZE, TILESIZE));
 //		buildings.add(new HQRed(12, 12, TILESIZE));
 //		buildings.add(new HQRed(3, 3, TILESIZE));
 //		buildings.add(new HQRed(2, 2, TILESIZE));
@@ -240,8 +238,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(0000f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.2f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
