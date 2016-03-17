@@ -19,6 +19,7 @@ public class Client {
 	private String hostName;
 	private BufferedReader input;
 	private PrintWriter output;
+	private Socket socket;
 	
 	public Client(String hostName, int hostPort) {
 		this.hostName = hostName;
@@ -33,6 +34,7 @@ public class Client {
 			Socket socket = new Socket(hostName, hostPort);
 			//socket.setKeepAlive(true);
 			socket.setTcpNoDelay(true);
+			this.socket = socket;
 			
 			this.input = new BufferedReader(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
 			//this.output = new PrintWriter(socket.getOutputStream(), true);
@@ -75,6 +77,7 @@ public class Client {
 		}
 		return gameobjects;
 	}
+	@SuppressWarnings("unchecked")
 	private IRTSObject deserializeGameObject(String input) {
 		Class<IRTSObject> objectClass = null;
 		boolean classExists = false;
@@ -137,5 +140,12 @@ public class Client {
 			}
 		}
 		return null;
+	}
+	public void disconnect() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
