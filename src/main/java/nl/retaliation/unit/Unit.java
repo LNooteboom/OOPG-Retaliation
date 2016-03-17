@@ -11,6 +11,7 @@ import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
+import nl.retaliation.unit.weapon.*;
 
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
@@ -28,6 +29,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	private int maxHealth, health;
 	private int armor;
+	private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
 	
 	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor) {
 		super(sprite, 8);
@@ -59,7 +61,12 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		}
 	}
 	
-	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects);
+	@Override
+	public void target(IRTSObject enemy) {
+		
+	}
+	
+	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float targetRadius);
 	
 	private void moveNext() {
 		if (currentPath != null && currentPath.size() > 0) { //checks if path exists
@@ -137,6 +144,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		output += ("$" + this.getClass());
 		output += ("$" + (int) getX());
 		output += ("$" + (int) getY());
+		
 		if (spriteDirection != 0) {
 			output += ("$" + spriteDirection);
 		} else {
@@ -170,6 +178,11 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public Player getOwner() {
 		return null;
 	}
+	@Override
+	public void addWeapon(Weapon newWeapon) {
+		weapons.add(newWeapon);
+	}
+	
 	public void addToEngine(GameEngine engine) {
 		engine.addGameObject(this);
 	}

@@ -1,5 +1,7 @@
 package nl.retaliation.logic;
 
+import nl.retaliation.logic.Trigonio;
+
 /**
  * This class stores coordinates for a 2D environment
  * 
@@ -34,6 +36,15 @@ public class Vector2 {
 	 */
 	public boolean equal(Vector2 object2) {
 		return x == object2.x && y == object2.y;
+	}
+	public boolean withinRadius(Vector2 object2, float radius) {
+		int deltaX = x - object2.getX();
+		int deltaY = y - object2.getY();
+		if (Trigonio.distance(deltaX, deltaY) <= radius) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean between(Vector2 vector1, Vector2 vector2){

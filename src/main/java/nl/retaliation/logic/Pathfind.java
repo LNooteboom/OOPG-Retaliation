@@ -31,7 +31,7 @@ public class Pathfind {
 	 * @param currentLevel map of obstacles
 	 * @return List of path nodes
 	 */
-	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, Unit currentUnit, ArrayList<IRTSObject> gameobjects) {
+	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, Unit currentUnit, ArrayList<IRTSObject> gameobjects, float targetRadius) {
 		if(!place_free(desiredPos, gameobjects, currentUnit, terrain)){
 			return new ArrayList<Vector2>(0);
 		}
@@ -44,7 +44,7 @@ public class Pathfind {
 
 		while (openList.size() > 0) {
 			PathNode current = calcLowestFCost(openList);
-			if (current.getPos().equal(desiredPos)) { //doel bereikt
+			if (current.getPos().withinRadius(desiredPos, targetRadius)) { //doel bereikt
 				desiredNode = current;
 				break;
 			} else {

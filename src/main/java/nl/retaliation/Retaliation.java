@@ -174,7 +174,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){
 				for(IRTSObject unit : selectedUnits){
-					((Unit)unit).setPath(tileCor, tileMap, allObjects);
+					((Unit)unit).setPath(tileCor, tileMap, allObjects, 0.1f);
 				}
 			}
 		}

@@ -20,7 +20,7 @@ public abstract class AirUnit extends Unit{
 		super(x, y, sprite, tileSize, maxSpeed, health, armor);
 	}
 	
-	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects){
+	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float radius){
 		isMoving = true;
 		this.desiredTilePos = desiredTilePos;
 		this.currentPath = setPath(desiredTilePos, this.tilePosition, gameobjects, terrain);

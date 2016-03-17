@@ -3,6 +3,7 @@ package nl.retaliation;
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
+import nl.retaliation.unit.weapon.Weapon;
 
 public interface IRTSObject {
 	
@@ -24,4 +25,8 @@ public interface IRTSObject {
 	public String serialize();
 	
 	public void addToEngine(GameEngine engine);
+	
+	public void addWeapon(Weapon newWeapon);
+	
+	public void target(IRTSObject enemy);
 }

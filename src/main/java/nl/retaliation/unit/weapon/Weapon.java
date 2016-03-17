@@ -5,12 +5,19 @@ import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Trigonio;
 
 public abstract class Weapon {
-	private float range;
-	private int cooldown;
+	protected float range;
+	protected int cooldown;
+	
+	protected int damage;
+	protected int armorDamage;
+	
 	private int timeSinceLastFire = 0;
 	
 	private GameObject parent;
 	public IRTSObject enemy;
+	
+	private boolean antiAir;
+	private boolean antiGround;
 	
 	protected boolean hasProjectile;
 	
