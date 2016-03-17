@@ -4,6 +4,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.*;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
+import nl.retaliation.unit.weapon.Weapon;
 
 public abstract class Building extends AnimatedSpriteObject implements IRTSObject{
 	private Vector2 tilePosition;
@@ -64,6 +65,16 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		//TODO: Add serialization
 		return "";
 	}
+	
+	@Override
+	public void addWeapon(Weapon newWeapon) {
+		
+	}
+	@Override
+	public void target(IRTSObject enemy) {
+		
+	}
+	
 	public float getHealthPercentage() {
 		return 0;
 	}
