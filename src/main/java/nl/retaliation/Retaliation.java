@@ -11,7 +11,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-import nl.retaliation.building.Building;
+import nl.retaliation.building.*;
 import nl.retaliation.dashboard.Minimap;
 import nl.retaliation.unit.*;
 import nl.retaliation.level.*;
@@ -66,10 +66,13 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		players.add(new Player(0xFF0000FF));
 		players.get(0).makeIRTSObject(this, new SovMiG(3, 13, TILESIZE, players.get(0)));
 		players.get(0).makeIRTSObject(this, new SovMiG(3, 12, TILESIZE, players.get(0)));
+		players.get(0).makeIRTSObject(this, new HQRed(3, 14, TILESIZE, players.get(0)));
 		players.add(new Player(0xFFFF0000));
 		players.get(1).makeIRTSObject(this, new SovMiG(4, 13, TILESIZE, players.get(1)));
+		players.get(1).makeIRTSObject(this, new HQRed(4, 14, TILESIZE, players.get(1)));
 		players.add(new Player(0xFF00FF00));
 		players.get(2).makeIRTSObject(this, new SovMiG(5, 13, TILESIZE, players.get(2)));
+		players.get(2).makeIRTSObject(this, new HQRed(5, 14, TILESIZE, players.get(2)));
 		
 		player = players.get(0);
 		
