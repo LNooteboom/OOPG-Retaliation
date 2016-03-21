@@ -28,6 +28,7 @@ public abstract class GroundUnit extends Unit{
 	public void destroy() {
 		//show explosion!!!
 		
+		this.setVisible(false);
 	}
 	
 	@Override

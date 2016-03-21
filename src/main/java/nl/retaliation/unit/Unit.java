@@ -8,6 +8,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 
 import nl.retaliation.IRTSObject;
+import nl.retaliation.Retaliation;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
@@ -55,8 +56,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	public void update() {
 		
-		tilePosition.setX((int) (x / width));
-		tilePosition.setY((int) (y / height));
+		tilePosition.setX((int) Math.floor(x / width));
+		tilePosition.setY((int) Math.floor(y / height));
 		
 		if (health <= 0 && isIndestructible == false) {
 			destroy();
@@ -68,12 +69,12 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	@Override
 	public void target(IRTSObject enemy, TileMap terrain, ArrayList<IRTSObject> gameobjects) {
-		if (getPos().withinRadius(enemy.getPos(), 5f)) {
+		if (getPos().withinRadius(enemy.getPos(), 3f)) {
 			for (Weapon currentWeapon : weapons) {
 				currentWeapon.setEnemy(enemy);
 			}
 		} else {
-			setPath(enemy.getPos(), terrain, gameobjects, 5f);
+			setPath(enemy.getPos(), terrain, gameobjects, 3f);
 		}
 	}
 	
@@ -86,7 +87,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 			float deltaX = nextX - x;
 			float deltaY = nextY - y;
 			if (Pathfind.place_free(new Vector2(currentPath.get(0).getX(), currentPath.get(0).getY()), gameobjects, this, terrain) == false) {
-				setPath(desiredTilePos, terrain, gameobjects, 0.1f);
+				setPath(desiredTilePos, terrain, gameobjects, 3f);
 				if (currentPath.size() == 0) {
 					currentPath.add(tilePosition);
 				}
@@ -201,7 +202,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		weapons.add(newWeapon);
 	}
 	
-	public void addToEngine(GameEngine engine) {
+	@Override
+	public void addToEngine(Retaliation engine) {
 		engine.addGameObject(this);
 	}
 }

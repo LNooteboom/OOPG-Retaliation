@@ -41,10 +41,7 @@ public class Vector2 {
 		int deltaX = x - object2.getX();
 		int deltaY = y - object2.getY();
 		float distance = Trigonio.distance(deltaX, deltaY);
-		System.out.println(distance);
 		if (distance <= radius) {
-			
-			System.out.println("true");
 			return true;
 		} else {
 			return false;

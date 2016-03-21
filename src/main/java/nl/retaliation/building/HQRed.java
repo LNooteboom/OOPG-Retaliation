@@ -1,7 +1,7 @@
 package nl.retaliation.building;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
+import nl.retaliation.Retaliation;
 
 public class HQRed extends Building{
 	public HQRed(float x, float y, int TILESIZE){
@@ -15,7 +15,7 @@ public class HQRed extends Building{
 	}
 
 	@Override
-	public void addToEngine(GameEngine engine) {
+	public void addToEngine(Retaliation engine) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -2,7 +2,6 @@ package nl.retaliation;
 
 import java.util.ArrayList;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
@@ -27,7 +26,7 @@ public interface IRTSObject {
 	
 	public String serialize();
 	
-	public void addToEngine(GameEngine engine);
+	public void addToEngine(Retaliation engine);
 	
 	public void addWeapon(Weapon newWeapon);
 	
