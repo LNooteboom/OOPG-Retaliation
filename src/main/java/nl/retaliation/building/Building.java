@@ -2,10 +2,14 @@ package nl.retaliation.building;
 
 import java.util.ArrayList;
 
+import processing.core.PGraphics;
+
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.*;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.IPlayer;
 import nl.retaliation.players.Player;
 import nl.retaliation.unit.weapon.Weapon;
 
@@ -16,7 +20,9 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	private int health, armor;
 	
-	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor){
+	private IPlayer player;
+	
+	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player){
 		super(sprite, 1);
 		
 		this.setX(x * TILESIZE);
@@ -28,12 +34,20 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		
 		this.health = health;
 		this.armor = armor;
+		this.player = player;
 	}
 	
 	public void update(){
 		if (health <= 0 && isIndestructible == false) {
 			destroy();
 		}
+	}
+	
+	@Override
+	public void drawWithViewport(PGraphics g, Viewport viewport) {
+		g.tint(player.getColor());
+		super.drawWithViewport(g, viewport);
+		g.noTint();
 	}
 	
 	public abstract void destroy();
