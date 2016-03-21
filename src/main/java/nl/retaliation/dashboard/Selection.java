@@ -16,8 +16,8 @@ public class Selection extends AnimatedSpriteObject{
 	HealthBar healthBar;
 	int TILESIZE;
 
-	public Selection(GameEngine gameEngine, Sprite sprite, int TILESIZE, IRTSObject object) {
-		super(sprite, 1);
+	public Selection(GameEngine gameEngine, int TILESIZE, IRTSObject object) {
+		super(new Sprite("nl/retaliation/media/sprites/selected.png"), 1);
 		healthBar = new HealthBar(object, TILESIZE);
 		gameEngine.addGameObject(healthBar);
 		
@@ -31,6 +31,10 @@ public class Selection extends AnimatedSpriteObject{
 	public void removeSelf(GameEngine gameEngine){
 		gameEngine.deleteGameObject(healthBar);
 		gameEngine.deleteGameObject(this);
+	}
+	
+	public IRTSObject getObject(){
+		return object;
 	}
 
 	@Override

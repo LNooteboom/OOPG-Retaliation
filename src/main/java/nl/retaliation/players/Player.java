@@ -1,23 +1,166 @@
 package nl.retaliation.players;
 
-import nl.retaliation.networking.Client;
+import java.util.ArrayList;
 
-public class Player {
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.retaliation.IRTSObject;
+import nl.retaliation.building.Building;
+import nl.retaliation.dashboard.Selection;
+import nl.retaliation.logic.Vector2;
+import nl.retaliation.unit.AirUnit;
+import nl.retaliation.unit.Unit;
+
+/**
+ * 
+ * @author Jonathan Vos
+ *
+ */
+
+public class Player implements IPlayer{
 	private int id;
 	private int color;
 	
-	private boolean networked;
-	private Client client;
+	private ArrayList<IRTSObject> objects;
+	private ArrayList<Unit> units;
+	private ArrayList<Building> buildings;
+	private ArrayList<Selection> selections;
+	
+	//private boolean networked;
+	//private Client client;
 	
 	
-	public Player() {
-		this.networked = false;
+	public Player(int color) {
+		this.color = color;
+		objects = new ArrayList<IRTSObject>(100);
+		units = new ArrayList<Unit>(100);
+		buildings = new ArrayList<Building>(100);
+		selections = new ArrayList<Selection>(20);
+		//this.networked = false;
 	}
 	public Player(int port, String host) {
-		this.networked = true;
+		//this.networked = true;
 	}
 
 	public int getID() {
 		return id;
+	}
+	
+	@Override
+	public boolean makeIRTSObject(GameEngine engine, IRTSObject object) {
+		objects.add(object);
+		if(object instanceof GameObject){
+			if(object instanceof Unit){
+				units.add((Unit)object);
+			}
+			if(object instanceof Building){
+				buildings.add((Building)object);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void selectIRTSObjects(Vector2 cor1, Vector2 cor2, GameEngine gameEngine, int TILESIZE){
+		removeSelection(gameEngine);
+		ArrayList<IRTSObject> selectedObjects = vectorsToIRTSObjects(cor1, cor2);
+		
+		selections = new ArrayList<Selection>(selectedObjects.size());
+		
+		for(IRTSObject object : selectedObjects){
+			if(object.getPos().between(cor1, cor2)){
+				selections.add(new Selection(gameEngine, TILESIZE, object));
+			}
+		}
+		
+		updateSelection(gameEngine);
+	}
+	
+	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
+		ArrayList<IRTSObject> selectedObjects = new ArrayList<IRTSObject>(30);
+		
+		if(cor1.equal(cor2)){
+			selectedObjects.add(null);
+			
+			for(IRTSObject object: objects){
+				if(object.getPos().equal(cor1)){
+					if(object instanceof AirUnit){
+						selectedObjects.set(0, object);
+						return selectedObjects;
+					}
+					else{
+						selectedObjects.set(0, object);
+					}
+				}
+			}
+			
+			if(selectedObjects.get(0) == null){
+				return new ArrayList<IRTSObject>(0);
+			}
+			else{
+				return selectedObjects;
+			}
+		}
+		else{
+			for(IRTSObject object: objects){
+				if(object.getPos().between(cor1, cor2)){
+					selectedObjects.add(object);
+				}
+			}
+			
+			return selectedObjects;
+		}
+	}
+	
+	private void removeSelection(GameEngine gameEngine){
+		if(selections != null){
+			for(Selection selection : selections){
+				selection.removeSelf(gameEngine);
+			}
+		}
+	}
+	
+	private void updateSelection(GameEngine gameEngine){
+		if(selections != null){
+			for(Selection selection : selections){
+				gameEngine.addGameObject(selection);
+			}
+		}
+	}
+	
+	@Override
+	public void setPathOfSelection(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> objects) {
+		for(Selection selection : selections){
+			if(selection.getObject() instanceof Unit){
+				((Unit)selection.getObject()).setPath(desiredTilePos, terrain, objects, 0.1f);
+			}
+		}
+	}
+	
+	@Override
+	public void letSelectionAttack() {
+		System.out.println("Attaaack!");
+		return;
+	}
+	
+	@Override
+	public ArrayList<Building> getBuildings() {
+		return buildings;
+	}
+	
+	@Override
+	public ArrayList<Unit> getUnits() {
+		return units;
+	}
+	
+	@Override
+	public ArrayList<IRTSObject> getIRTSObjects() {
+		return objects;
+	}
+	
+	public int getColor(){
+		return color;
 	}
 }

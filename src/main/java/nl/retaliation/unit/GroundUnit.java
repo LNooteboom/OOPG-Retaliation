@@ -1,12 +1,12 @@
 package nl.retaliation.unit;
 
 import java.util.ArrayList;
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.IPlayer;
 
 /**
  * GroundUnit class
@@ -20,8 +20,8 @@ public abstract class GroundUnit extends Unit{
 	private boolean canStepOnLand = true;
 	
 	
-	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor) {
-		super(x, y, sprite, tileSize, maxSpeed, health, armor);
+	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player) {
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, player);
 	}
 	
 	@Override

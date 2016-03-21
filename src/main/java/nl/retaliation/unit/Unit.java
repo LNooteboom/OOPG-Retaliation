@@ -2,16 +2,19 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
+import processing.core.PGraphics;
+
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.players.Player;
+import nl.retaliation.players.*;
 import nl.retaliation.unit.weapon.*;
 
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
@@ -35,11 +38,13 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private int armor;
 	private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
 	
-	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor) {
+	private IPlayer player;
+	
+	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player) {
 		super(sprite, 8);
 		
-		this.setX(x);
-		this.setY(y);
+		this.setX(x * tileSize);
+		this.setY(y * tileSize);
 		tilePosition = new Vector2((int) x / tileSize, (int) y / tileSize);
 		
 		this.setWidth(tileSize);
@@ -49,6 +54,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		this.armor = armor;
+		this.player = player;
 	}
 	
 	public abstract void destroy();
@@ -78,6 +84,13 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	}
 	
 	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float targetRadius);
+	
+	@Override
+	public void drawWithViewport(PGraphics g, Viewport viewport) {
+		g.tint(player.getColor());
+		super.drawWithViewport(g, viewport);
+		g.noTint();
+	}
 	
 	private void moveNext() {
 		if (currentPath != null && currentPath.size() > 0) { //checks if path exists

@@ -11,16 +11,17 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-import nl.retaliation.building.Building;
+
 import nl.retaliation.dashboard.Minimap;
-import nl.retaliation.dashboard.Selection;
-import nl.retaliation.level.GrassTile;
-import nl.retaliation.level.WaterTile;
+import nl.retaliation.unit.*;
+import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
 import nl.retaliation.networking.Server;
-import nl.retaliation.unit.*;
+import nl.retaliation.players.IPlayer;
+import nl.retaliation.players.Player;
+
 import processing.core.PApplet;
 
 /**
@@ -44,12 +45,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Minimap minimap;
 	
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>(200);
-	private ArrayList<Unit> units = new ArrayList<Unit>(100);
-	private ArrayList<Building> buildings = new ArrayList<Building>(100);
+	private ArrayList<IPlayer> players = new ArrayList<IPlayer>(8);
 	
-	private ArrayList<IRTSObject> selectedUnits = null;
-	private ArrayList<Selection> selections = null;
 	private Vector2 corMousePressed = null, corMouseReleased = null;
+	
+	private IPlayer player;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
@@ -62,31 +62,29 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		} else {
 			currentClient = new Client("localhost", 63530);
 		}
-		Unit unit1 = new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE);
-		Unit unit2 = new SovIFV(11 * TILESIZE, 6 * TILESIZE, TILESIZE);
 		
+		players.add(new Player(0xFF0000FF));
+		players.get(0).makeIRTSObject(this, new SovMiG(3, 13, TILESIZE, players.get(0)));
+		players.get(0).makeIRTSObject(this, new SovMiG(3, 12, TILESIZE, players.get(0)));
+		players.add(new Player(0xFFFF0000));
+		players.get(1).makeIRTSObject(this, new SovMiG(4, 13, TILESIZE, players.get(1)));
+		players.add(new Player(0xFF00FF00));
+		players.get(2).makeIRTSObject(this, new SovMiG(5, 13, TILESIZE, players.get(2)));
 		
+		player = players.get(0);
 		
-		units.add(unit1);
-		units.add(unit2);
-		//units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
-		units.add(new SovIFV(10 * TILESIZE, 10 * TILESIZE, TILESIZE));
-		units.add(new SovMiG(13 * TILESIZE, 13 * TILESIZE, TILESIZE));
-		units.add(new SovMiG(16 * TILESIZE, 16 * TILESIZE, TILESIZE));
-//		buildings.add(new HQRed(12, 12, TILESIZE));
-//		buildings.add(new HQRed(3, 3, TILESIZE));
-//		buildings.add(new HQRed(2, 2, TILESIZE));
-//		buildings.add(new HQRed(1, 1, TILESIZE));
-		
-		for(Unit unit : units){
-			addGameObject(unit);
-			allObjects.add(unit);
-			
+		for(IPlayer player : players){
+			ArrayList<IRTSObject> objects = player.getIRTSObjects();
+			for(IRTSObject object : objects){
+				if(object instanceof GameObject){
+					addGameObject((GameObject)object);
+				}
+				else{
+					System.out.println("Code should never get here!");
+				}
+			}
 		}
-		for(Building building : buildings){
-			addGameObject(building);
-			allObjects.add(building);
-		}
+		
 		initTileMap();
 		viewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
@@ -145,101 +143,26 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	@Override
 	public void mouseReleased(){
-		if(mouseButton == LEFT){
-			int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
-			int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
-			corMouseReleased = new Vector2(xTile, yTile);
-			
-			if(corMouseReleased.equal(corMousePressed)){
-				selectedUnits = vectorToIRTSObject(corMouseReleased);
-			}
-			else{
-				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
-			}
-			
-			removeSelection();
-			selections = new ArrayList<Selection>(selectedUnits.size());
-			for(IRTSObject object : selectedUnits){
-				selections.add(new Selection(this, new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
-			}
-			updateSelection();
-		}
-	}
-	
-	@Override
-	public void mouseClicked() {
 		int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
 		int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
-		Vector2 tileCor = new Vector2(xTile, yTile);
-		//Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
+		corMouseReleased = new Vector2(xTile, yTile);
 		
-		if(mouseButton == RIGHT && selectedUnits.size() > 0){
-			if(selectedUnits.get(0) instanceof Unit){
-				for(IRTSObject unit : selectedUnits){
-					
-					
-					ArrayList<IRTSObject> targetList = vectorToIRTSObject(new Vector2(yTile, xTile));
-					if (targetList.size() > 0) {
-						selectedUnits.get(0).target(targetList.get(0), tileMap, allObjects);
-					} else {
-						((Unit)unit).setPath(tileCor, tileMap, allObjects, 0.1f);
-					}
-				}
-			}
+		if(mouseButton == LEFT){
+			player.selectIRTSObjects(corMousePressed, corMouseReleased, this, TILESIZE);
 		}
-		
-		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
-	}
-	
-	private void removeSelection(){
-		if(selections != null){
-			for(Selection selection : selections){
-				selection.removeSelf(this);
-			}
+		else if(mouseButton == RIGHT){
+			player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
 		}
 	}
 	
-	private void updateSelection(){
-		if(selections != null){
-			for(Selection selection : selections){
-				this.addGameObject(selection);
+	private ArrayList<IRTSObject> vectorToArrayList(Vector<GameObject> gameObjects) {
+		ArrayList<IRTSObject> newGameObjects = new ArrayList<IRTSObject>();
+		for (int i = 0; i < gameObjects.size(); i++) {
+			if (gameObjects.get(i) instanceof IRTSObject) {
+				newGameObjects.add((IRTSObject) gameObjects.get(i));
 			}
 		}
-	}
-	
-	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
-		ArrayList<IRTSObject> selectedUnits = new ArrayList<IRTSObject>(30);
-		
-		for(IRTSObject object: allObjects){
-			if(object.getPos().between(cor1, cor2)){
-				selectedUnits.add(object);
-			}
-		}
-		
-		return selectedUnits;
-	}
-	
-	private ArrayList<IRTSObject> vectorToIRTSObject(Vector2 cor){
-		ArrayList<IRTSObject> selectedObject = new ArrayList<IRTSObject>(1);
-		selectedObject.add(null);
-		
-		for(IRTSObject object: allObjects){
-			if(object.getPos().equal(cor)){
-				if(object instanceof AirUnit){
-					selectedObject.set(0, object);
-					return selectedObject;
-				}
-				else{
-					selectedObject.set(0, object);
-				}
-			}
-		}
-		
-		if(selectedObject.get(0) == null){
-			return new ArrayList<IRTSObject>(0);
-		}
-		
-		return selectedObject;
+		return newGameObjects;
 	}
 	
 	private void initTileMap() {
@@ -264,15 +187,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		size(screenWidth, screenHeight);
 	}
 	
-	private ArrayList<IRTSObject> vectorToArrayList(Vector<GameObject> gameObjects) {
-		ArrayList<IRTSObject> newGameObjects = new ArrayList<IRTSObject>();
-		for (int i = 0; i < gameObjects.size(); i++) {
-			if (gameObjects.get(i) instanceof IRTSObject) {
-				newGameObjects.add((IRTSObject) gameObjects.get(i));
-			}
-		}
-		return newGameObjects;
-	}
 	private void deleteDeadGameObjects() {
 		GameObject currentObject;
 		for (int i = 0; i < getGameObjectItems().size(); i++) {
@@ -282,5 +196,4 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			}
 		}
 	}
-
 }
