@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
+import nl.retaliation.logic.Vector2;
 import nl.retaliation.unit.Unit;
 
 public class Client {
@@ -140,6 +141,9 @@ public class Client {
 			}
 		}
 		return null;
+	}
+	public void sendClick(Vector2 pos) {
+		output.println(pos.getX() + "$" + pos.getY());
 	}
 	public void disconnect() {
 		try {

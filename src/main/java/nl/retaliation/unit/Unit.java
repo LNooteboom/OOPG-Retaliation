@@ -2,21 +2,19 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
-import processing.core.PGraphics;
-
-import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-
 import nl.retaliation.IRTSObject;
 import nl.retaliation.Retaliation;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.players.*;
-import nl.retaliation.unit.weapon.*;
+import nl.retaliation.players.IPlayer;
+import nl.retaliation.players.Player;
+import nl.retaliation.unit.weapon.Weapon;
+import processing.core.PGraphics;
 
 /**
  * Unit class for every object that can move across the map
