@@ -146,74 +146,16 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	@Override
 	public void mouseReleased(){
+		int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
+		int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
+		corMouseReleased = new Vector2(xTile, yTile);
+		
 		if(mouseButton == LEFT){
-			int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
-			int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
-			corMouseReleased = new Vector2(xTile, yTile);
-			
-			if(corMouseReleased.equal(corMousePressed)){
-				//selectedUnits = vectorToIRTSObject(corMouseReleased);
-				selectedUnits = new ArrayList<IRTSObject>();
-				selectedUnits.add(vectorToIRTSObject(corMouseReleased));
-			} else {
-				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
-			}
-			
-			removeSelection();
-			selections = new ArrayList<Selection>(selectedUnits.size());
-			for(IRTSObject object : selectedUnits){
-				if (object != null) {
-					selections.add(new Selection(this, new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
-				}
-			}
-			updateSelection();
+			player.selectIRTSObjects(corMousePressed, corMouseReleased, this, TILESIZE);
 		}
-	}
-	
-	@Override
-	public void mouseClicked() {
-		int xTile = (int) Math.floor((viewport.getX() + mouseX) / TILESIZE);
-		int yTile = (int) Math.floor((viewport.getY() + mouseY) / TILESIZE);
-		Vector2 tileCor = new Vector2(xTile, yTile);
-		//Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
-		
-		if(mouseButton == RIGHT && selectedUnits.size() > 0){
-			if(selectedUnits.get(0) instanceof Unit){
-				for(IRTSObject unit : selectedUnits){
-					
-					
-					IRTSObject target = vectorToIRTSObject(new Vector2(yTile, xTile));
-					if (target != null) {
-						System.out.println("target");
-						selectedUnits.get(0).target(target, tileMap, allObjects);
-					} else if (unit instanceof Unit){
-						System.out.println("mov");
-						((Unit) unit).setPath(tileCor, tileMap, allObjects, 0.1f);
-					}
-				}
-			}
+		else if(mouseButton == RIGHT){
+			player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
 		}
-		
-		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
-	}
-	
-	private IRTSObject vectorToIRTSObject(Vector2 cor){
-		//IRTSObject selectedObject;
-		
-		for(IRTSObject object: allObjects){
-			if(object.getPos().equal(cor)){
-//				if(object instanceof AirUnit){
-//					selectedObject.set(0, object);
-//					return selectedObject;
-//				}
-//				else{
-//					selectedObject.set(0, object);
-//				}
-				return object;
-			}
-		}
-		
-		return null;
 	}
 	
 	private void initTileMap() {

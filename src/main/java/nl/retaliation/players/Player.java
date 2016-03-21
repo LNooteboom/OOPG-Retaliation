@@ -132,11 +132,30 @@ public class Player implements IPlayer{
 	
 	@Override
 	public void setPathOfSelection(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> objects) {
-		for(Selection selection : selections){
-			if(selection.getObject() instanceof Unit){
-				((Unit)selection.getObject()).setPath(desiredTilePos, terrain, objects, 0.1f);
+		IRTSObject target = vectorToIRTSObject(desiredTilePos, objects);
+		
+		if(target != null){
+			for(Selection selection : selections){
+				selection.getObject().target(target, terrain, objects);
 			}
 		}
+		else{
+			for(Selection selection : selections){
+				if(selection.getObject() instanceof Unit){
+					((Unit)selection.getObject()).setPath(desiredTilePos, terrain, objects, 0.1f);
+				}
+			}
+		}
+	}
+	
+	private IRTSObject vectorToIRTSObject(Vector2 desiredTilePos, ArrayList<IRTSObject> objects){
+		for(IRTSObject object : objects){
+			if(object.getPos().between(desiredTilePos, desiredTilePos)){
+				return object;
+			}
+		}
+		
+		return null;
 	}
 	
 	@Override
