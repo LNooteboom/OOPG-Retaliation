@@ -62,8 +62,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		} else {
 			currentClient = new Client("localhost", 63530);
 		}
+		Unit unit1 = new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE);
+		Unit unit2 = new SovIFV(11 * TILESIZE, 6 * TILESIZE, TILESIZE);
 		
-		units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
+		
+		
+		units.add(unit1);
+		units.add(unit2);
+		//units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
 		units.add(new SovIFV(10 * TILESIZE, 10 * TILESIZE, TILESIZE));
 		units.add(new SovMiG(13 * TILESIZE, 13 * TILESIZE, TILESIZE));
 		units.add(new SovMiG(16 * TILESIZE, 16 * TILESIZE, TILESIZE));
@@ -82,7 +88,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			allObjects.add(building);
 		}
 		initTileMap();
-		tempViewPort(800, 600);
+		viewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
 		addDashboard(minimap);
 		setFPSCounter(true);
@@ -170,7 +176,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		if(mouseButton == RIGHT && selectedUnits.size() > 0){
 			if(selectedUnits.get(0) instanceof Unit){
 				for(IRTSObject unit : selectedUnits){
-					((Unit)unit).setPath(tileCor, tileMap, allObjects, 0.1f);
+					
+					
+					ArrayList<IRTSObject> targetList = vectorToIRTSObject(new Vector2(yTile, xTile));
+					if (targetList.size() > 0) {
+						selectedUnits.get(0).target(targetList.get(0), tileMap, allObjects);
+					} else {
+						((Unit)unit).setPath(tileCor, tileMap, allObjects, 0.1f);
+					}
 				}
 			}
 		}
@@ -238,12 +251,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.2f));
+		LevelGenerator noise = new LevelGenerator(0000f, 128, 128);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
-	private void tempViewPort(int screenWidth, int screenHeight) {
+	private void viewPort(int screenWidth, int screenHeight) {
 		viewport = new Viewport(0, 0, screenWidth, screenHeight);
 		view = new View(viewport, screenWidth, screenHeight);
 

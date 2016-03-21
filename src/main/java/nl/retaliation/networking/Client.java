@@ -50,8 +50,8 @@ public class Client {
 	
 	public ArrayList<IRTSObject> transceiveData(TileMap tilemap) {
 		try {
-			String line = input.readLine();
 			
+			String line = input.readLine();
 			return deserializeGameObjects(line);
 		} catch (IOException e) {
 			System.out.println(e);

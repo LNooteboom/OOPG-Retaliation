@@ -40,7 +40,11 @@ public class Vector2 {
 	public boolean withinRadius(Vector2 object2, float radius) {
 		int deltaX = x - object2.getX();
 		int deltaY = y - object2.getY();
-		if (Trigonio.distance(deltaX, deltaY) <= radius) {
+		float distance = Trigonio.distance(deltaX, deltaY);
+		System.out.println(distance);
+		if (distance <= radius) {
+			
+			System.out.println("true");
 			return true;
 		} else {
 			return false;

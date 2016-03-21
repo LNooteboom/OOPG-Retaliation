@@ -30,7 +30,7 @@ public class Pathfind {
 	 */
 	public static ArrayList<Vector2> calcPath(Vector2 pos, Vector2 desiredPos, TileMap terrain, Unit currentUnit, ArrayList<IRTSObject> gameobjects, float targetRadius) {
 		if(!place_free(desiredPos, gameobjects, currentUnit, terrain)){
-			return new ArrayList<Vector2>(0);
+			//return new ArrayList<Vector2>(0);
 		}
 		
 		ArrayList<PathNode> openList = new ArrayList<PathNode>();
@@ -41,12 +41,14 @@ public class Pathfind {
 
 		while (openList.size() > 0) {
 			PathNode current = calcLowestFCost(openList);
+			System.out.println("sa " + current.getPos().getX());
 			if (current.getPos().withinRadius(desiredPos, targetRadius)) { //doel bereikt
 				desiredNode = current;
 				break;
 			} else {
 				openList = removeWithValues(current, openList);
 				closedList.add(current);
+				System.out.println(terrain.toString());
 				ArrayList<PathNode> neighbors = calcNeighbors(current, desiredPos, terrain.getMapWidth() / terrain.getTileSize(), terrain.getMapHeight() / terrain.getTileSize());
 				for (PathNode currentNeighbor : neighbors) {
 					if (presentInList(currentNeighbor, closedList) || !place_free(currentNeighbor.getPos(), gameobjects, currentUnit, terrain)) { //als de neighbor in de closedlist staat of niet walkable is
@@ -148,7 +150,7 @@ public class Pathfind {
 	public static boolean place_free(Vector2 position, ArrayList<IRTSObject> allObjects, Unit currentUnit, TileMap terrain) {
 		//Tile currentTile = tilemap.getTileOnIndex(position.getX(), position.getY());
 		if (allObjects == null) {
-			return false;
+			return true;
 		}
 		if(currentUnit instanceof AirUnit){
 			for(IRTSObject object : allObjects){

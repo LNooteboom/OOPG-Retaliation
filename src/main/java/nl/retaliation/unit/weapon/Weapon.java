@@ -14,7 +14,7 @@ public abstract class Weapon {
 	private int timeSinceLastFire = 0;
 	
 	private GameObject parent;
-	public IRTSObject enemy;
+	private IRTSObject enemy;
 	
 	private boolean antiAir;
 	private boolean antiGround;
@@ -40,5 +40,10 @@ public abstract class Weapon {
 	public void setCooldown(int cooldown) {
 		this.cooldown = cooldown;
 	}
-
+	public void setEnemy(IRTSObject enemy) {
+		this.enemy = enemy;
+	}
+	public IRTSObject getEnemy() {
+		return enemy;
+	}
 }

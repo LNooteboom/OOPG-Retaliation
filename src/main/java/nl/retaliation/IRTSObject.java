@@ -1,6 +1,9 @@
 package nl.retaliation;
 
+import java.util.ArrayList;
+
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
 import nl.retaliation.unit.weapon.Weapon;
@@ -28,5 +31,5 @@ public interface IRTSObject {
 	
 	public void addWeapon(Weapon newWeapon);
 	
-	public void target(IRTSObject enemy);
+	public void target(IRTSObject enemy, TileMap terrain, ArrayList<IRTSObject> gameobjects);
 }

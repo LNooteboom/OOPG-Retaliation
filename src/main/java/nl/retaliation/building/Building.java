@@ -1,6 +1,9 @@
 package nl.retaliation.building;
 
+import java.util.ArrayList;
+
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.*;
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.Player;
@@ -71,7 +74,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		
 	}
 	@Override
-	public void target(IRTSObject enemy) {
+	public void target(IRTSObject enemy, TileMap terrain, ArrayList<IRTSObject> gameobjects) {
 		
 	}
 	

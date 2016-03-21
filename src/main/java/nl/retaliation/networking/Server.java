@@ -15,7 +15,7 @@ import nl.retaliation.IRTSObject;
 public class Server {
 	private int port;
 	private int time = 0;
-	private final int wait = 2;
+	private final int wait = 10;
 	
 	//private ServerSocket socket;
 	private RTSProtocolServer protocol = new RTSProtocolServer();

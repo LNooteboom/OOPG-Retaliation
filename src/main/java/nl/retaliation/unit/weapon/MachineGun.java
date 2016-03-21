@@ -11,7 +11,7 @@ public class MachineGun extends Weapon{
 
 	@Override
 	public void fire() {
-		enemy.damage(damage);
+		getEnemy().damage(damage);
 	}
 
 }

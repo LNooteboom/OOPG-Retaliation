@@ -67,8 +67,14 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	}
 	
 	@Override
-	public void target(IRTSObject enemy) {
-		
+	public void target(IRTSObject enemy, TileMap terrain, ArrayList<IRTSObject> gameobjects) {
+		if (getPos().withinRadius(enemy.getPos(), 5f)) {
+			for (Weapon currentWeapon : weapons) {
+				currentWeapon.setEnemy(enemy);
+			}
+		} else {
+			setPath(enemy.getPos(), terrain, gameobjects, 5f);
+		}
 	}
 	
 	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float targetRadius);
@@ -80,7 +86,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 			float deltaX = nextX - x;
 			float deltaY = nextY - y;
 			if (Pathfind.place_free(new Vector2(currentPath.get(0).getX(), currentPath.get(0).getY()), gameobjects, this, terrain) == false) {
-				setPath(desiredTilePos, terrain, gameobjects);
+				setPath(desiredTilePos, terrain, gameobjects, 0.1f);
 				if (currentPath.size() == 0) {
 					currentPath.add(tilePosition);
 				}
