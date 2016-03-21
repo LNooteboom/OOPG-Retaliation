@@ -41,6 +41,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
+	private boolean singlePlayer = true;
 	
 	private Minimap minimap;
 	
@@ -57,10 +58,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		if (isServer) {
-			currentServer = new Server(63530);
-		} else {
-			currentClient = new Client("localhost", 63530);
+		if (singlePlayer == false) {
+			if (isServer) {
+				currentServer = new Server(63530);
+			} else {
+				currentClient = new Client("localhost", 63530);
+			}
 		}
 		
 		players.add(new Player(0xFF0000FF));
@@ -99,16 +102,18 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void update() {
 		deleteDeadGameObjects();
 		allObjects = vectorToArrayList(getGameObjectItems());
-		
-		if (currentServer != null) {
-			currentServer.sendData(allObjects, tileMap);
-		}
-		if (currentClient != null) {
-			ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
-			if (newObjects != null) {
-				deleteAllGameOBjects();
-				for (IRTSObject newObject : newObjects) {
-					newObject.addToEngine(this);
+
+		if (singlePlayer == false) {
+			if (currentServer != null) {
+				currentServer.sendData(allObjects, tileMap);
+			}
+			if (currentClient != null) {
+				ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
+				if (newObjects != null) {
+					deleteAllGameOBjects();
+					for (IRTSObject newObject : newObjects) {
+						newObject.addToEngine(this);
+					}
 				}
 			}
 		}
@@ -146,28 +151,30 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	
 	@Override
 	public void mouseReleased(){
-		if(mouseButton == LEFT){
-			int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
-			int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
-			corMouseReleased = new Vector2(xTile, yTile);
-			
-			if(corMouseReleased.equal(corMousePressed)){
-				//selectedUnits = vectorToIRTSObject(corMouseReleased);
-				selectedUnits = new ArrayList<IRTSObject>();
-				selectedUnits.add(vectorToIRTSObject(corMouseReleased));
-			} else {
-				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
-			}
-			
-			removeSelection();
-			selections = new ArrayList<Selection>(selectedUnits.size());
-			for(IRTSObject object : selectedUnits){
-				if (object != null) {
-					selections.add(new Selection(this, new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
-				}
-			}
-			updateSelection();
-		}
+		int xTile = (int) ((viewport.getX() + mouseX) / TILESIZE);
+		int yTile = (int) ((viewport.getY() + mouseY) / TILESIZE);
+		corMouseReleased = new Vector2(xTile, yTile);
+		player.selectIRTSObjects(corMousePressed, corMouseReleased, this, TILESIZE);
+//		if(mouseButton == LEFT){
+//			
+//			corMouseReleased = new Vector2(xTile, yTile);
+//			
+//			if(corMouseReleased.equal(corMousePressed)){
+//				player.se
+//				selectedUnits.add(vectorToIRTSObject(corMouseReleased));
+//			} else {
+//				selectedUnits = vectorsToIRTSObjects(corMousePressed, corMouseReleased);
+//			}
+//			
+//			removeSelection();
+//			selections = new ArrayList<Selection>(selectedUnits.size());
+//			for(IRTSObject object : selectedUnits){
+//				if (object != null) {
+//					selections.add(new Selection(this, new Sprite("nl/retaliation/media/sprites/selected.png"), TILESIZE, object));
+//				}
+//			}
+//			updateSelection();
+//		}
 	}
 	
 	@Override
@@ -177,22 +184,22 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		Vector2 tileCor = new Vector2(xTile, yTile);
 		//Tile clickedTile = tileMap.getTileOnIndex(xTile, yTile);
 		
-		if(mouseButton == RIGHT && selectedUnits.size() > 0){
-			if(selectedUnits.get(0) instanceof Unit){
-				for(IRTSObject unit : selectedUnits){
-					
-					
-					IRTSObject target = vectorToIRTSObject(new Vector2(yTile, xTile));
-					if (target != null) {
-						System.out.println("target");
-						selectedUnits.get(0).target(target, tileMap, allObjects);
-					} else if (unit instanceof Unit){
-						System.out.println("mov");
-						((Unit) unit).setPath(tileCor, tileMap, allObjects, 0.1f);
-					}
-				}
-			}
-		}
+//		if(mouseButton == RIGHT && selectedUnits.size() > 0){
+//			if(selectedUnits.get(0) instanceof Unit){
+//				for(IRTSObject unit : selectedUnits){
+//					
+//					
+//					IRTSObject target = vectorToIRTSObject(new Vector2(yTile, xTile));
+//					if (target != null) {
+//						System.out.println("target");
+//						selectedUnits.get(0).target(target, tileMap, allObjects);
+//					} else if (unit instanceof Unit){
+//						System.out.println("mov");
+//						((Unit) unit).setPath(tileCor, tileMap, allObjects, 0.1f);
+//					}
+//				}
+//			}
+//		}
 		
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
 	}
