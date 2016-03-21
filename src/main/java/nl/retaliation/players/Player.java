@@ -163,4 +163,9 @@ public class Player implements IPlayer{
 	public int getColor(){
 		return color;
 	}
+	
+	@Override
+	public ArrayList<Selection> getSelection() {
+		return selections;
+	}
 }

@@ -6,6 +6,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.building.Building;
+import nl.retaliation.dashboard.Selection;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.unit.Unit;
 
@@ -27,4 +28,5 @@ public interface IPlayer {
 	public ArrayList<Building> getBuildings();
 	public ArrayList<Unit> getUnits();
 	public ArrayList<IRTSObject> getIRTSObjects();
+	public ArrayList<Selection> getSelection();
 }
