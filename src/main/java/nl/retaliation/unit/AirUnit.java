@@ -2,12 +2,12 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.GameObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.IPlayer;
 
 /**
  * 
@@ -16,8 +16,8 @@ import nl.retaliation.logic.Vector2;
  */
 
 public abstract class AirUnit extends Unit{
-	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor){
-		super(x, y, sprite, tileSize, maxSpeed, health, armor);
+	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player){
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, player);
 	}
 	
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float radius){

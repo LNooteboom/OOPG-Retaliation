@@ -13,14 +13,15 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.building.Building;
 import nl.retaliation.dashboard.Minimap;
-import nl.retaliation.dashboard.Selection;
-import nl.retaliation.level.GrassTile;
-import nl.retaliation.level.WaterTile;
+import nl.retaliation.unit.*;
+import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
 import nl.retaliation.networking.Server;
-import nl.retaliation.unit.*;
+import nl.retaliation.players.IPlayer;
+import nl.retaliation.players.Player;
+
 import processing.core.PApplet;
 
 /**
@@ -44,10 +45,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Minimap minimap;
 	
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>();
+	private ArrayList<IPlayer> players = new ArrayList<IPlayer>(8);
 	
-	private ArrayList<IRTSObject> selectedUnits = null;
-	private ArrayList<Selection> selections = null;
 	private Vector2 corMousePressed = null, corMouseReleased = null;
+	
+	private IPlayer player;
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
@@ -61,29 +63,26 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentClient = new Client("localhost", 63530);
 		}
 		
+		players.add(new Player(0xFF0000FF));
+		players.get(0).makeIRTSObject(this, new SovMiG(3, 13, TILESIZE, players.get(0)));
+		players.get(0).makeIRTSObject(this, new SovMiG(3, 12, TILESIZE, players.get(0)));
+		players.add(new Player(0xFFFF0000));
+		players.get(1).makeIRTSObject(this, new SovMiG(4, 13, TILESIZE, players.get(1)));
+		players.add(new Player(0xFF00FF00));
+		players.get(2).makeIRTSObject(this, new SovMiG(5, 13, TILESIZE, players.get(2)));
 		
-		ArrayList<Unit> units = new ArrayList<Unit>();
-		ArrayList<Building> buildings = new ArrayList<Building>();
+		player = players.get(0);
 		
-		
-		
-		units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
-		//units.add(new SovIFV(11 * TILESIZE, 6 * TILESIZE, TILESIZE));
-		//units.add(new SovIFV(6 * TILESIZE, 6 * TILESIZE, TILESIZE));
-		units.add(new SovIFV(10 * TILESIZE, 10 * TILESIZE, TILESIZE));
-		units.add(new SovMiG(13 * TILESIZE, 13 * TILESIZE, TILESIZE));
-		units.add(new SovMiG(16 * TILESIZE, 16 * TILESIZE, TILESIZE));
-//		buildings.add(new HQRed(12, 12, TILESIZE));
-//		buildings.add(new HQRed(3, 3, TILESIZE));
-//		buildings.add(new HQRed(2, 2, TILESIZE));
-//		buildings.add(new HQRed(1, 1, TILESIZE));
-		
-		for(Unit unit : units){
-			addGameObject(unit);
-			
-		}
-		for(Building building : buildings){
-			addGameObject(building);
+		for(IPlayer player : players){
+			ArrayList<IRTSObject> objects = player.getIRTSObjects();
+			for(IRTSObject object : objects){
+				if(object instanceof GameObject){
+					addGameObject((GameObject)object);
+				}
+				else{
+					System.out.println("Code should never get here!");
+				}
+			}
 		}
 		
 		initTileMap();
@@ -195,34 +194,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		//u.setPath(new Vector2((int) ((viewport.getX() + mouseX) / TILESIZE), (int) ((viewport.getY() + mouseY) / TILESIZE)), tileMap, allObjects);
 	}
 	
-	private void removeSelection(){
-		if(selections != null){
-			for(Selection selection : selections){
-				selection.removeSelf(this);
-			}
-		}
-	}
-	
-	private void updateSelection(){
-		if(selections != null){
-			for(Selection selection : selections){
-				this.addGameObject(selection);
-			}
-		}
-	}
-	
-	private ArrayList<IRTSObject> vectorsToIRTSObjects(Vector2 cor1, Vector2 cor2){
-		ArrayList<IRTSObject> selectedUnits = new ArrayList<IRTSObject>(30);
-		
-		for(IRTSObject object: allObjects){
-			if(object.getPos().between(cor1, cor2)){
-				selectedUnits.add(object);
-			}
-		}
-		
-		return selectedUnits;
-	}
-	
 	private IRTSObject vectorToIRTSObject(Vector2 cor){
 		//IRTSObject selectedObject;
 		
@@ -273,6 +244,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		return newGameObjects;
 	}
+	
 	private void deleteDeadGameObjects() {
 		GameObject currentObject;
 		for (int i = 0; i < getGameObjectItems().size(); i++) {
@@ -282,5 +254,4 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			}
 		}
 	}
-
 }
