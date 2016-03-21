@@ -41,6 +41,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
+	private boolean singlePlayer = true;
 	
 	private Minimap minimap;
 	
@@ -57,10 +58,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		if (isServer) {
-			currentServer = new Server(63530);
-		} else {
-			currentClient = new Client("localhost", 63530);
+		if (singlePlayer == false) {
+			if (isServer) {
+				currentServer = new Server(63530);
+			} else {
+				currentClient = new Client("localhost", 63530);
+			}
 		}
 		
 		players.add(new Player(0xFF0000FF));
@@ -99,16 +102,18 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void update() {
 		deleteDeadGameObjects();
 		allObjects = vectorToArrayList(getGameObjectItems());
-		
-		if (currentServer != null) {
-			currentServer.sendData(allObjects, tileMap);
-		}
-		if (currentClient != null) {
-			ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
-			if (newObjects != null) {
-				deleteAllGameOBjects();
-				for (IRTSObject newObject : newObjects) {
-					newObject.addToEngine(this);
+
+		if (singlePlayer == false) {
+			if (currentServer != null) {
+				currentServer.sendData(allObjects, tileMap);
+			}
+			if (currentClient != null) {
+				ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
+				if (newObjects != null) {
+					deleteAllGameOBjects();
+					for (IRTSObject newObject : newObjects) {
+						newObject.addToEngine(this);
+					}
 				}
 			}
 		}
