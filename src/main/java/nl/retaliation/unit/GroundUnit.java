@@ -9,7 +9,7 @@ import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
 
 /**
- * GroundUnit class
+ * GroundUnit for all Units that move on land or water
  * 
  * @author Luke Nooteboom
  *

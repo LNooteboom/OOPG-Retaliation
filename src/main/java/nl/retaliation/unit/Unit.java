@@ -18,6 +18,12 @@ import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.*;
 import nl.retaliation.unit.weapon.*;
 
+/**
+ * Unit class for every object that can move across the map
+ * 
+ * @author Luke Nooteboom
+ *
+ */
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	protected Vector2 tilePosition;
@@ -57,9 +63,14 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.armor = armor;
 		this.player = player;
 	}
-	
+	/**
+	 * Destroys this object
+	 */
 	public abstract void destroy();
 	
+	/**
+	 * Call this method in when the game updates
+	 */
 	public void update() {
 		
 		tilePosition.setX((int) Math.floor(x / width));
@@ -84,6 +95,14 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		}
 	}
 	
+	/**
+	 * Moves this unit to a desired location
+	 * 
+	 * @param desiredTilePos The desired position
+	 * @param terrain The terrain to move around
+	 * @param gameobjects The obstacles to avoid
+	 * @param targetRadius The radius of the desired position
+	 */
 	public abstract void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float targetRadius);
 	
 	@Override
