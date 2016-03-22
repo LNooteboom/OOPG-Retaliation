@@ -18,6 +18,7 @@ import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
+import nl.retaliation.networking.Packet;
 import nl.retaliation.networking.Server;
 import nl.retaliation.players.IPlayer;
 import nl.retaliation.players.Player;
@@ -41,7 +42,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
-	private boolean singlePlayer = true;
+	private boolean singlePlayer = false;
 	
 	private Minimap minimap;
 	
@@ -58,13 +59,6 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 	@Override
 	public void setupGame() {
-		if (singlePlayer == false) {
-			if (isServer) {
-				currentServer = new Server(63530);
-			} else {
-				currentClient = new Client("localhost", 63530);
-			}
-		}
 		
 		players.add(new Player(0xFF0000FF));
 		players.get(0).makeIRTSObject(this, new SovMiG(3, 13, TILESIZE, players.get(0)));
@@ -96,6 +90,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		minimap = new Minimap(0, 0, this.getTileMap());
 		addDashboard(minimap);
 		setFPSCounter(true);
+		
+		if (singlePlayer == false) {
+			if (isServer) {
+				currentServer = new Server(63530, tileMap);
+			} else {
+				currentClient = new Client("localhost", 63530, tileMap);
+			}
+		}
 	}
 
 	@Override
@@ -108,7 +110,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 				currentServer.sendData(allObjects, tileMap);
 			}
 			if (currentClient != null) {
-				ArrayList<IRTSObject> newObjects = currentClient.transceiveData(tileMap);
+				Packet packet = currentClient.transceiveData();
+				ArrayList<IRTSObject> newObjects = packet.getGameObjects();
+				this.setTileMap(packet.getTilemap());
+				minimap.updateMinimap(tileMap);
 				if (newObjects != null) {
 					deleteAllGameOBjects();
 					for (IRTSObject newObject : newObjects) {
@@ -172,8 +177,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
-		LevelGenerator noise = new LevelGenerator(0000f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.0f));
+		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
 		tileMap.setTile(3, 3, 1);
 	}
 	

@@ -27,10 +27,13 @@ public class Server {
 	private ArrayList<BufferedReader> input = new ArrayList<BufferedReader>();
 	private ArrayList<PrintWriter> output = new ArrayList<PrintWriter>();
 	
-	private boolean sendTileMap;
+	private boolean sendTileMap = true;
+	private TileMap tileMap;
+	private String tileMapString;
 	
-	public Server(int port) {
+	public Server(int port, TileMap tileMap) {
 		this.port = port;
+		this.tileMap = tileMap;
 		
 		setupServer();
 	}
@@ -50,7 +53,11 @@ public class Server {
 			try {
 				Socket newClient = serverSocket.accept();
 				input.add(new BufferedReader(new InputStreamReader(newClient.getInputStream())));
-				output.add(new PrintWriter(new BufferedOutputStream(newClient.getOutputStream()), false));
+				PrintWriter printOut = new PrintWriter(new BufferedOutputStream(newClient.getOutputStream()), false);
+				
+				sendTileMap(tileMap);
+				
+				output.add(printOut);
 				connectedClients.add(newClient);
 			} catch (IOException e){
 				System.out.println("Error waiting for clients?");
@@ -78,7 +85,8 @@ public class Server {
 		for (IRTSObject rtsObject : gameobjects) {
 			output += rtsObject.serialize();
 		}
-		out.println(output);
+		//out.println(output);
+		out.println(sendTileMap(tileMap));
 		out.flush();
 	}
 	/**
@@ -86,8 +94,18 @@ public class Server {
 	 * 
 	 * @return result
 	 */
-	public boolean sendTileMap() {
-		return sendTileMap;
+	public String sendTileMap(TileMap tilemap) {
+		tileMapString = "tm%";
+		int indexMap[][] = tilemap.getTileMap();
+		tileMapString += "$" + indexMap[0].length;
+		tileMapString += "$" + indexMap.length;
+		for (int y = 0; y < indexMap.length; y++) {
+			for (int x = 0; x < indexMap[0].length; x++) {
+				tileMapString += ("$" + indexMap[y][x]);
+			}
+		}
+		sendTileMap = false;
+		return tileMapString;
 	}
 	/**
 	 * Set this to true if the tilemap needs to be sent again

@@ -191,6 +191,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public String serialize() {
 		String output = "%";
 		output += ("$" + this.getClass());
+		output += ("$" + player.getID());
 		output += ("$" + (int) getX());
 		output += ("$" + (int) getY());
 		
@@ -224,8 +225,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public Vector2 getPos(){
 		return tilePosition;
 	}
-	public Player getOwner() {
-		return null;
+	@Override
+	public IPlayer getOwner() {
+		return player;
 	}
 	@Override
 	public void addWeapon(Weapon newWeapon) {

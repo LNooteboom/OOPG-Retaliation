@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.players.Player;
+import nl.retaliation.players.IPlayer;
 import nl.retaliation.unit.weapon.Weapon;
 
 /**
@@ -26,7 +26,7 @@ public interface IRTSObject {
 	
 	public int getArmor();
 	
-	public Player getOwner();
+	public IPlayer getOwner();
 	
 	public Vector2 getPos();
 	

@@ -11,6 +11,9 @@ public class Minimap extends Dashboard {
 		super(x, y, tilemap.getTileMap()[0].length, tilemap.getTileMap().length);
 		this.tilemap = tilemap;
 	}
+	public void updateMinimap(TileMap tilemap) {
+		this.tilemap = tilemap;
+	}
 	
 	@Override
 	public void draw(PGraphics g) {
