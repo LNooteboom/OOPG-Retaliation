@@ -1,6 +1,8 @@
 package nl.retaliation.unit;
 
 import java.util.ArrayList;
+
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
@@ -20,15 +22,8 @@ public abstract class GroundUnit extends Unit{
 	private boolean canStepOnLand = true;
 	
 	
-	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player) {
-		super(x, y, sprite, tileSize, maxSpeed, health, armor, player);
-	}
-	
-	@Override
-	public void destroy() {
-		//show explosion!!!
-		
-		this.setVisible(false);
+	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player, GameEngine engine) {
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, player, engine);
 	}
 	
 	@Override

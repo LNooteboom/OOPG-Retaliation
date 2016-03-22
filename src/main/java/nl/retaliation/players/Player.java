@@ -21,6 +21,7 @@ import nl.retaliation.unit.Unit;
 public class Player implements IPlayer{
 	private int id;
 	private int color;
+	private GameEngine engine;
 	
 	private ArrayList<IRTSObject> objects;
 	private ArrayList<Unit> units;
@@ -31,8 +32,10 @@ public class Player implements IPlayer{
 	//private Client client;
 	
 	
-	public Player(int color) {
+	public Player(int color, GameEngine engine) {
 		this.color = color;
+		this.engine = engine;
+		
 		objects = new ArrayList<IRTSObject>(100);
 		units = new ArrayList<Unit>(100);
 		buildings = new ArrayList<Building>(100);
@@ -48,7 +51,7 @@ public class Player implements IPlayer{
 	}
 	
 	@Override
-	public boolean makeIRTSObject(GameEngine engine, IRTSObject object) {
+	public boolean makeIRTSObject(IRTSObject object) {
 		objects.add(object);
 		if(object instanceof GameObject){
 			if(object instanceof Unit){
@@ -60,6 +63,26 @@ public class Player implements IPlayer{
 			return true;
 		}
 		return false;
+	}
+	
+	public void removeIRTSObject(IRTSObject object){
+		objects.remove(object);
+		if(object instanceof Unit){
+			units.remove((Unit)object);
+		}
+		if(object instanceof Building){
+			buildings.remove((Building)object);
+		}
+		
+		for(Selection selection : selections){
+			if(selection.getObject() == object){
+				selection.removeSelf(engine);
+				selections.remove(selection);
+				
+				break;
+			}
+		}
+		engine.deleteGameObject((GameObject)object);
 	}
 	
 	@Override

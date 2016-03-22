@@ -2,6 +2,7 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.retaliation.IRTSObject;
@@ -16,8 +17,8 @@ import nl.retaliation.players.IPlayer;
  */
 
 public abstract class AirUnit extends Unit{
-	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player){
-		super(x, y, sprite, tileSize, maxSpeed, health, armor, player);
+	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player, GameEngine engine){
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, player, engine);
 	}
 	
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float radius){
@@ -57,10 +58,5 @@ public abstract class AirUnit extends Unit{
 		}
 		
 		return path;
-	}
-
-	@Override
-	public void destroy() {
-		// Boom!
 	}
 }

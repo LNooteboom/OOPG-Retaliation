@@ -2,10 +2,12 @@ package nl.retaliation.unit;
 
 import java.util.ArrayList;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
+import nl.retaliation.Explosion;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.Retaliation;
 import nl.retaliation.logic.Pathfind;
@@ -23,7 +25,6 @@ import processing.core.PGraphics;
  *
  */
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
-	
 	protected Vector2 tilePosition;
 	protected Vector2 desiredTilePos;
 	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN RAD
@@ -33,6 +34,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	protected ArrayList<IRTSObject> gameobjects;
 	protected TileMap terrain;
+	private int tileSize;
 
 	private float maxSpeed;
 	
@@ -44,13 +46,15 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private ArrayList<Weapon> weapons = new ArrayList<Weapon>();
 	
 	private IPlayer player;
+	private GameEngine engine;
 	
-	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player) {
+	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player, GameEngine engine) {
 		super(sprite, 8);
 		
+		this.tileSize = tileSize;
 		this.setX(x * tileSize);
 		this.setY(y * tileSize);
-		tilePosition = new Vector2((int) x / tileSize, (int) y / tileSize);
+		tilePosition = new Vector2((int) x, (int) y);
 		
 		this.setWidth(tileSize);
 		this.setHeight(tileSize);
@@ -60,11 +64,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.health = maxHealth;
 		this.armor = armor;
 		this.player = player;
+		this.engine = engine;
 	}
-	/**
-	 * Destroys this object
-	 */
-	public abstract void destroy();
 	
 	/**
 	 * Call this method in when the game updates
@@ -80,6 +81,12 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		if (isMoving) {
 			moveNext();
 		}
+	}
+	
+	@Override
+	public void destroy() {
+		engine.addGameObject(new Explosion(tilePosition, tileSize, engine));
+		player.removeIRTSObject(this);
 	}
 	
 	@Override

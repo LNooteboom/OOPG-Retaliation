@@ -2,39 +2,45 @@ package nl.retaliation.building;
 
 import java.util.ArrayList;
 
-import processing.core.PGraphics;
-
-import nl.han.ica.OOPDProcessingEngineHAN.Objects.*;
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.AnimatedSpriteObject;
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
+import nl.retaliation.Explosion;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
-import nl.retaliation.players.Player;
 import nl.retaliation.unit.weapon.Weapon;
+import processing.core.PGraphics;
 
 public abstract class Building extends AnimatedSpriteObject implements IRTSObject{
 	private Vector2 tilePosition;
+	private int TILESIZE;
 	
 	private boolean isIndestructible;
 	
-	private int health, armor;
+	private int maxHealth, health, armor;
 	
 	private IPlayer player;
+	private GameEngine engine;
 	
-	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player){
+	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player, GameEngine engine){
 		super(sprite, 1);
 		
+		this.TILESIZE = TILESIZE;
 		this.setX(x * TILESIZE);
 		this.setY(y * TILESIZE);
-		tilePosition = new Vector2((int) x / TILESIZE, (int) y / TILESIZE);
+		tilePosition = new Vector2((int)x, (int)y);
 		
 		this.setWidth(TILESIZE);
 		this.setHeight(TILESIZE);
 		
-		this.health = health;
+		this.maxHealth = health;
+		this.health = maxHealth;
 		this.armor = armor;
 		this.player = player;
+		this.engine = engine;
 	}
 	
 	public void update(){
@@ -50,7 +56,11 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		g.noTint();
 	}
 	
-	public abstract void destroy();
+	@Override
+	public void destroy() {
+		engine.addGameObject(new Explosion(tilePosition, TILESIZE, engine));
+		player.removeIRTSObject(this);
+	}
 
 	@Override
 	public void damage(int amount) {
@@ -72,14 +82,12 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	}
 	
 	@Override
-	public Player getOwner() {
-		// TODO Auto-generated method stub
-		return null;
+	public IPlayer getOwner() {
+		return player;
 	}
 	
 	@Override
 	public String serialize() {
-		//TODO: Add serialization
 		return "";
 	}
 	
@@ -93,6 +101,6 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	}
 	
 	public float getHealthPercentage() {
-		return 0;
+		return (float)health / (float)maxHealth;
 	}
 }

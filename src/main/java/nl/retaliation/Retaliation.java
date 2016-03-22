@@ -11,17 +11,18 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.han.ica.OOPDProcessingEngineHAN.View.View;
 import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
-import nl.retaliation.building.*;
+import nl.retaliation.building.HQRed;
 import nl.retaliation.dashboard.Minimap;
-import nl.retaliation.unit.*;
-import nl.retaliation.level.*;
+import nl.retaliation.dashboard.Selection;
+import nl.retaliation.level.GrassTile;
+import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.networking.Client;
 import nl.retaliation.networking.Server;
 import nl.retaliation.players.IPlayer;
 import nl.retaliation.players.Player;
-
+import nl.retaliation.unit.SovMiG;
 import processing.core.PApplet;
 
 /**
@@ -66,18 +67,20 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			}
 		}
 		
-		players.add(new Player(0xFF0000FF));
-		players.get(0).makeIRTSObject(this, new SovMiG(3, 13, TILESIZE, players.get(0)));
-		players.get(0).makeIRTSObject(this, new SovMiG(3, 12, TILESIZE, players.get(0)));
-		players.get(0).makeIRTSObject(this, new HQRed(3, 14, TILESIZE, players.get(0)));
-		players.add(new Player(0xFFFF0000));
-		players.get(1).makeIRTSObject(this, new SovMiG(4, 13, TILESIZE, players.get(1)));
-		players.get(1).makeIRTSObject(this, new HQRed(4, 14, TILESIZE, players.get(1)));
-		players.add(new Player(0xFF00FF00));
-		players.get(2).makeIRTSObject(this, new SovMiG(5, 13, TILESIZE, players.get(2)));
-		players.get(2).makeIRTSObject(this, new HQRed(5, 14, TILESIZE, players.get(2)));
+		players.add(new Player(0xFF0000FF, this));
+		players.get(0).makeIRTSObject(new SovMiG(3, 13, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new SovMiG(3, 12, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
+		players.add(new Player(0xFFFF0000, this));
+		players.get(1).makeIRTSObject(new SovMiG(4, 13, TILESIZE, players.get(1), this));
+		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
+		players.add(new Player(0xFF00FF00, this));
+		players.get(2).makeIRTSObject(new SovMiG(5, 13, TILESIZE, players.get(2), this));
+		players.get(2).makeIRTSObject(new HQRed(5, 14, TILESIZE, players.get(2), this));
 		
-		player = players.get(0);
+		player = players.get(1);
+		
+		this.addGameObject(new Explosion(new Vector2(5, 5), TILESIZE, this));
 		
 		for(IPlayer player : players){
 			ArrayList<IRTSObject> objects = player.getIRTSObjects();
@@ -135,6 +138,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			break;
 		case 'd':
 			viewport.setX(viewport.getX() + moveSpeed);
+			break;
+		case 'q':
+			ArrayList<Selection> selections = player.getSelection();
+			if(selections.size() != 0){
+				selections.get(0).getObject().destroy();
+			}
 			break;
 		}
 	}

@@ -17,7 +17,8 @@ import nl.retaliation.unit.Unit;
  */
 
 public interface IPlayer {
-	public boolean makeIRTSObject(GameEngine engine, IRTSObject object);
+	public boolean makeIRTSObject(IRTSObject object);
+	public void removeIRTSObject(IRTSObject object);
 	public void selectIRTSObjects(Vector2 cor1, Vector2 cor2, GameEngine gameEngine, int TILESIZE);
 	public void setPathOfSelection(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> objects);
 	public void letSelectionAttack();
