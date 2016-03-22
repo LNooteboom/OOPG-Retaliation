@@ -60,14 +60,13 @@ public class Client {
 		try {
 			
 			String line = input.readLine();
-			//System.out.println(line);
-			//if (line.substring(0, 3) == "tm%") {
+			System.out.println(line);
+			if (line.charAt(0) == '#' || line.charAt(1) == '#') {
 				System.out.println("tm");
 				return new Packet(null, deserializeTileMap(line));
-			//} else {
-				//return deserializeGameObjects(line);
-			//	return null;
-			//}
+			} else {
+				return new Packet(deserializeGameObjects(line), null);
+			}
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -159,7 +158,7 @@ public class Client {
 	private TileMap deserializeTileMap(String input) {
 		int prevSepPos = 0;
 		ArrayList<Integer> mapData = new ArrayList<Integer>();
-		input = input.substring(3, input.length());
+		input = input.substring(1, input.length());
 		for (int i = prevSepPos + 1; i < input.length(); i++) {
 			if (input.charAt(i) == '$') {
 				mapData.add(Integer.parseInt(input.substring(prevSepPos + 1, i)));

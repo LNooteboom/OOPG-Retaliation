@@ -115,8 +115,10 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			if (currentClient != null) {
 				Packet packet = currentClient.transceiveData();
 				ArrayList<IRTSObject> newObjects = packet.getGameObjects();
-				this.setTileMap(packet.getTilemap());
-				minimap.updateMinimap(tileMap);
+				if (packet.getTilemap() != null) {
+					this.setTileMap(packet.getTilemap());
+					minimap.updateMinimap(tileMap);
+				}
 				if (newObjects != null) {
 					deleteAllGameOBjects();
 					for (IRTSObject newObject : newObjects) {
