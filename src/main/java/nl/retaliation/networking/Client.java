@@ -10,8 +10,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
+import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.retaliation.IRTSObject;
+import nl.retaliation.level.GrassTile;
+import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.unit.Unit;
 
@@ -22,9 +26,12 @@ public class Client {
 	private PrintWriter output;
 	private Socket socket;
 	
-	public Client(String hostName, int hostPort) {
+	private TileMap clientTilemap;
+	
+	public Client(String hostName, int hostPort, TileMap tilemap) {
 		this.hostName = hostName;
 		this.hostPort = hostPort;
+		this.clientTilemap = tilemap;
 		
 		createClient();
 		//System.out.println("c: "+socket.isClosed());
@@ -49,11 +56,18 @@ public class Client {
 		}
 	}
 	
-	public ArrayList<IRTSObject> transceiveData(TileMap tilemap) {
+	public Packet transceiveData() {
 		try {
 			
 			String line = input.readLine();
-			return deserializeGameObjects(line);
+			//System.out.println(line);
+			//if (line.substring(0, 3) == "tm%") {
+				System.out.println("tm");
+				return new Packet(null, deserializeTileMap(line));
+			//} else {
+				//return deserializeGameObjects(line);
+			//	return null;
+			//}
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -141,6 +155,51 @@ public class Client {
 			}
 		}
 		return null;
+	}
+	private TileMap deserializeTileMap(String input) {
+		int prevSepPos = 0;
+		ArrayList<Integer> mapData = new ArrayList<Integer>();
+		input = input.substring(3, input.length());
+		for (int i = prevSepPos + 1; i < input.length(); i++) {
+			if (input.charAt(i) == '$') {
+				mapData.add(Integer.parseInt(input.substring(prevSepPos + 1, i)));
+				//System.out.println("ss "+Integer.parseInt(input.substring(prevSepPos + 1, i)));
+				prevSepPos = i;
+			}
+		}
+		
+		int mapWidthCounter = 0;
+		int mapHeightCounter = 0;
+		int[][] indexMap = new int[mapData.get(1)][mapData.get(0)];
+		for (int i = 2; i < mapData.size(); i++) {
+			if (mapHeightCounter < indexMap.length) {
+				if (mapWidthCounter >= indexMap[0].length) {
+					mapWidthCounter = 0;
+					mapHeightCounter++;
+				}
+				indexMap[mapHeightCounter][mapWidthCounter] = mapData.get(i);
+				mapWidthCounter++;
+			}
+		}
+//		for (int x = 0; x < indexMap[0].length; x++) {
+//			String line = "";
+//			for (int y = 0; y < indexMap.length; y++) {
+//				line += indexMap[y][x];
+//			}
+//			System.out.println(line);
+//		}
+		
+		Sprite grassSprite = new Sprite("src/main/java/nl/retaliation/media/sprites/grass.png");
+		TileType<GrassTile> grassType = new TileType<>(GrassTile.class, grassSprite);
+		Sprite waterSprite = new Sprite("src/main/java/nl/retaliation/media/sprites/water.png");
+		TileType<WaterTile> waterType = new TileType<>(WaterTile.class, waterSprite);
+		
+		TileType<?>[] tileTypes = {grassType, waterType};
+		
+		TileMap tilemap = new TileMap(32, tileTypes, indexMap);
+		
+		
+		return tilemap;
 	}
 	public void sendClick(Vector2 pos) {
 		output.println(pos.getX() + "$" + pos.getY());
