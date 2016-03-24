@@ -19,6 +19,11 @@ import nl.retaliation.unit.Unit;
  */
 
 public class Player implements IPlayer{
+	private static final int PLAYING = 0;
+	private static final int LOSE = 1;
+	private static final int WIN = 2;
+	private int state = PLAYING;
+	
 	private int id;
 	private int color;
 	private GameEngine engine;
@@ -42,9 +47,6 @@ public class Player implements IPlayer{
 		buildings = new ArrayList<Building>(100);
 		selections = new ArrayList<Selection>(20);
 		//this.networked = false;
-	}
-	public Player(int port, String host) {
-		//this.networked = true;
 	}
 
 	public int getID() {
@@ -210,5 +212,20 @@ public class Player implements IPlayer{
 	@Override
 	public ArrayList<Selection> getSelection() {
 		return selections;
+	}
+	@Override
+	public void setWin() {
+		// TODO Auto-generated method stub
+		state = WIN;
+	}
+	@Override
+	public void setLose() {
+		// TODO Auto-generated method stub
+		state = LOSE;
+	}
+	@Override
+	public int getState() {
+		// TODO Auto-generated method stub
+		return state;
 	}
 }

@@ -30,4 +30,8 @@ public interface IPlayer {
 	public ArrayList<Unit> getUnits();
 	public ArrayList<IRTSObject> getIRTSObjects();
 	public ArrayList<Selection> getSelection();
+	
+	public void setWin();
+	public void setLose();
+	public int getState();
 }

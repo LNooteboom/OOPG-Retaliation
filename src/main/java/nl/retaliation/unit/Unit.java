@@ -14,7 +14,6 @@ import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
-import nl.retaliation.players.Player;
 import nl.retaliation.unit.weapon.Weapon;
 import processing.core.PGraphics;
 
@@ -212,6 +211,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public void forceSpriteDirection(int direction) {
 		spriteDirection = direction;
 		setCurrentFrameIndex(direction);
+	}
+	public int getSpriteDirection() {
+		return spriteDirection;
 	}
 	
 	public void damage(int damage) {
