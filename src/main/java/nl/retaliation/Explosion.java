@@ -26,7 +26,7 @@ public class Explosion extends AnimatedSpriteObject implements IAlarmListener{
 	@Override
 	public void update() {
 		if(getCurrentFrameIndex() == 23){
-			alarm.stop();
+			//alarm.stop();
 			gameEngine.deleteGameObject(this);
 		}
 	}

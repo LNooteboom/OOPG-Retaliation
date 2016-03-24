@@ -62,14 +62,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	public void setupGame() {
 		
 		players.add(new Player(0xFF0000FF, this));
-		players.get(0).makeIRTSObject(new SovMiG(3, 13, TILESIZE, players.get(0), this));
-		players.get(0).makeIRTSObject(new SovMiG(3, 12, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
 		players.add(new Player(0xFFFF0000, this));
-		players.get(1).makeIRTSObject(new SovMiG(4, 13, TILESIZE, players.get(1), this));
+		players.get(1).makeIRTSObject(new SovMiG(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
 		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
 		players.add(new Player(0xFF00FF00, this));
-		players.get(2).makeIRTSObject(new SovMiG(5, 13, TILESIZE, players.get(2), this));
+		players.get(2).makeIRTSObject(new SovMiG(5 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(2), this));
 		players.get(2).makeIRTSObject(new HQRed(5, 14, TILESIZE, players.get(2), this));
 		
 		player = players.get(1);
@@ -91,14 +91,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		initTileMap();
 		viewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
-		addDashboard(minimap);
+		//addDashboard(minimap);
 		setFPSCounter(true);
 		
 		if (singlePlayer == false) {
 			if (isServer) {
 				currentServer = new Server(63530, tileMap);
 			} else {
-				currentClient = new Client("localhost", 63530, tileMap);
+				currentClient = new Client("localhost", 63530, this);
 			}
 		}
 	}
@@ -122,7 +122,9 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 				if (newObjects != null) {
 					deleteAllGameOBjects();
 					for (IRTSObject newObject : newObjects) {
-						newObject.addToEngine(this);
+						IPlayer owner = newObject.getOwner();
+						owner.makeIRTSObject(newObject);
+						addGameObject((GameObject) newObject);
 					}
 				}
 			}
@@ -219,5 +221,9 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 				deleteGameObject(currentObject);
 			}
 		}
+	}
+	
+	public ArrayList<IPlayer> getPlayers() {
+		return players;
 	}
 }

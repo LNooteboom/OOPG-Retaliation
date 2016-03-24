@@ -10,13 +10,19 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
 import nl.han.ica.OOPDProcessingEngineHAN.Objects.Sprite;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.retaliation.IRTSObject;
+import nl.retaliation.Retaliation;
+import nl.retaliation.building.Building;
 import nl.retaliation.level.GrassTile;
 import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.Vector2;
+import nl.retaliation.players.IPlayer;
+import nl.retaliation.players.Player;
+import nl.retaliation.unit.GroundUnit;
 import nl.retaliation.unit.Unit;
 
 public class Client {
@@ -26,12 +32,12 @@ public class Client {
 	private PrintWriter output;
 	private Socket socket;
 	
-	private TileMap clientTilemap;
+	private Retaliation clientEngine;
 	
-	public Client(String hostName, int hostPort, TileMap tilemap) {
+	public Client(String hostName, int hostPort, Retaliation clientEngine) {
 		this.hostName = hostName;
 		this.hostPort = hostPort;
-		this.clientTilemap = tilemap;
+		this.clientEngine = clientEngine;
 		
 		createClient();
 		//System.out.println("c: "+socket.isClosed());
@@ -60,9 +66,8 @@ public class Client {
 		try {
 			
 			String line = input.readLine();
-			System.out.println(line);
+			//System.out.println(line);
 			if (line.charAt(0) == '#' || line.charAt(1) == '#') {
-				System.out.println("tm");
 				return new Packet(null, deserializeTileMap(line));
 			} else {
 				return new Packet(deserializeGameObjects(line), null);
@@ -97,9 +102,6 @@ public class Client {
 		boolean classExists = false;
 		
 		IRTSObject newObject;
-		int xPos = 0;
-		int yPos = 0;
-		int direction;
 		
 		int prevSepPos = 0;
 		char seperator = '$';
@@ -117,33 +119,36 @@ public class Client {
 				break;
 			}
 		}
+		ArrayList<Integer> objectProperties = new ArrayList<Integer>();
 		for (int i = prevSepPos + 1; i < input.length(); i++) {
 			if (input.charAt(i) == '$') {
-				xPos = Integer.parseInt(input.substring(prevSepPos + 1, i));
+				objectProperties.add(Integer.parseInt(input.substring(prevSepPos + 1, i)));
 				prevSepPos = i;
-				break;
 			}
 		}
-		for (int i = prevSepPos + 1; i < input.length(); i++) {
-			if (input.charAt(i) == '$') {
-				yPos = Integer.parseInt(input.substring(prevSepPos + 1, i));
-				prevSepPos = i;
-				break;
-			}
-		}
-		direction = Integer.parseInt(input.substring(prevSepPos + 1, input.length()));
+		objectProperties.add(Integer.parseInt(input.substring(prevSepPos + 1, input.length())));
 		if (classExists) {
 			
-			Class<?>[] pars = {Float.TYPE, Float.TYPE, Integer.TYPE};
-			Object[] initargs = {xPos, yPos, 32};
+			int playerID = objectProperties.get(0);
+			IPlayer unitOwner = new Player(0, clientEngine);
+			for (IPlayer player : clientEngine.getPlayers()) {
+				if (player.getID() == playerID) {
+					unitOwner = player;
+					break;
+				}
+			}
+			
+			Class<?>[] pars = {Float.TYPE, Float.TYPE, Integer.TYPE, IPlayer.class, GameEngine.class};
+			Object[] initargs = {objectProperties.get(1), objectProperties.get(2), 32, unitOwner, clientEngine};
 			try {
 				Constructor<?> constructor = objectClass.getConstructor(pars);
 				try {
 					newObject = (IRTSObject) constructor.newInstance(initargs);
 					//Holy shit het werkt!!
 					if (newObject instanceof Unit) {
-						((Unit) newObject).forceSpriteDirection(direction);
+						((Unit) newObject).forceSpriteDirection(objectProperties.get(3));
 					}
+					System.out.println(newObject.toString());
 					return newObject;
 					
 				} catch (Exception e) {
@@ -162,7 +167,6 @@ public class Client {
 		for (int i = prevSepPos + 1; i < input.length(); i++) {
 			if (input.charAt(i) == '$') {
 				mapData.add(Integer.parseInt(input.substring(prevSepPos + 1, i)));
-				//System.out.println("ss "+Integer.parseInt(input.substring(prevSepPos + 1, i)));
 				prevSepPos = i;
 			}
 		}

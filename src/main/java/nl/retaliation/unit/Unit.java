@@ -52,9 +52,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		super(sprite, 8);
 		
 		this.tileSize = tileSize;
-		this.setX(x * tileSize);
-		this.setY(y * tileSize);
-		tilePosition = new Vector2((int) x, (int) y);
+		this.setX(x);
+		this.setY(y);
+		tilePosition = new Vector2((int) x * tileSize, (int) y * tileSize);
 		
 		this.setWidth(tileSize);
 		this.setHeight(tileSize);

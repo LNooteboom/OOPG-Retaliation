@@ -88,7 +88,13 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	@Override
 	public String serialize() {
-		return "";
+		String output = "%";
+		output += ("$" + this.getClass());
+		output += ("$" + player.getID());
+		output += ("$" + (int) tilePosition.getX());
+		output += ("$" + (int) tilePosition.getY());
+		
+		return output;
 	}
 	
 	@Override

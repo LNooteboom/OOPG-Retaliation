@@ -21,9 +21,9 @@ import nl.retaliation.IRTSObject;
 public class Server {
 	private int port;
 	private int time = 0;
-	private final int wait = 10;
+	private final int wait = 3;
 	private int tileMapTime = 0;
-	private final int tileMapWait = 5;
+	private final int tileMapWait = 200;
 	
 	private ArrayList<Socket> connectedClients = new ArrayList<Socket>();
 	private ArrayList<BufferedReader> input = new ArrayList<BufferedReader>();
