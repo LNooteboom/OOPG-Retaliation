@@ -17,6 +17,8 @@ public interface IRTSObject {
 	
 	public float getX();
 	public float getY();
+	public void setX(float x);
+	public void setY(float y);
 	
 	public void damage(int amount);
 	

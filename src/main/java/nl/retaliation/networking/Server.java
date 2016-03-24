@@ -22,6 +22,8 @@ public class Server {
 	private int port;
 	private int time = 0;
 	private final int wait = 10;
+	private int tileMapTime = 0;
+	private final int tileMapWait = 200;
 	
 	private ArrayList<Socket> connectedClients = new ArrayList<Socket>();
 	private ArrayList<BufferedReader> input = new ArrayList<BufferedReader>();
@@ -58,6 +60,7 @@ public class Server {
 				sendTileMap(tileMap);
 				
 				output.add(printOut);
+				printOut.println(sendTileMap(tileMap));
 				connectedClients.add(newClient);
 			} catch (IOException e){
 				System.out.println("Error waiting for clients?");
@@ -81,12 +84,17 @@ public class Server {
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		String output = "";
-		for (IRTSObject rtsObject : gameobjects) {
-			output += rtsObject.serialize();
-		}
-		//out.println(output);
-		out.println(sendTileMap(tileMap));
+//		if (tileMapTime >= tileMapWait) {
+//			out.println(sendTileMap(tileMap));
+//			tileMapTime = 0;
+//		} else {
+			String output = "";
+			for (IRTSObject rtsObject : gameobjects) {
+				output += rtsObject.serialize();
+			}
+			out.println(output);
+			tileMapTime++;
+		//}
 		out.flush();
 	}
 	/**
@@ -95,7 +103,7 @@ public class Server {
 	 * @return result
 	 */
 	public String sendTileMap(TileMap tilemap) {
-		tileMapString = "tm%";
+		tileMapString = "#";
 		int indexMap[][] = tilemap.getTileMap();
 		tileMapString += "$" + indexMap[0].length;
 		tileMapString += "$" + indexMap.length;
