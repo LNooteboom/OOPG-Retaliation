@@ -100,6 +100,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		output += ("$" + id);
 		output += ("$" + (int) tilePosition.getX());
 		output += ("$" + (int) tilePosition.getY());
+		output += ("$" + health);
 		
 		return output;
 	}
@@ -115,6 +116,9 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	public float getHealthPercentage() {
 		return (float)health / (float)maxHealth;
+	}
+	public void setHealth(int health) {
+		this.health = health;
 	}
 	
 	@Override

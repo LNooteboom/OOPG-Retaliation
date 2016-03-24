@@ -31,6 +31,8 @@ public interface IPlayer {
 	public ArrayList<IRTSObject> getIRTSObjects();
 	public ArrayList<Selection> getSelection();
 	
+	public void setSelection(ArrayList<Selection> selection);
+	
 	public void setWin();
 	public void setLose();
 	public int getState();

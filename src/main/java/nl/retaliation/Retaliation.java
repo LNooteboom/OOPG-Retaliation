@@ -65,11 +65,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		players.get(0).makeIRTSObject(new SovIFV(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
 		players.add(new Player(0xFFFF0000, 1, this));
-		players.get(1).makeIRTSObject(new SovMiG(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
+		players.get(1).makeIRTSObject(new SovIFV(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
 		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
-		//		players.add(new Player(0xFF00FF00, 2, this));
-		//		players.get(2).makeIRTSObject(new SovMiG(5 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(2), this));
-		//		players.get(2).makeIRTSObject(new HQRed(5, 14, TILESIZE, players.get(2), this));
 
 		this.addGameObject(new Explosion(new Vector2(5, 5), TILESIZE, this));
 
@@ -245,6 +242,9 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 	public ArrayList<IPlayer> getPlayers() {
 		return players;
 	}
+	public IPlayer getPlayer() {
+		return player;
+	}
 	public ArrayList<Selection> getSelection() {
 		return player.getSelection();
 	}
@@ -281,6 +281,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 			} else {
 				matchingObject.setX(newObject.getX());
 				matchingObject.setY(newObject.getY());
+				matchingObject.setHealth(newObject.getHealth());
 				
 				if (matchingObject instanceof Unit) {
 					((Unit) matchingObject).forceSpriteDirection(((Unit) newObject).getSpriteDirection());

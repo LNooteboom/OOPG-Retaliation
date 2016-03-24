@@ -148,16 +148,18 @@ public class Server {
 		}
 		desiredPos.setY(Integer.parseInt(input.substring(prevSepPos + 1, input.length())));
 
-		//ArrayList<Selection> newSelection = new ArrayList<Selection>();
+		ArrayList<Selection> newSelection = new ArrayList<Selection>();
 		System.out.println(inputData.size());
 		for (int id : inputData) {
 			IRTSObject selectedObject = engine.getObjectFromID(id, engine.getObjects());
 			if (selectedObject != null) {
-				//newSelection.add(new Selection(engine, 32, selectedObject));
-				if (selectedObject instanceof Unit) {
-					((Unit)selectedObject).setPath(desiredPos, engine.getTileMap(), engine.getObjects(), 0.1f);
-				}
+				newSelection.add(new Selection(engine, 32, selectedObject));
+				//if (selectedObject instanceof Unit) {
+					//((Unit)selectedObject).setPath(desiredPos, engine.getTileMap(), engine.getObjects(), 0.1f);
+				//}
 			}
 		}
+		engine.getPlayer().setSelection(newSelection);
+		engine.getPlayer().setPathOfSelection(desiredPos, engine.getTileMap(), engine.getObjects());
 	}
 }

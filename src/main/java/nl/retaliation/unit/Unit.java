@@ -213,6 +213,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		output += ("$" + id);
 		output += ("$" + (int) getX());
 		output += ("$" + (int) getY());
+		output += ("$" + health);
 		
 		if (spriteDirection != 0) {
 			output += ("$" + spriteDirection);
@@ -234,6 +235,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	}
 	public int getHealth() {
 		return health;
+	}
+	public void setHealth(int health) {
+		this.health = health;
 	}
 	
 	public float getHealthPercentage(){

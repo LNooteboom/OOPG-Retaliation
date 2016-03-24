@@ -150,9 +150,10 @@ public class Client {
 				try {
 					newObject = (IRTSObject) constructor.newInstance(initargs);
 					newObject.setID(objectProperties.get(1));
+					newObject.setHealth(objectProperties.get(4));
 					//Holy shit het werkt!!
 					if (newObject instanceof Unit) {
-						((Unit) newObject).forceSpriteDirection(objectProperties.get(4));
+						((Unit) newObject).forceSpriteDirection(objectProperties.get(5));
 					}
 					return newObject;
 					

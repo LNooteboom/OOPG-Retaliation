@@ -60,6 +60,10 @@ public class Player implements IPlayer{
 	public int getID() {
 		return id;
 	}
+	@Override
+	public void setSelection(ArrayList<Selection> selection) {
+		this.selections = selection;
+	}
 	
 	@Override
 	public boolean makeIRTSObject(IRTSObject object) {

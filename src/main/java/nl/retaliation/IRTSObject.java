@@ -24,6 +24,7 @@ public interface IRTSObject {
 	public void setY(float y);
 	
 	public void damage(int amount);
+	public void setHealth(int health);
 	
 	public int getHealth();
 	
