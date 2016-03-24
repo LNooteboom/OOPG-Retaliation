@@ -10,6 +10,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.View.Viewport;
 import nl.retaliation.Explosion;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.Retaliation;
+import nl.retaliation.building.Building;
 import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
@@ -25,7 +26,7 @@ import processing.core.PGraphics;
  *
  */
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
-	private static int amountOfUnits;
+	private static int amountOfUnits = 1;
 	private int id;
 	
 	protected Vector2 tilePosition;
@@ -54,7 +55,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player, GameEngine engine) {
 		super(sprite, 8);
 		amountOfUnits++;
-		id = amountOfUnits;
+		id = amountOfUnits + Building.getAmountOfBuildings();
 		
 		this.tileSize = tileSize;
 		this.setX(x);
@@ -266,5 +267,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	@Override
 	public void setID(int id) {
 		this.id = id;
+	}
+	
+	public static int getAmountOfUnits() {
+		return amountOfUnits;
 	}
 }

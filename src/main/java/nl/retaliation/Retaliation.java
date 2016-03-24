@@ -15,18 +15,12 @@ import nl.retaliation.building.HQRed;
 import nl.retaliation.dashboard.Minimap;
 import nl.retaliation.dashboard.Selection;
 import nl.retaliation.dashboard.TextScreen;
-import nl.retaliation.level.GrassTile;
-import nl.retaliation.level.WaterTile;
+import nl.retaliation.level.*;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.networking.Client;
-import nl.retaliation.networking.Packet;
-import nl.retaliation.networking.Server;
-import nl.retaliation.players.IPlayer;
-import nl.retaliation.players.Player;
-import nl.retaliation.unit.SovIFV;
-import nl.retaliation.unit.SovMiG;
-import nl.retaliation.unit.Unit;
+import nl.retaliation.networking.*;
+import nl.retaliation.players.*;
+import nl.retaliation.unit.*;
 import processing.core.PApplet;
 
 /**
@@ -46,8 +40,8 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
-	private boolean singlePlayer = true;
-	
+	private boolean singlePlayer = false;
+
 	private Minimap minimap;
 
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>();
@@ -265,46 +259,22 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		}
 	}
 	private void updateGameObjects(ArrayList<IRTSObject> oldObjects, ArrayList<IRTSObject> newObjects) {
-//		for (int i = 0; i < newObjects.size(); i++) {
-//			if (i >= oldObjects.size()) {
-//				oldObjects.add(newObjects.get(i));
-//			} else {
-//				IRTSObject oldObject = oldObjects.get(i);
-//				oldObject.setX(newObjects.get(i).getX());
-//				oldObject.setY(newObjects.get(i).getY());
-//
-//				if (oldObject instanceof Unit) {
-//					((Unit) oldObject).forceSpriteDirection(((Unit) newObjects.get(i)).getSpriteDirection());
-//				}
-//			}
-//		}
-		//if (newObjects.size() < oldObjects.size()) {
-			int[] idsPresent = new int[oldObjects.size()];
-			int count = 0;
-			for (IRTSObject oldObject : oldObjects) {
-				idsPresent[count] = oldObject.getID();
-				count++;
+		for (IRTSObject oldObject : oldObjects) {
+			if (getObjectFromID(oldObject.getID(), newObjects) == null) {
+				oldObject.destroy();
 			}
-			for (int i = 0; i < idsPresent.length; i++) {
-				IRTSObject matchingObject = getObjectFromID(idsPresent[i], newObjects);
-				if (matchingObject == null) {
-					//this.deleteGameObject((GameObject) matchingObject);
-					oldObjects.get(i).destroy();
-				}
-			}
-		//}
-		for (int i = 0; i < newObjects.size(); i++) {
-			IRTSObject matchingObject = getObjectFromID(newObjects.get(i).getID(), oldObjects);
-			if (matchingObject != null) {
-				IRTSObject oldObject = oldObjects.get(i);
-				oldObject.setX(newObjects.get(i).getX());
-				oldObject.setY(newObjects.get(i).getY());
-
-				if (oldObject instanceof Unit && newObjects.get(i) instanceof Unit) {
-					((Unit) oldObject).forceSpriteDirection(((Unit) newObjects.get(i)).getSpriteDirection());
-				}
+		}
+		for (IRTSObject newObject : newObjects) {
+			IRTSObject matchingObject = getObjectFromID(newObject.getID(), oldObjects);
+			if (matchingObject == null) {
+				oldObjects.add(newObject);
 			} else {
-				oldObjects.add(newObjects.get(i));
+				matchingObject.setX(newObject.getX());
+				matchingObject.setY(newObject.getY());
+				
+				if (matchingObject instanceof Unit) {
+					((Unit) matchingObject).forceSpriteDirection(((Unit) newObject).getSpriteDirection());
+				}
 			}
 		}
 	}

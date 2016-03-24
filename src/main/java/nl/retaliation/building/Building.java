@@ -11,6 +11,7 @@ import nl.retaliation.Explosion;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
+import nl.retaliation.unit.Unit;
 import nl.retaliation.unit.weapon.Weapon;
 import processing.core.PGraphics;
 
@@ -31,7 +32,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player, GameEngine engine){
 		super(sprite, 1);
 		amountOfBuildings++;
-		id = amountOfBuildings;
+		id = amountOfBuildings + Unit.getAmountOfUnits();
 		
 		this.TILESIZE = TILESIZE;
 		this.setX(x * TILESIZE);
@@ -123,5 +124,9 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	@Override
 	public void setID(int id) {
 		this.id = id;
+	}
+	
+	public static int getAmountOfBuildings() {
+		return amountOfBuildings;
 	}
 }
