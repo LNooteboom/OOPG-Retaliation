@@ -14,7 +14,7 @@ import nl.retaliation.logic.Pathfind;
 import nl.retaliation.logic.Trigonio;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
-import nl.retaliation.players.Player;
+import nl.retaliation.unit.weapon.MachineGun;
 import nl.retaliation.unit.weapon.Weapon;
 import processing.core.PGraphics;
 
@@ -65,6 +65,9 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.armor = armor;
 		this.player = player;
 		this.engine = engine;
+		
+		weapons.add(new MachineGun(this, tileSize));
+		engine.addGameObject(weapons.get(0));
 	}
 	
 	/**
@@ -86,12 +89,14 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	@Override
 	public void destroy() {
 		engine.addGameObject(new Explosion(tilePosition, tileSize, engine));
+		engine.deleteGameObject(weapons.get(0));
 		player.removeIRTSObject(this);
+		engine.deleteGameObject(this);
 	}
 	
 	@Override
 	public void target(IRTSObject enemy, TileMap terrain, ArrayList<IRTSObject> gameobjects) {
-		if (getPos().withinRadius(enemy.getPos(), 3f)) {
+		if (this.getPos().withinRadius(enemy.getPos(), 3f)) {
 			for (Weapon currentWeapon : weapons) {
 				currentWeapon.setEnemy(enemy);
 			}

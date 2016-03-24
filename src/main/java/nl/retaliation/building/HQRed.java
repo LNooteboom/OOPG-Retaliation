@@ -7,7 +7,7 @@ import nl.retaliation.players.IPlayer;
 
 public class HQRed extends Building{
 	public HQRed(float x, float y, int TILESIZE, IPlayer player, GameEngine gameEngine){
-		super(x, y, new Sprite("nl/retaliation/media/sprites/HQ.png"), TILESIZE, 1000, 300, player, gameEngine);
+		super(x, y, new Sprite("nl/retaliation/media/sprites/HQ.png"), TILESIZE, 1000, 5, player, gameEngine);
 		
 	}
 

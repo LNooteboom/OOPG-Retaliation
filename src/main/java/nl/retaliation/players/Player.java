@@ -45,6 +45,10 @@ public class Player implements IPlayer{
 	public Player(int port, String host) {
 		//this.networked = true;
 	}
+	
+	public void setID(int id){
+		this.id = id;
+	}
 
 	public int getID() {
 		return id;
