@@ -43,4 +43,15 @@ public class Selection extends AnimatedSpriteObject{
 		this.setY(object.getY());
 	}
 	
+	public String serialize() {
+		String out;
+		if (object.getID() != 0) {
+			out = "$" + object.getID();
+		} else {
+			out = "$0";
+		}
+		
+		return out;
+	}
+	
 }

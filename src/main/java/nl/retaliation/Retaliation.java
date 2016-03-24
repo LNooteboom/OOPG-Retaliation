@@ -84,7 +84,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		if (singlePlayer == false) {
 			if (isServer) {
 				player = players.get(0);
-				currentServer = new Server(63530, tileMap);
+				currentServer = new Server(63530, this);
 			} else {
 				player = players.get(1);
 				currentClient = new Client("localhost", 63530, this);
@@ -176,7 +176,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 			player.selectIRTSObjects(corMousePressed, corMouseReleased, this, TILESIZE);
 		}
 		else if(mouseButton == RIGHT){
-			player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
+			if (isServer) {
+				player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
+			} else {
+				currentClient.sendSelection(corMouseReleased);
+			}
 		}
 	}
 
@@ -234,9 +238,15 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 			}
 		}
 	}
-
+	
+	public ArrayList<IRTSObject> getObjects() {
+		return allObjects;
+	}
 	public ArrayList<IPlayer> getPlayers() {
 		return players;
+	}
+	public ArrayList<Selection> getSelection() {
+		return player.getSelection();
 	}
 	private void endGame() {
 		//System.exit(0);
@@ -278,7 +288,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 			}
 		}
 	}
-	private IRTSObject getObjectFromID(int id, ArrayList<IRTSObject> objects) {
+	public IRTSObject getObjectFromID(int id, ArrayList<IRTSObject> objects) {
 		for (IRTSObject object : objects) {
 			if (object.getID() == id) {
 				return object;

@@ -16,6 +16,7 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.Retaliation;
+import nl.retaliation.dashboard.Selection;
 import nl.retaliation.level.GrassTile;
 import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.Vector2;
@@ -31,11 +32,13 @@ public class Client {
 	private Socket socket;
 	
 	private Retaliation clientEngine;
+	private ArrayList<Selection> selection;
 	
 	public Client(String hostName, int hostPort, Retaliation clientEngine) {
 		this.hostName = hostName;
 		this.hostPort = hostPort;
 		this.clientEngine = clientEngine;
+		this.selection = clientEngine.getSelection();
 		
 		createClient();
 		//System.out.println("c: "+socket.isClosed());
@@ -49,7 +52,7 @@ public class Client {
 			this.socket = socket;
 			
 			this.input = new BufferedReader(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
-			//this.output = new PrintWriter(socket.getOutputStream(), true);
+			this.output = new PrintWriter(socket.getOutputStream(), true);
 			input.mark(0);
 			input.reset();
 			input.mark(64);
@@ -206,8 +209,18 @@ public class Client {
 		
 		return tilemap;
 	}
-	public void sendClick(Vector2 pos) {
-		output.println(pos.getX() + "$" + pos.getY());
+	public void sendSelection(Vector2 targetPos) {
+		String output = "";
+		
+		for (Selection currentSelection : clientEngine.getSelection()) {
+			output += currentSelection.serialize();
+		}
+		output += "%";
+		output += "$" + targetPos.getX();
+		output += "$" + targetPos.getY();
+		
+		this.output.println(output);
+		this.output.flush();
 	}
 	public void disconnect() {
 		try {
