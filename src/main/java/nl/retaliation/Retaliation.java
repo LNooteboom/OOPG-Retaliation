@@ -61,14 +61,14 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 	@Override
 	public void setupGame() {
 		
-		players.add(new Player(0xFF0000FF, this));
+		players.add(new Player(0xFF0000FF, 0, this));
 		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
-		players.add(new Player(0xFFFF0000, this));
+		players.add(new Player(0xFFFF0000, 1, this));
 		players.get(1).makeIRTSObject(new SovMiG(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
 		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
-		players.add(new Player(0xFF00FF00, this));
+		players.add(new Player(0xFF00FF00, 2, this));
 		players.get(2).makeIRTSObject(new SovMiG(5 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(2), this));
 		players.get(2).makeIRTSObject(new HQRed(5, 14, TILESIZE, players.get(2), this));
 		
@@ -76,22 +76,12 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		
 		this.addGameObject(new Explosion(new Vector2(5, 5), TILESIZE, this));
 		
-		for(IPlayer player : players){
-			ArrayList<IRTSObject> objects = player.getIRTSObjects();
-			for(IRTSObject object : objects){
-				if(object instanceof GameObject){
-					addGameObject((GameObject)object);
-				}
-				else{
-					System.out.println("Code should never get here!");
-				}
-			}
-		}
+		createPlayerUnits();
 		
 		initTileMap();
 		viewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
-		//addDashboard(minimap);
+		addDashboard(minimap);
 		setFPSCounter(true);
 		
 		if (singlePlayer == false) {
@@ -191,7 +181,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		TileType<?>[] tileTypes = {grassType, waterType};
 		
 		LevelGenerator noise = new LevelGenerator(8000f, 128, 128);
-		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.5f));
+		tileMap = new TileMap(TILESIZE, tileTypes, noise.generateNoise(0.1f));
 		tileMap.setTile(3, 3, 1);
 	}
 	
@@ -219,6 +209,19 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 			currentObject = getGameObjectItems().get(i);
 			if (currentObject.isVisible() == false) {
 				deleteGameObject(currentObject);
+			}
+		}
+	}
+	private void createPlayerUnits() {
+		for(IPlayer player : players){
+			ArrayList<IRTSObject> objects = player.getIRTSObjects();
+			for(IRTSObject object : objects){
+				if(object instanceof GameObject){
+					addGameObject((GameObject)object);
+				}
+				else{
+					System.out.println("Code should never get here!");
+				}
 			}
 		}
 	}

@@ -32,8 +32,9 @@ public class Player implements IPlayer{
 	//private Client client;
 	
 	
-	public Player(int color, GameEngine engine) {
+	public Player(int color, int id, GameEngine engine) {
 		this.color = color;
+		this.id = id;
 		this.engine = engine;
 		
 		objects = new ArrayList<IRTSObject>(100);

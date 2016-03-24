@@ -130,7 +130,7 @@ public class Client {
 		if (classExists) {
 			
 			int playerID = objectProperties.get(0);
-			IPlayer unitOwner = new Player(0, clientEngine);
+			IPlayer unitOwner = new Player(0, 0, clientEngine);
 			for (IPlayer player : clientEngine.getPlayers()) {
 				if (player.getID() == playerID) {
 					unitOwner = player;
@@ -148,7 +148,6 @@ public class Client {
 					if (newObject instanceof Unit) {
 						((Unit) newObject).forceSpriteDirection(objectProperties.get(3));
 					}
-					System.out.println(newObject.toString());
 					return newObject;
 					
 				} catch (Exception e) {
