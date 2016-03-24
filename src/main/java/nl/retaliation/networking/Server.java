@@ -21,7 +21,7 @@ import nl.retaliation.IRTSObject;
 public class Server {
 	private int port;
 	private int time = 0;
-	private final int wait = 3;
+	private final int wait = 10;
 	private int tileMapTime = 0;
 	private final int tileMapWait = 200;
 	
@@ -60,6 +60,7 @@ public class Server {
 				sendTileMap(tileMap);
 				
 				output.add(printOut);
+				printOut.println(sendTileMap(tileMap));
 				connectedClients.add(newClient);
 			} catch (IOException e){
 				System.out.println("Error waiting for clients?");
@@ -83,17 +84,17 @@ public class Server {
 		}
 	}
 	private void transceiveData(PrintWriter out, BufferedReader in, ArrayList<IRTSObject> gameobjects, TileMap tilemap) {
-		if (tileMapTime >= tileMapWait) {
-			out.println(sendTileMap(tileMap));
-			tileMapTime = 0;
-		} else {
+//		if (tileMapTime >= tileMapWait) {
+//			out.println(sendTileMap(tileMap));
+//			tileMapTime = 0;
+//		} else {
 			String output = "";
 			for (IRTSObject rtsObject : gameobjects) {
 				output += rtsObject.serialize();
 			}
 			out.println(output);
 			tileMapTime++;
-		}
+		//}
 		out.flush();
 	}
 	/**

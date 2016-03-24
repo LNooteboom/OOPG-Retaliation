@@ -16,13 +16,11 @@ import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileMap;
 import nl.han.ica.OOPDProcessingEngineHAN.Tile.TileType;
 import nl.retaliation.IRTSObject;
 import nl.retaliation.Retaliation;
-import nl.retaliation.building.Building;
 import nl.retaliation.level.GrassTile;
 import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.Vector2;
 import nl.retaliation.players.IPlayer;
 import nl.retaliation.players.Player;
-import nl.retaliation.unit.GroundUnit;
 import nl.retaliation.unit.Unit;
 
 public class Client {
@@ -52,7 +50,9 @@ public class Client {
 			
 			this.input = new BufferedReader(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
 			//this.output = new PrintWriter(socket.getOutputStream(), true);
-			
+			input.mark(0);
+			input.reset();
+			input.mark(64);
 			System.out.println("connected!");
 			
 		} catch (UnknownHostException e){
@@ -64,8 +64,10 @@ public class Client {
 	
 	public Packet transceiveData() {
 		try {
-			
 			String line = input.readLine();
+			input.mark(0);
+			input.reset();
+			input.mark(64);
 			//System.out.println(line);
 			if (line.charAt(0) == '#' || line.charAt(1) == '#') {
 				return new Packet(null, deserializeTileMap(line));
