@@ -25,6 +25,9 @@ import processing.core.PGraphics;
  *
  */
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
+	private static int amountOfUnits;
+	private int id;
+	
 	protected Vector2 tilePosition;
 	protected Vector2 desiredTilePos;
 	private float currentDirection = 0; //0 is right, 0,5PI is bottom etc. IN RAD
@@ -50,6 +53,8 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player, GameEngine engine) {
 		super(sprite, 8);
+		amountOfUnits++;
+		id = amountOfUnits;
 		
 		this.tileSize = tileSize;
 		this.setX(x);
@@ -204,6 +209,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		String output = "%";
 		output += ("$" + this.getClass());
 		output += ("$" + player.getID());
+		output += ("$" + id);
 		output += ("$" + (int) getX());
 		output += ("$" + (int) getY());
 		
@@ -252,5 +258,13 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	@Override
 	public void addToEngine(Retaliation engine) {
 		engine.addGameObject(this);
+	}
+	@Override
+	public int getID() {
+		return id;
+	}
+	@Override
+	public void setID(int id) {
+		this.id = id;
 	}
 }

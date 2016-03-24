@@ -24,6 +24,7 @@ import nl.retaliation.networking.Packet;
 import nl.retaliation.networking.Server;
 import nl.retaliation.players.IPlayer;
 import nl.retaliation.players.Player;
+import nl.retaliation.unit.SovIFV;
 import nl.retaliation.unit.SovMiG;
 import nl.retaliation.unit.Unit;
 import processing.core.PApplet;
@@ -36,7 +37,7 @@ import processing.core.PApplet;
  *
  */
 @SuppressWarnings("serial")
-public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of garbage */	
+public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of Garbage */	
 	private final int TILESIZE = 32;
 	private View view;
 	private Viewport viewport;
@@ -67,7 +68,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 
 		players.add(new Player(0xFF0000FF, 0, this));
 		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(0), this));
-		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new SovIFV(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
 		players.add(new Player(0xFFFF0000, 1, this));
 		players.get(1).makeIRTSObject(new SovMiG(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
@@ -83,7 +84,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		initTileMap();
 		viewPort(800, 600);
 		minimap = new Minimap(0, 0, this.getTileMap());
-		//addDashboard(minimap);
+		addDashboard(minimap);
 		setFPSCounter(true);
 
 		if (singlePlayer == false) {
@@ -244,7 +245,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		return players;
 	}
 	private void endGame() {
-		System.exit(0);
+		//System.exit(0);
 	}
 	private void checkStatus(ArrayList<IPlayer> players) {
 		int losers = 0;
@@ -256,7 +257,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 		if (losers == players.size() - 1) {
 			for (IPlayer player : players) {
-				if (player.getBuildings().size() == 0) {
+				if (player.getBuildings().size() != 0) {
 					player.setWin();
 					endGame();
 				}
@@ -264,18 +265,55 @@ public class Retaliation extends GameEngine { /* OOPG = Object oriented piece of
 		}
 	}
 	private void updateGameObjects(ArrayList<IRTSObject> oldObjects, ArrayList<IRTSObject> newObjects) {
+//		for (int i = 0; i < newObjects.size(); i++) {
+//			if (i >= oldObjects.size()) {
+//				oldObjects.add(newObjects.get(i));
+//			} else {
+//				IRTSObject oldObject = oldObjects.get(i);
+//				oldObject.setX(newObjects.get(i).getX());
+//				oldObject.setY(newObjects.get(i).getY());
+//
+//				if (oldObject instanceof Unit) {
+//					((Unit) oldObject).forceSpriteDirection(((Unit) newObjects.get(i)).getSpriteDirection());
+//				}
+//			}
+//		}
+		//if (newObjects.size() < oldObjects.size()) {
+			int[] idsPresent = new int[oldObjects.size()];
+			int count = 0;
+			for (IRTSObject oldObject : oldObjects) {
+				idsPresent[count] = oldObject.getID();
+				count++;
+			}
+			for (int i = 0; i < idsPresent.length; i++) {
+				IRTSObject matchingObject = getObjectFromID(idsPresent[i], newObjects);
+				if (matchingObject == null) {
+					//this.deleteGameObject((GameObject) matchingObject);
+					oldObjects.get(i).destroy();
+				}
+			}
+		//}
 		for (int i = 0; i < newObjects.size(); i++) {
-			if (i >= oldObjects.size()) {
-				oldObjects.add(newObjects.get(i));
-			} else {
+			IRTSObject matchingObject = getObjectFromID(newObjects.get(i).getID(), oldObjects);
+			if (matchingObject != null) {
 				IRTSObject oldObject = oldObjects.get(i);
 				oldObject.setX(newObjects.get(i).getX());
 				oldObject.setY(newObjects.get(i).getY());
 
-				if (oldObject instanceof Unit) {
+				if (oldObject instanceof Unit && newObjects.get(i) instanceof Unit) {
 					((Unit) oldObject).forceSpriteDirection(((Unit) newObjects.get(i)).getSpriteDirection());
 				}
+			} else {
+				oldObjects.add(newObjects.get(i));
 			}
 		}
+	}
+	private IRTSObject getObjectFromID(int id, ArrayList<IRTSObject> objects) {
+		for (IRTSObject object : objects) {
+			if (object.getID() == id) {
+				return object;
+			}
+		}
+		return null;
 	}
 }

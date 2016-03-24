@@ -15,6 +15,9 @@ import nl.retaliation.unit.weapon.Weapon;
  */
 public interface IRTSObject {
 	
+	public int getID();
+	public void setID(int id);
+	
 	public float getX();
 	public float getY();
 	public void setX(float x);

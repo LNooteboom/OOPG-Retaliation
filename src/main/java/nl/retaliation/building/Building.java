@@ -15,6 +15,9 @@ import nl.retaliation.unit.weapon.Weapon;
 import processing.core.PGraphics;
 
 public abstract class Building extends AnimatedSpriteObject implements IRTSObject{
+	private int id;
+	private static int amountOfBuildings;
+	
 	private Vector2 tilePosition;
 	private int TILESIZE;
 	
@@ -27,6 +30,8 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player, GameEngine engine){
 		super(sprite, 1);
+		amountOfBuildings++;
+		id = amountOfBuildings;
 		
 		this.TILESIZE = TILESIZE;
 		this.setX(x * TILESIZE);
@@ -91,6 +96,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		String output = "%";
 		output += ("$" + this.getClass());
 		output += ("$" + player.getID());
+		output += ("$" + id);
 		output += ("$" + (int) tilePosition.getX());
 		output += ("$" + (int) tilePosition.getY());
 		
@@ -108,5 +114,14 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	
 	public float getHealthPercentage() {
 		return (float)health / (float)maxHealth;
+	}
+	
+	@Override
+	public int getID() {
+		return id;
+	}
+	@Override
+	public void setID(int id) {
+		this.id = id;
 	}
 }

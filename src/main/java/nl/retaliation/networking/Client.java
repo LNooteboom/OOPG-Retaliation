@@ -141,14 +141,15 @@ public class Client {
 			}
 			
 			Class<?>[] pars = {Float.TYPE, Float.TYPE, Integer.TYPE, IPlayer.class, GameEngine.class};
-			Object[] initargs = {objectProperties.get(1), objectProperties.get(2), 32, unitOwner, clientEngine};
+			Object[] initargs = {objectProperties.get(2), objectProperties.get(3), 32, unitOwner, clientEngine};
 			try {
 				Constructor<?> constructor = objectClass.getConstructor(pars);
 				try {
 					newObject = (IRTSObject) constructor.newInstance(initargs);
+					newObject.setID(objectProperties.get(1));
 					//Holy shit het werkt!!
 					if (newObject instanceof Unit) {
-						((Unit) newObject).forceSpriteDirection(objectProperties.get(3));
+						((Unit) newObject).forceSpriteDirection(objectProperties.get(4));
 					}
 					return newObject;
 					
