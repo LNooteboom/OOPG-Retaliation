@@ -17,8 +17,8 @@ import nl.retaliation.players.IPlayer;
  */
 
 public abstract class AirUnit extends Unit{
-	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player, GameEngine engine){
-		super(x, y, sprite, tileSize, maxSpeed, health, armor, player, engine);
+	public AirUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, int cost, IPlayer player, GameEngine engine){
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, cost, player, engine);
 	}
 	
 	public void setPath(Vector2 desiredTilePos, TileMap terrain, ArrayList<IRTSObject> gameobjects, float radius){

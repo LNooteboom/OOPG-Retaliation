@@ -2,6 +2,8 @@ package nl.retaliation;
 
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import nl.han.ica.OOPDProcessingEngineHAN.Engine.GameEngine;
@@ -15,12 +17,18 @@ import nl.retaliation.building.HQRed;
 import nl.retaliation.dashboard.Minimap;
 import nl.retaliation.dashboard.Selection;
 import nl.retaliation.dashboard.TextScreen;
-import nl.retaliation.level.*;
+import nl.retaliation.level.GrassTile;
+import nl.retaliation.level.WaterTile;
 import nl.retaliation.logic.LevelGenerator;
 import nl.retaliation.logic.Vector2;
-import nl.retaliation.networking.*;
-import nl.retaliation.players.*;
-import nl.retaliation.unit.*;
+import nl.retaliation.networking.Client;
+import nl.retaliation.networking.Packet;
+import nl.retaliation.networking.Server;
+import nl.retaliation.players.IPlayer;
+import nl.retaliation.players.Player;
+import nl.retaliation.unit.SovIFV;
+import nl.retaliation.unit.SovMiG;
+import nl.retaliation.unit.Unit;
 import processing.core.PApplet;
 
 /**
@@ -40,9 +48,19 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
-	private boolean singlePlayer = false;
+	private boolean singlePlayer = true;
 
 	private Minimap minimap;
+	
+	private TimerTask timerTask = new TimerTask() 
+	{ 
+	    public void run()  
+	    { 
+	         income();
+	    } 
+	};
+
+	private Timer timer = new Timer(); 
 
 	private ArrayList<IRTSObject> allObjects = new ArrayList<IRTSObject>();
 	private ArrayList<IPlayer> players = new ArrayList<IPlayer>(8);
@@ -53,30 +71,38 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 
 	private TextScreen statusScreen;
 
+	private String build = null;
+	
 	public static void main(String[] args) {
 		PApplet.main(new String[]{"nl.retaliation.Retaliation"});
 	}
 
 	@Override
 	public void setupGame() {
+		if(singlePlayer){
+			isServer = true;
+		}
 
 		players.add(new Player(0xFF0000FF, 0, this));
+		players.get(0).addResources(1000000);
 		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new SovIFV(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
-		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new HQRed(3 * TILESIZE, 14 * TILESIZE, TILESIZE, players.get(0), this));
 		players.add(new Player(0xFFFF0000, 1, this));
+		players.get(1).addResources(1000000);
 		players.get(1).makeIRTSObject(new SovIFV(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
-		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
-
-		this.addGameObject(new Explosion(new Vector2(5, 5), TILESIZE, this));
+		players.get(1).makeIRTSObject(new HQRed(4 * TILESIZE, 14 * TILESIZE, TILESIZE, players.get(1), this));
 
 		createPlayerUnits();
 
 		initTileMap();
 		viewPort(800, 600);
+		
 		minimap = new Minimap(0, 0, this.getTileMap());
 		addDashboard(minimap);
 		setFPSCounter(true);
+		
+		timer.scheduleAtFixedRate(timerTask, 0, 1000);
 
 		if (singlePlayer == false) {
 			if (isServer) {
@@ -127,6 +153,17 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		}
 
 	}
+	
+	private void income(){
+		//System.out.println("Yay! Moneyzzz!");
+		for(int i = 0; i < players.size(); i++){
+			//System.out.println("Player " + i + " has a state of: " + players.get(i).getState());
+			if(players.get(i).getState() == 0){
+				players.get(i).addResources(1);
+				//System.out.println("Player " + i + " has " + players.get(i).getResources() + " resources.");
+			}
+		}
+	}
 
 	@Override
 	public void keyPressed() {
@@ -145,10 +182,20 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 			viewport.setX(viewport.getX() + moveSpeed);
 			break;
 		case 'q':
-			ArrayList<Selection> selections = player.getSelection();
-			if(selections.size() != 0){
-				selections.get(0).getObject().destroy();
+			if(player.getSelection().size() > 0){
+				player.getSelection().get(0).getObject().destroy();
 			}
+			break;
+		case 'b':
+			build = "hq";
+			break;
+		case '1':
+			System.out.println("1");
+			build = "ifv";
+			break;
+		case '2':
+			System.out.println("2");
+			build = "mig";
 			break;
 		}
 	}
@@ -174,7 +221,32 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		}
 		else if(mouseButton == RIGHT){
 			if (isServer) {
-				player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
+				if(build != null){
+					IRTSObject object;
+					switch(build){
+					case "hq":
+						object = new HQRed(xTile * TILESIZE, yTile * TILESIZE, TILESIZE, player, this);
+						break;
+					case "ifv":
+						System.out.println("ifv");
+						object = new SovIFV(xTile * TILESIZE, yTile * TILESIZE, TILESIZE, player, this);
+						break;
+					case "mig":
+						System.out.println("mig");
+						object = new SovMiG(xTile * TILESIZE, yTile * TILESIZE, TILESIZE, player, this);
+						break;
+					default:
+						object = null;
+					}
+					
+					if(player.makeIRTSObject(object)){
+						this.addGameObject((GameObject)object);
+					}
+					build = null;
+				}
+				else{
+					player.setPathOfSelection(corMouseReleased, tileMap, allObjects);
+				}
 			} else {
 				currentClient.sendSelection(corMouseReleased);
 			}
