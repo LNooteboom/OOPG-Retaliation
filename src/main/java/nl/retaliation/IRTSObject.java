@@ -32,6 +32,8 @@ public interface IRTSObject {
 	
 	public int getArmor();
 	
+	public int getCost();
+	
 	public IPlayer getOwner();
 	
 	public Vector2 getPos();

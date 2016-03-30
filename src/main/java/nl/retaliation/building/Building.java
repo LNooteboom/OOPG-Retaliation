@@ -25,18 +25,19 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	private boolean isIndestructible;
 	
 	private int maxHealth, health, armor;
+	private int cost;
 	
 	private IPlayer player;
 	private GameEngine engine;
 	
-	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, IPlayer player, GameEngine engine){
+	Building(float x, float y, Sprite sprite, int TILESIZE, int health, int armor, int cost, IPlayer player, GameEngine engine){
 		super(sprite, 1);
 		amountOfBuildings++;
 		id = amountOfBuildings + Unit.getAmountOfUnits();
 		
 		this.TILESIZE = TILESIZE;
-		this.setX(x * TILESIZE);
-		this.setY(y * TILESIZE);
+		this.setX(x);
+		this.setY(y);
 		tilePosition = new Vector2((int)x, (int)y);
 		
 		this.setWidth(TILESIZE);
@@ -45,6 +46,7 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		this.maxHealth = health;
 		this.health = maxHealth;
 		this.armor = armor;
+		this.cost = cost;
 		this.player = player;
 		this.engine = engine;
 	}
@@ -81,6 +83,10 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 	@Override
 	public int getArmor() {
 		return armor;
+	}
+	
+	public int getCost(){
+		return cost;
 	}
 	
 	public Vector2 getPos(){

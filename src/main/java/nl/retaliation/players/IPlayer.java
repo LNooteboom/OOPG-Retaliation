@@ -26,6 +26,9 @@ public interface IPlayer {
 	public int getColor();
 	public int getID();
 	
+	public int getResources();
+	public boolean addResources(int amount);
+	
 	public ArrayList<Building> getBuildings();
 	public ArrayList<Unit> getUnits();
 	public ArrayList<IRTSObject> getIRTSObjects();

@@ -22,8 +22,8 @@ public abstract class GroundUnit extends Unit{
 	private boolean canStepOnLand = true;
 	
 	
-	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, IPlayer player, GameEngine engine) {
-		super(x, y, sprite, tileSize, maxSpeed, health, armor, player, engine);
+	public GroundUnit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int health, int armor, int cost, IPlayer player, GameEngine engine) {
+		super(x, y, sprite, tileSize, maxSpeed, health, armor, cost,  player, engine);
 	}
 	
 	@Override

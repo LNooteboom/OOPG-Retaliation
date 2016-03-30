@@ -28,6 +28,7 @@ import processing.core.PGraphics;
 public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private static int amountOfUnits = 1;
 	private int id;
+	private int cost;
 	
 	protected Vector2 tilePosition;
 	protected Vector2 desiredTilePos;
@@ -52,7 +53,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	private IPlayer player;
 	private GameEngine engine;
 	
-	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, IPlayer player, GameEngine engine) {
+	public Unit(float x, float y, Sprite sprite, int tileSize, float maxSpeed, int maxHealth, int armor, int cost, IPlayer player, GameEngine engine) {
 		super(sprite, 8);
 		amountOfUnits++;
 		id = amountOfUnits + Building.getAmountOfBuildings();
@@ -60,7 +61,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.tileSize = tileSize;
 		this.setX(x);
 		this.setY(y);
-		tilePosition = new Vector2((int) x * tileSize, (int) y * tileSize);
+		tilePosition = new Vector2((int) x, (int) y);
 		
 		this.setWidth(tileSize);
 		this.setHeight(tileSize);
@@ -69,6 +70,7 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		this.armor = armor;
+		this.cost = cost;
 		this.player = player;
 		this.engine = engine;
 		
@@ -246,6 +248,10 @@ public abstract class Unit extends AnimatedSpriteObject implements IRTSObject{
 	
 	public int getArmor() {
 		return armor;
+	}
+	
+	public int getCost(){
+		return cost;
 	}
 	
 	public Vector2 getPos(){

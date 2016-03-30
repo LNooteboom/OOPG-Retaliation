@@ -26,6 +26,7 @@ public class Player implements IPlayer{
 	
 	private int id;
 	private int color;
+	private int resources;
 	private GameEngine engine;
 	
 	private ArrayList<IRTSObject> objects;
@@ -67,15 +68,17 @@ public class Player implements IPlayer{
 	
 	@Override
 	public boolean makeIRTSObject(IRTSObject object) {
-		objects.add(object);
-		if(object instanceof GameObject){
-			if(object instanceof Unit){
-				units.add((Unit)object);
+		if(this.addResources(object.getCost() * -1)){
+			objects.add(object);
+			if(object instanceof GameObject){
+				if(object instanceof Unit){
+					units.add((Unit)object);
+				}
+				if(object instanceof Building){
+					buildings.add((Building)object);
+				}
+				return true;
 			}
-			if(object instanceof Building){
-				buildings.add((Building)object);
-			}
-			return true;
 		}
 		return false;
 	}
@@ -227,17 +230,31 @@ public class Player implements IPlayer{
 	}
 	@Override
 	public void setWin() {
-		// TODO Auto-generated method stub
 		state = WIN;
 	}
 	@Override
 	public void setLose() {
-		// TODO Auto-generated method stub
 		state = LOSE;
 	}
 	@Override
 	public int getState() {
-		// TODO Auto-generated method stub
 		return state;
+	}
+
+	@Override
+	public int getResources() {
+		return resources;
+	}
+
+	@Override
+	public boolean addResources(int amount) {
+		if(amount + resources >= 0){
+			resources += amount;
+			
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
