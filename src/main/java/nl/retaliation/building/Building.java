@@ -36,8 +36,8 @@ public abstract class Building extends AnimatedSpriteObject implements IRTSObjec
 		id = amountOfBuildings + Unit.getAmountOfUnits();
 		
 		this.TILESIZE = TILESIZE;
-		this.setX(x);
-		this.setY(y);
+		this.setX(x * TILESIZE);
+		this.setY(y * TILESIZE);
 		tilePosition = new Vector2((int)x, (int)y);
 		
 		this.setWidth(TILESIZE);

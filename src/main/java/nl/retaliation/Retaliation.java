@@ -48,7 +48,7 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 	private Server currentServer;
 	private Client currentClient;
 	private boolean isServer = false;
-	private boolean singlePlayer = true;
+	private boolean singlePlayer = false;
 
 	private Minimap minimap;
 	
@@ -87,11 +87,11 @@ public class Retaliation extends GameEngine { /* OOPG = Object Oriented Piece of
 		players.get(0).addResources(1000000);
 		players.get(0).makeIRTSObject(new SovMiG(3 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(0), this));
 		players.get(0).makeIRTSObject(new SovIFV(3 * TILESIZE, 12 * TILESIZE, TILESIZE, players.get(0), this));
-		players.get(0).makeIRTSObject(new HQRed(3 * TILESIZE, 14 * TILESIZE, TILESIZE, players.get(0), this));
+		players.get(0).makeIRTSObject(new HQRed(3, 14, TILESIZE, players.get(0), this));
 		players.add(new Player(0xFFFF0000, 1, this));
 		players.get(1).addResources(1000000);
 		players.get(1).makeIRTSObject(new SovIFV(4 * TILESIZE, 13 * TILESIZE, TILESIZE, players.get(1), this));
-		players.get(1).makeIRTSObject(new HQRed(4 * TILESIZE, 14 * TILESIZE, TILESIZE, players.get(1), this));
+		players.get(1).makeIRTSObject(new HQRed(4, 14, TILESIZE, players.get(1), this));
 
 		createPlayerUnits();
 

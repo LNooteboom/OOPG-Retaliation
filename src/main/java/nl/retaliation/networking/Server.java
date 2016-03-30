@@ -91,7 +91,7 @@ public class Server {
 			if (in.ready()) {
 				String line = in.readLine();
 				System.out.println(line);
-				if (line != null) {
+				if (line != null && line.length() > 0) {
 					getSelection(line);
 				}
 			}

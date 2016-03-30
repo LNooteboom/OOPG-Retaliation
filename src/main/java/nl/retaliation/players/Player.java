@@ -112,6 +112,7 @@ public class Player implements IPlayer{
 		
 		for(IRTSObject object : selectedObjects){
 			if(object.getPos().between(cor1, cor2)){
+				System.out.println(object.toString());
 				selections.add(new Selection(gameEngine, TILESIZE, object));
 			}
 		}
